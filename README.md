@@ -25,7 +25,7 @@ For more information try these resources:
 Contributions are encouraged! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Authors
-See the list of [contributors](https://github.com/solacecommunity/<github-repo>/graphs/contributors) who participated in this project.
+See the list of [contributors](https://github.com/solacelabs/customer-controlled-region-reference-architectures/graphs/contributors) who participated in this project.
 
 ## License
 See the [LICENSE](LICENSE) file for details.
