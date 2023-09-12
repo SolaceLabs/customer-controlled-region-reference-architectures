@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "test-service.fullname" . }}
+  labels:
+    {{- include "test-service.labels" . | nindent 4 }}
+  {{- with .Values.service.annotations }}
+  annotations:
+  {{- toYaml . | nindent 4}}
+  {{- end }}
+spec:
+  type: LoadBalancer
+  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
+  ports:
+    - port: 943
+      targetPort: http
+      protocol: TCP
+      name: semptls
+    - port: 55443
+      targetPort: http
+      protocol: TCP
+      name: smftls
+  selector:
+    {{- include "test-service.selectorLabels" . | nindent 4 }}
+    nodeType: messaging

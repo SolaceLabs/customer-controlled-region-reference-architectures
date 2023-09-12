@@ -1,0 +1,8 @@
+formatter: "markdown table"
+
+output:
+  mode: replace
+  file: "README.md"
+
+recursive:
+  enabled: true

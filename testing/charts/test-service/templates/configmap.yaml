@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "test-service.fullname" . }}
+  labels:
+    {{- include "test-service.labels" . | nindent 4 }}
+data:
+  index.html: |
+    Test Service

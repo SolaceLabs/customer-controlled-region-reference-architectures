@@ -1,0 +1,281 @@
+locals {
+  os_disk_size_gb = 48
+
+  availability_zones = ["1", "2", "3"]
+
+  default_vm_size    = "Standard_D2s_v3"
+  prod1k_vm_size     = "Standard_E2s_v3"
+  prod10k_vm_size    = "Standard_E4s_v3"
+  prod100k_vm_size   = "Standard_E8s_v3"
+  monitoring_vm_size = "Standard_D2s_v3"
+
+  worker_node_max_pods = 50
+
+  worker_node_username = "worker"
+}
+
+################################################################################
+# Cluster
+################################################################################
+
+resource "azurerm_user_assigned_identity" "cluster" {
+  name                = "${var.cluster_name}-identity"
+  resource_group_name = var.resource_group_name
+  location            = var.region
+}
+
+resource "azurerm_role_assignment" "cluster_subnet" {
+  scope                = var.subnet_id
+  role_definition_name = "Network Contributor"
+  principal_id         = azurerm_user_assigned_identity.cluster.principal_id
+}
+
+resource "azurerm_role_assignment" "cluster_route_table" {
+  scope                = var.route_table_id
+  role_definition_name = "Network Contributor"
+  principal_id         = azurerm_user_assigned_identity.cluster.principal_id
+}
+
+resource "azurerm_kubernetes_cluster" "cluster" {
+  #checkov:skip=CKV_AZURE_171:Auto-upgrade disabled - Solace recommends that clusters be upgraded manually
+  #checkov:skip=CKV_AZURE_117:Solace's recommended VM series use ephemeral OS disks so do not support BYOK
+  #checkov:skip=CKV_AZURE_4:Solace is not opinionated on how container metrics are collected
+  #checkov:skip=CKV_AZURE_7:Network Policy setting not supported when network plugin is 'kubenet'
+  #checkov:skip=CKV_AZURE_116:Solace is not opinionated on the use of Azure Policy for Kubernetes
+
+  name                    = var.cluster_name
+  location                = var.region
+  resource_group_name     = var.resource_group_name
+  dns_prefix              = var.cluster_name
+  private_cluster_enabled = var.kubernetes_api_public_access ? false : true
+  kubernetes_version      = var.kubernetes_version
+  sku_tier                = "Standard"
+  local_account_disabled  = var.local_account_disabled
+
+  api_server_access_profile {
+    authorized_ip_ranges = var.kubernetes_api_public_access ? var.kubernetes_api_authorized_networks : null
+  }
+
+  key_vault_secrets_provider {
+    secret_rotation_enabled = true
+  }
+
+  auto_scaler_profile {
+    scale_down_unneeded        = "5m"
+    scale_down_delay_after_add = "5m"
+  }
+
+  default_node_pool {
+    name            = "default"
+    node_count      = 2
+    vm_size         = local.default_vm_size
+    os_disk_size_gb = local.os_disk_size_gb
+    os_disk_type    = "Ephemeral"
+    vnet_subnet_id  = var.subnet_id
+    max_pods        = local.worker_node_max_pods
+    zones           = local.availability_zones
+  }
+
+  network_profile {
+    #checkov:skip=CKV2_AZURE_29:Solace recommends the use of the 'kubenet' network plugin, but Azure CNI can be used if desired
+    network_plugin = "kubenet"
+    service_cidr   = var.kubernetes_service_cidr
+    dns_service_ip = var.kubernetes_dns_service_ip
+    pod_cidr       = var.kubernetes_pod_cidr
+
+    load_balancer_sku = "standard"
+    load_balancer_profile {
+      managed_outbound_ip_count = var.outbound_ip_count
+      outbound_ports_allocated  = var.outbound_ports_allocated
+    }
+  }
+
+  linux_profile {
+    admin_username = local.worker_node_username
+    ssh_key {
+      key_data = var.worker_node_ssh_public_key
+    }
+  }
+
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.cluster.id]
+  }
+
+  azure_active_directory_role_based_access_control {
+    managed                = true
+    azure_rbac_enabled     = true
+    admin_group_object_ids = var.kubernetes_cluster_admin_groups
+  }
+
+  depends_on = [
+    azurerm_role_assignment.cluster_route_table,
+    azurerm_role_assignment.cluster_subnet
+  ]
+
+  lifecycle {
+    ignore_changes = [kubernetes_version]
+  }
+}
+
+data "azuread_user" "cluster_admin" {
+  count = length(var.kubernetes_cluster_admin_users)
+
+  user_principal_name = var.kubernetes_cluster_admin_users[count.index]
+}
+
+resource "azurerm_role_assignment" "cluster_admin" {
+  count = length(var.kubernetes_cluster_admin_users)
+
+  scope                = azurerm_kubernetes_cluster.cluster.id
+  role_definition_name = "Azure Kubernetes Service RBAC Cluster Admin"
+  principal_id         = data.azuread_user.cluster_admin[count.index].id
+}
+
+################################################################################
+# Cluster Logs
+################################################################################
+
+resource "azurerm_log_analytics_workspace" "cluster" {
+  name                = "${var.cluster_name}-logs"
+  location            = var.region
+  resource_group_name = var.resource_group_name
+
+  sku               = "PerGB2018"
+  retention_in_days = 30
+}
+
+# https://learn.microsoft.com/en-us/azure/aks/monitor-aks
+resource "azurerm_monitor_diagnostic_setting" "cluster" {
+  name                       = var.cluster_name
+  target_resource_id         = azurerm_kubernetes_cluster.cluster.id
+  log_analytics_workspace_id = azurerm_log_analytics_workspace.cluster.id
+
+  enabled_log {
+    category = "cluster-autoscaler"
+  }
+
+  enabled_log {
+    category = "kube-apiserver"
+  }
+
+  enabled_log {
+    category = "kube-audit-admin"
+  }
+
+  enabled_log {
+    category = "kube-controller-manager"
+  }
+
+  metric {
+    category = "AllMetrics"
+    enabled  = true
+  }
+}
+
+################################################################################
+# Node Pools
+################################################################################
+
+module "node_pool_prod1k" {
+  source = "../broker-node-pool"
+
+  cluster_id     = azurerm_kubernetes_cluster.cluster.id
+  node_pool_name = "prod1k"
+
+  availability_zones = local.availability_zones
+  subnet_id          = var.subnet_id
+
+  node_pool_max_size = var.node_pool_max_size
+
+  worker_node_max_pods  = local.worker_node_max_pods
+  worker_node_vm_size   = local.prod1k_vm_size
+  worker_node_disk_size = local.os_disk_size_gb
+
+  node_pool_labels = {
+    serviceClass = "prod1k"
+    nodeType     = "messaging"
+  }
+
+  node_pool_taints = [
+    "serviceClass=prod1k:NoExecute",
+    "nodeType=messaging:NoExecute"
+  ]
+}
+
+module "node_pool_prod10k" {
+  source = "../broker-node-pool"
+
+  cluster_id     = azurerm_kubernetes_cluster.cluster.id
+  node_pool_name = "prod10k"
+
+  availability_zones = local.availability_zones
+  subnet_id          = var.subnet_id
+
+  node_pool_max_size = var.node_pool_max_size
+
+  worker_node_max_pods  = local.worker_node_max_pods
+  worker_node_vm_size   = local.prod10k_vm_size
+  worker_node_disk_size = local.os_disk_size_gb
+
+  node_pool_labels = {
+    serviceClass = "prod10k"
+    nodeType     = "messaging"
+  }
+
+  node_pool_taints = [
+    "serviceClass=prod10k:NoExecute",
+    "nodeType=messaging:NoExecute"
+  ]
+}
+
+module "node_pool_prod100k" {
+  source = "../broker-node-pool"
+
+  cluster_id     = azurerm_kubernetes_cluster.cluster.id
+  node_pool_name = "prod100k"
+
+  availability_zones = local.availability_zones
+  subnet_id          = var.subnet_id
+
+  node_pool_max_size = var.node_pool_max_size
+
+  worker_node_max_pods  = local.worker_node_max_pods
+  worker_node_vm_size   = local.prod100k_vm_size
+  worker_node_disk_size = local.os_disk_size_gb
+
+  node_pool_labels = {
+    serviceClass = "prod100k"
+    nodeType     = "messaging"
+  }
+
+  node_pool_taints = [
+    "serviceClass=prod100k:NoExecute",
+    "nodeType=messaging:NoExecute"
+  ]
+}
+
+module "node_pool_monitoring" {
+  source = "../broker-node-pool"
+
+  cluster_id     = azurerm_kubernetes_cluster.cluster.id
+  node_pool_name = "monitoring"
+
+  availability_zones = local.availability_zones
+  subnet_id          = var.subnet_id
+
+  node_pool_max_size = var.node_pool_max_size
+
+  worker_node_max_pods  = local.worker_node_max_pods
+  worker_node_vm_size   = local.monitoring_vm_size
+  worker_node_disk_size = local.os_disk_size_gb
+
+  node_pool_labels = {
+    nodeType                                                  = "monitoring",
+    "node.kubernetes.io/exclude-from-external-load-balancers" = "true"
+  }
+
+  node_pool_taints = [
+    "nodeType=monitoring:NoExecute"
+  ]
+}
