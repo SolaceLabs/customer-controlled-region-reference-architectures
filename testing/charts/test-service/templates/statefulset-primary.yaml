@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "test-service.fullname" . }}-primary
+spec:
+  serviceName: {{ include "test-service.fullname" . }}-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "test-service.selectorLabels" . | nindent 6 }}
+      role: primary
+  template:
+    metadata:
+      labels:
+        {{- include "test-service.selectorLabels" . | nindent 8 }}
+        role: primary
+        nodeType: messaging
+    spec:
+      {{ if $.Values.highlyAvailable }}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values: [{{ include "test-service.name" . }}]
+              topologyKey: topology.kubernetes.io/zone
+      {{- end }}
+      nodeSelector:
+        nodeType: messaging
+        serviceClass: {{ .Values.serviceClass }}
+      tolerations:
+      - effect: NoExecute
+        key: nodeType
+        operator: Equal
+        value: messaging
+      - effect: NoExecute
+        key: serviceClass
+        operator: Equal
+        value:  {{ .Values.serviceClass }}
+      initContainers:
+      - name: init
+        image: {{ .Values.images.busybox }}
+        command: ['sh', '-c', "cp /config/index.html /usr/share/nginx/html/index.html"]
+        volumeMounts:
+        - name: www
+          mountPath: /usr/share/nginx/html
+        - name: config
+          mountPath: /config
+      containers:
+      - name: nginx
+        image: {{ .Values.images.nginx }}
+        ports:
+        - containerPort: 80
+          name: http
+        volumeMounts:
+        - name: www
+          mountPath: /usr/share/nginx/html
+        resources: {{ get .Values.resources.messaging .Values.serviceClass | toYaml | nindent 10 }}
+      volumes:
+       - name: config
+         configMap:
+           name: {{ include "test-service.fullname" $ }}
+  volumeClaimTemplates:
+  - metadata:
+      name: www
+    spec:
+      storageClassName: {{ required "Storage class is required." .Values.storage.storageClass }}
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: {{ .Values.storage.size }}

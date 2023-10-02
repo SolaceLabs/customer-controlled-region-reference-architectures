@@ -1,0 +1,60 @@
+# Default values for standalone.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceClass:
+highlyAvailable: true
+
+images:
+  busybox: registry.k8s.io/busybox:latest
+  nginx: registry.k8s.io/nginx-slim:0.8
+
+service:
+  externalTrafficPolicy: Local
+  annotations: {}
+
+storage:
+  storageClass:
+  size: 10Gi
+
+resources:
+  messaging:
+    prod1k:
+      limits:
+        cpu: 2200m
+        ephemeral-storage: 2.25Gi
+        memory: 6912Mi
+      requests:
+        cpu: 1250m
+        ephemeral-storage: 2.25Gi
+        memory: 6912Mi
+    prod10k:
+      requests:
+        cpu: 3200m
+        memory: 14490Mi
+        ephemeral-storage: 2.25Gi
+      limits:
+        cpu: 4200m
+        memory: 14490Mi
+        ephemeral-storage: 2.25Gi
+    prod100k:
+      limits:
+        cpu: 82000m
+        ephemeral-storage: 2.25Gi
+        memory: 31284Mi
+      requests:
+        cpu: 7200m
+        ephemeral-storage: 2.25Gi
+        memory: 31284Mi
+  monitoring: 
+    limits:
+      cpu: 1200m
+      ephemeral-storage: 2.25Gi
+      memory: 2304Mi
+    requests:
+      cpu: 300m
+      ephemeral-storage: 2.25Gi
+      memory: 2304Mi

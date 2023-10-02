@@ -1,0 +1,11 @@
+.terraform/
+terraform.tfstate*
+.terraform.tfstate*
+.terraform.lock.hcl
+*.tfvars
+.tmp
+.infracost
+.external_modules
+testing/*/terraform/*
+*.bak
+.idea

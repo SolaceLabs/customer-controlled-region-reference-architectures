@@ -1,0 +1,25 @@
+repos:
+- repo: https://github.com/antonbabenko/pre-commit-terraform
+  rev:  "v1.81.0"
+  hooks:
+    - id: terraform_fmt
+    - id: terraform_tflint
+    - id: terraform_checkov
+      args:
+        - --args=--quiet
+        - --args=--compact
+        - --args=--skip-path=./testing
+        - --args=--skip-path=./.github
+
+- repo: https://github.com/terraform-docs/terraform-docs
+  rev: "v0.16.0"
+  hooks:
+    - name: Run terraform-docs for AKS
+      id: terraform-docs-go
+      args: ["./aks/terraform", "--lockfile=false"]
+    - name: Run terraform-docs for EKS
+      id: terraform-docs-go
+      args: ["./eks/terraform", "--lockfile=false"]
+    - name: Run terraform-docs for GKE
+      id: terraform-docs-go
+      args: ["./gke/terraform", "--lockfile=false"]
