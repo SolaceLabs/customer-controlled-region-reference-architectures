@@ -1,0 +1,96 @@
+name: Pull Request
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened] 
+    branches: [main]
+
+jobs:
+  scan-eks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v2
+      - name: Terraform format check for EKS
+        run: terraform fmt -check
+        working-directory: ./eks/terraform
+      - uses: terraform-linters/setup-tflint@v3
+        name: Setup tflint
+        with:
+          tflint_version: v0.45.0
+      - name: Init tflint
+        run: tflint --init
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Run tflint for EKS
+        run: tflint -f compact
+        working-directory: ./eks/terraform
+      - name: Run checkov for EKS
+        uses: bridgecrewio/checkov-action@v12.2361.0 # 2.3.261
+        with:
+          directory: eks/terraform
+          output_format: cli
+          output_file_path: console
+          quiet: true
+          compact: true
+  scan-aks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v2
+      - name: Terraform format check for AKS
+        run: terraform fmt -check
+        working-directory: ./aks/terraform
+      - uses: terraform-linters/setup-tflint@v3
+        name: Setup tflint
+        with:
+          tflint_version: v0.45.0
+      - name: Init tflint
+        run: tflint --init
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Run tflint for AKS
+        run: tflint -f compact
+        working-directory: ./aks/terraform
+      - name: Run checkov for AKS
+        uses: bridgecrewio/checkov-action@v12.2361.0 # 2.3.261
+        with:
+          directory: aks/terraform
+          output_format: cli
+          output_file_path: console
+          quiet: true
+          compact: true
+  scan-gke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup terraform
+        uses: hashicorp/setup-terraform@v2
+      - name: Terraform format check for GKE
+        run: terraform fmt -check
+        working-directory: ./gke/terraform
+      - uses: terraform-linters/setup-tflint@v3
+        name: Setup tflint
+        with:
+          tflint_version: v0.45.0
+      - name: Init tflint
+        run: tflint --init
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Run tflint for GKE
+        run: tflint -f compact
+        working-directory: ./gke/terraform
+      - name: Run checkov for GKE
+        uses: bridgecrewio/checkov-action@v12.2361.0 # 2.3.261
+        with:
+          directory: gke/terraform
+          output_format: cli
+          output_file_path: console
+          quiet: true
+          compact: true

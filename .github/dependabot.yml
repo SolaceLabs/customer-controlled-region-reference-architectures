@@ -1,0 +1,14 @@
+version: 2
+updates:
+  - package-ecosystem: "terraform"
+    directory: "/aks/terraform"
+    schedule:
+      interval: "monthly"
+  - package-ecosystem: "terraform"
+    directory: "/eks/terraform"
+    schedule:
+      interval: "monthly"
+  - package-ecosystem: "terraform"
+    directory: "/gke/terraform"
+    schedule:
+      interval: "monthly"
