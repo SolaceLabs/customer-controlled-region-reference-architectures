@@ -20,7 +20,7 @@ resource "google_compute_subnetwork" "cluster" {
   private_ip_google_access = true
 
   lifecycle {
-    ignore_changes = [secondary_ip_range]
+    ignore_changes = [secondary_ip_range] # these are automatically added by gke
 
     precondition {
       condition     = can(cidrhost(var.network_cidr_range, 0))

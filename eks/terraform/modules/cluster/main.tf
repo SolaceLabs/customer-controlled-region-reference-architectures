@@ -195,8 +195,6 @@ resource "aws_eks_cluster" "cluster" {
   ]
 
   lifecycle {
-    ignore_changes = [version]
-
     precondition {
       condition     = !var.kubernetes_api_public_access || length(var.kubernetes_api_authorized_networks) > 0
       error_message = "At least one authorized network must be provided if public Kubernetes API is being created."
@@ -467,8 +465,7 @@ resource "aws_eks_node_group" "default" {
 
   lifecycle {
     ignore_changes = [
-      scaling_config[0].desired_size,
-      launch_template[0].version
+      scaling_config[0].desired_size
     ]
   }
 }
