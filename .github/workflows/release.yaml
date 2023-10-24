@@ -5,6 +5,9 @@ on:
     tags:
       - "v*.*.*"
 
+env:
+  PACKAGE_PREFIX: customer-controlled-region-reference-architectures
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,22 +17,22 @@ jobs:
       - name: EKS Release
         uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r sc-private-regions-eks-${{ github.ref_name }}.zip README.md LICENCE eks
+          args: zip -qq -r ${{ env.PACKAGE_PREFIX }}-eks-${{ github.ref_name }}.zip README.md LICENCE eks
       - name: AKS Release
         uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r sc-private-regions-aks-${{ github.ref_name }}.zip README.md LICENCE aks
+          args: zip -qq -r ${{ env.PACKAGE_PREFIX }}-aks-${{ github.ref_name }}.zip README.md LICENCE aks
       - name: GKE Release
         uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r sc-private-regions-gke-${{ github.ref_name }}.zip README.md LICENCE gke
+          args: zip -qq -r ${{ env.PACKAGE_PREFIX }}-gke-${{ github.ref_name }}.zip README.md LICENCE gke
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           draft: true
           generate_release_notes: true
           files: |
-            sc-private-regions-eks-${{ github.ref_name }}.zip
-            sc-private-regions-aks-${{ github.ref_name }}.zip
-            sc-private-regions-gke-${{ github.ref_name }}.zip
+            ${{ env.PACKAGE_PREFIX }}-eks-${{ github.ref_name }}.zip
+            ${{ env.PACKAGE_PREFIX }}-aks-${{ github.ref_name }}.zip
+            ${{ env.PACKAGE_PREFIX }}-gke-${{ github.ref_name }}.zip
             
