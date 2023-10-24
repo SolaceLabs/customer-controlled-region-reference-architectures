@@ -1,0 +1,46 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: ["bug", "triage"]
+assignees: ["lumberbaron", "Luay-Sol", "hadielaham88"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: What is the problem?
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: How can the problem be reproduced?
+    validations:
+      required: true
+ - type: dropdown
+    id: flavour
+    attributes:
+      label: Kubernetes flavour
+      description: What Kubernetes favour were you using?
+      options:
+        - EKS
+        - AKS
+        - GKE
+      default: 0
+    validations:
+      required: true
+ - type: input
+    id: version
+    attributes:
+      label: Kubernetes version
+      description: What Kubernetes version were you using?
+    validations:
+      required: true

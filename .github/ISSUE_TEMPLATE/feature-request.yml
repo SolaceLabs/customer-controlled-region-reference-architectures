@@ -1,0 +1,27 @@
+name: Feature Request
+description: File a feature request
+title: "[Feature]: "
+labels: ["feature", "triage"]
+assignees: ["lumberbaron", "Luay-Sol", "hadielaham88"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      description: A description of the feature you are proposing.
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Why do you need this feature?
+    validations:
+        required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How would you solve this problem?
+    validations:
+      required: false
