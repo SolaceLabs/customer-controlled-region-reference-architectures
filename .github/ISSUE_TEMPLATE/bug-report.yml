@@ -2,7 +2,7 @@ name: Bug Report
 description: File a bug report
 title: "[Bug]: "
 labels: ["bug", "triage"]
-assignees: ["lumberbaron", "Luay-Sol", "hadielaham88"]
+assignees: ["lumberbaron"]
 body:
   - type: textarea
     id: description
