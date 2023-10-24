@@ -114,7 +114,10 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   ]
 
   lifecycle {
-    ignore_changes = [kubernetes_version]
+    precondition {
+      condition     = !var.local_account_disabled || length(var.kubernetes_cluster_admin_groups) > 0 || length(var.kubernetes_cluster_admin_users) > 0
+      error_message = "At least one admin group or admin user must be provided if local accounts are disabled."
+    }
   }
 }
 

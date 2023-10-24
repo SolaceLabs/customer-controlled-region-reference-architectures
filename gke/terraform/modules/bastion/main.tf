@@ -49,10 +49,6 @@ resource "google_compute_instance" "bastion" {
   }
 
   lifecycle {
-    ignore_changes = [
-      zone,
-    ]
-
     precondition {
       condition     = var.bastion_ssh_public_key != ""
       error_message = "Public key must be provided if bastion host is being created."

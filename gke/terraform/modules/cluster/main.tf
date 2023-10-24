@@ -89,16 +89,6 @@ resource "google_container_cluster" "cluster" {
   release_channel {
     channel = "UNSPECIFIED"
   }
-
-  lifecycle {
-    ignore_changes = [
-      network,
-      subnetwork,
-      ip_allocation_policy[0],
-      min_master_version,
-      location
-    ]
-  }
 }
 
 ################################################################################
@@ -139,14 +129,6 @@ resource "google_container_node_pool" "system" {
   }
 
   node_count = 1
-
-  lifecycle {
-    ignore_changes = [
-      id,
-      node_config[0].metadata,
-      location
-    ]
-  }
 }
 
 module "node_group_prod1k" {

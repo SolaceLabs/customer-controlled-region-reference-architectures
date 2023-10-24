@@ -45,13 +45,4 @@ resource "google_container_node_pool" "this" {
     min_node_count  = 0
     max_node_count  = var.node_pool_max_size
   }
-
-  lifecycle {
-    ignore_changes = [
-      id,
-      node_config[0].metadata,
-      location,
-      node_locations
-    ]
-  }
 }
