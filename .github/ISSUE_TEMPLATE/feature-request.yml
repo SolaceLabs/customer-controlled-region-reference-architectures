@@ -1,8 +1,12 @@
+---
 name: Feature Request
 description: File a feature request
 title: "[Feature]: "
-labels: ["feature", "triage"]
-assignees: ["lumberbaron", "Luay-Sol", "hadielaham88"]
+labels:
+  - feature
+  - triage
+assignees:
+  - lumberbaron
 body:
   - type: textarea
     id: description
@@ -17,7 +21,7 @@ body:
       label: Use Case
       description: Why do you need this feature?
     validations:
-        required: true
+      required: true
   - type: textarea
     id: solution
     attributes:

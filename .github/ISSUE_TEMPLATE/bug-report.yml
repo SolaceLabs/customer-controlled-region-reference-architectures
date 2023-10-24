@@ -1,8 +1,12 @@
+---
 name: Bug Report
 description: File a bug report
 title: "[Bug]: "
-labels: ["bug", "triage"]
-assignees: ["lumberbaron", "Luay-Sol", "hadielaham88"]
+labels:
+  - bug
+  - triage
+assignees:
+  - lumberbaron
 body:
   - type: textarea
     id: description
@@ -25,7 +29,7 @@ body:
       description: How can the problem be reproduced?
     validations:
       required: true
- - type: dropdown
+  - type: dropdown
     id: flavour
     attributes:
       label: Kubernetes flavour
@@ -37,7 +41,7 @@ body:
       default: 0
     validations:
       required: true
- - type: input
+  - type: input
     id: version
     attributes:
       label: Kubernetes version
