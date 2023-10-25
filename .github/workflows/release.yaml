@@ -17,15 +17,15 @@ jobs:
       - name: EKS Release
         uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r ${{ env.PACKAGE_PREFIX }}-eks-${{ github.ref_name }}.zip README.md LICENCE eks
+          args: zip -r ${{ env.PACKAGE_PREFIX }}-eks-${{ github.ref_name }}.zip README.md LICENSE eks
       - name: AKS Release
         uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r ${{ env.PACKAGE_PREFIX }}-aks-${{ github.ref_name }}.zip README.md LICENCE aks
+          args: zip -r ${{ env.PACKAGE_PREFIX }}-aks-${{ github.ref_name }}.zip README.md LICENSE aks
       - name: GKE Release
         uses: montudor/action-zip@v1
         with:
-          args: zip -qq -r ${{ env.PACKAGE_PREFIX }}-gke-${{ github.ref_name }}.zip README.md LICENCE gke
+          args: zip -r ${{ env.PACKAGE_PREFIX }}-gke-${{ github.ref_name }}.zip README.md LICENSE gke
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
