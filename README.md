@@ -30,6 +30,8 @@ For more information try these resources:
 - Ask the [Solace Community](https://solace.community)
 - The Solace Developer Portal website at: https://solace.dev
 
+If you have issues with your PubSub+ Cloud deployment, please contact [Support](https://solace.com/support/).
+
 ## Contributing
 
 Contributions are encouraged! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
