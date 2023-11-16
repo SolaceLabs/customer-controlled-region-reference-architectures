@@ -65,6 +65,11 @@ There are two options for cluster access:
  * A bastion host (enabled by default, but you can choose excluded it) which has a public IP and is accessible via SSH from provided CIDRs
  * Optionally, the cluster's API can be made public and restricted to provided CIDRs (by default the API is private)
 
+There are also a few options for authentication:
+
+ * Azure RBAC is enabled by default. The `kubernetes_cluster_admin_users` or `kubernetes_cluster_admin_groups` variables should be set with the user or group names that will be given admin access to the cluster.
+ * Optionally, local authentication can be enabled by setting `local_account_disabled` to false.
+
 ## Usage of Terraform for Azure Kubernetes Service<a name="aks-usage"></a>
 
 The following section is an overview of the steps to use this Terraform. Before you you begin, review the necessary [prerequistites](aks-prerequisites). Here's an overview of the steps:
@@ -92,6 +97,7 @@ To use this Terraform module, the following is required:
 * The `bastion_ssh_authorized_networks` variable must be set with the CIDR(s) of the networks where the bastion host will be accessed from.
 * The `bastion_ssh_public_key` variable must be set with the public key of the key pair that will be used to access the bastion host.
 * The `worker_node_ssh_public_key` variable must be set with the public key of the key pair that will be used to access the worker node hosts.
+* The `kubernetes_cluster_admin_users` or `kubernetes_cluster_admin_groups` variable must be set to allow for specific users or groups access to the cluster.
 
 See the Terraform [README.md](terraform/README.md) for a full list of the required and optional variables available.
 
@@ -101,7 +107,7 @@ For example:
 region = "eastus2"
 
 cluster_name       = "solace-eastus2"
-kubernetes_version = "1.25"
+kubernetes_version = "1.27"
 
 vnet_cidr = "10.1.1.0/24"
 
@@ -109,6 +115,8 @@ bastion_ssh_authorized_networks = ["192.168.1.1/32"]
 bastion_ssh_public_key          = "ssh-rsa abc123..."
 
 worker_node_ssh_public_key = "ssh-rsa abc234..."
+
+kubernetes_cluster_admin_users = ["user@..."]
 ```
 
 2. Apply the Terraform using the following commands:
