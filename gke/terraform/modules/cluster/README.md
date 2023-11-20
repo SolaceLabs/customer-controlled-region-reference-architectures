@@ -4,15 +4,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | 4.80.0 |
-| <a name="requirement_google-beta"></a> [google-beta](#requirement\_google-beta) | 4.80.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | 5.6.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 4.80.0 |
-| <a name="provider_google-beta"></a> [google-beta](#provider\_google-beta) | 4.80.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 5.6.0 |
 
 ## Modules
 
@@ -27,11 +25,11 @@
 
 | Name | Type |
 |------|------|
-| [google-beta_google_container_cluster.cluster](https://registry.terraform.io/providers/hashicorp/google-beta/4.80.0/docs/resources/google_container_cluster) | resource |
-| [google_container_node_pool.system](https://registry.terraform.io/providers/hashicorp/google/4.80.0/docs/resources/container_node_pool) | resource |
-| [google_service_account.cluster](https://registry.terraform.io/providers/hashicorp/google/4.80.0/docs/resources/service_account) | resource |
-| [google-beta_google_container_engine_versions.this](https://registry.terraform.io/providers/hashicorp/google-beta/4.80.0/docs/data-sources/google_container_engine_versions) | data source |
-| [google_compute_zones.available](https://registry.terraform.io/providers/hashicorp/google/4.80.0/docs/data-sources/compute_zones) | data source |
+| [google_container_cluster.cluster](https://registry.terraform.io/providers/hashicorp/google/5.6.0/docs/resources/container_cluster) | resource |
+| [google_container_node_pool.system](https://registry.terraform.io/providers/hashicorp/google/5.6.0/docs/resources/container_node_pool) | resource |
+| [google_service_account.cluster](https://registry.terraform.io/providers/hashicorp/google/5.6.0/docs/resources/service_account) | resource |
+| [google_compute_zones.available](https://registry.terraform.io/providers/hashicorp/google/5.6.0/docs/data-sources/compute_zones) | data source |
+| [google_container_engine_versions.this](https://registry.terraform.io/providers/hashicorp/google/5.6.0/docs/data-sources/container_engine_versions) | data source |
 
 ## Inputs
 

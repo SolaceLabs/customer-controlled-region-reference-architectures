@@ -263,6 +263,20 @@ resource "aws_cloudwatch_log_group" "cluster_logs" {
   ]
 }
 
+data "tls_certificate" "eks_oidc_issuer" {
+  url = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
+}
+
+resource "aws_iam_openid_connect_provider" "cluster" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.eks_oidc_issuer.certificates[0].sha1_fingerprint]
+  url             = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
+}
+
+################################################################################
+# Add-ons
+################################################################################
+
 resource "aws_eks_addon" "csi-driver" {
   cluster_name             = aws_eks_cluster.cluster.name
   addon_name               = "aws-ebs-csi-driver"
@@ -283,6 +297,8 @@ resource "aws_eks_addon" "vpc-cni" {
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
+
+  configuration_values = "{\"env\":{\"WARM_IP_TARGET\": \"1\", \"WARM_ENI_TARGET\": \"0\"}}"
 }
 
 resource "aws_eks_addon" "coredns" {
@@ -307,16 +323,6 @@ resource "aws_eks_addon" "kube-proxy" {
   depends_on = [
     aws_eks_node_group.default
   ]
-}
-
-data "tls_certificate" "eks_oidc_issuer" {
-  url = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
-}
-
-resource "aws_iam_openid_connect_provider" "cluster" {
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = [data.tls_certificate.eks_oidc_issuer.certificates[0].sha1_fingerprint]
-  url             = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
 }
 
 ################################################################################
