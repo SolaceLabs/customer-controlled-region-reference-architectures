@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Support
+    url: https://solace.com/support/
+    about: Contact Support if you have issues with your PubSub+ Cloud deployment.
+  - name: Documentation
+    url: https://docs.solace.com/
+    about: For more documentation about PubSub+ Cloud and the PubSub+ Event Broker.
+  - name: Community 
+    url: https://solace.community/
+    about: Ask the Solace community about anything Solace!

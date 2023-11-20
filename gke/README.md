@@ -92,6 +92,7 @@ To use this Terraform module, you require:
 1. Navigate to the `terraform/` directory and create a `terraform.tfvars` file with the required variables. The VPC and subnet CIDRs must be sized appropriately for the number of event broker services that you require to be created. Make the following changes in the file:
 
 * The `kubernetes_version` variable should be set to the latest Kubernetes version that is [supported by PubSub+ Cloud](https://docs.solace.com/Cloud/Deployment-Considerations/cloud-broker-k8s-versions-support.htm).
+* The `network_cidr_range`, `secondary_cidr_range_pods`, and `secondary_cidr_range_services` variables set the CIDR ranges that will be used for the network, pods, and services. The `secondary_cidr_range_pods` and `secondary_cidr_range_services` variables end up as secondary CIDR ranges in the cluster's subnet and cannot overlap.
 * The `bastion_ssh_authorized_networks` variable must be set with the CIDRs of the networks where the bastion host will be accessed from.
 * The `bastion_ssh_public_key` variable must be set with the public key of the key pair that will be used to access the bastion host.
 
@@ -104,13 +105,11 @@ project = "project123"
 region  = "us-east1"
 
 cluster_name       = "solace-us-east1"
-kubernetes_version = "1.25"
+kubernetes_version = "1.27"
 
 network_cidr_range            = "10.10.0.0/16"
 secondary_cidr_range_pods     = "10.11.0.0/16"
 secondary_cidr_range_services = "10.12.0.0/16"
-
-master_ipv4_cidr_block = "10.100.0.0/28"
 
 bastion_ssh_authorized_networks = ["192.168.1.1/32"]
 bastion_ssh_public_key          = "ssh-rsa abc123..."

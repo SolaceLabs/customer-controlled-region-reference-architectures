@@ -26,7 +26,7 @@ variable "create_network" {
 variable "network_cidr_range" {
   type        = string
   default     = ""
-  description = "The CIDR for the cluster's network."
+  description = "The CIDR for the cluster's network. Worker nodes, load balancers, and other infrastructure is assigned an IP address from this range."
 }
 
 variable "network_name" {
@@ -69,12 +69,12 @@ variable "bastion_ssh_public_key" {
 
 variable "secondary_cidr_range_pods" {
   type        = string
-  description = "The secondary CIDR for the cluster's pods."
+  description = "The secondary CIDR for the cluster's pods. GKE assigns each worker node a /24 for pods from this address range."
 }
 
 variable "secondary_cidr_range_services" {
   type        = string
-  description = "The secondary CIDR for the cluster's services."
+  description = "The secondary CIDR for the cluster's services. Cluster IP services are assigned an IP from this addres range."
 }
 
 variable "kubernetes_version" {
@@ -84,7 +84,8 @@ variable "kubernetes_version" {
 
 variable "master_ipv4_cidr_block" {
   type        = string
-  description = "The CIDR used to assign IPs to the Kubernetes API endpoints."
+  description = "The CIDR used to assign IPs to the Kubernetes API endpoints. This range must be unique within the VPC."
+  default     = "172.16.0.32/28"
 }
 
 variable "max_pods_per_node_system" {
