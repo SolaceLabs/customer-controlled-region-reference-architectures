@@ -298,7 +298,12 @@ resource "aws_eks_addon" "vpc-cni" {
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
 
-  configuration_values = "{\"env\":{\"WARM_IP_TARGET\": \"1\", \"WARM_ENI_TARGET\": \"0\"}}"
+  configuration_values = jsonencode({
+    env = {
+      WARM_IP_TARGET  = "1"
+      WARM_ENI_TARGET = "0"
+    }
+  })
 }
 
 resource "aws_eks_addon" "coredns" {
