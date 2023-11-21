@@ -4,13 +4,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | 4.80.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | 5.6.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 4.80.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 5.6.0 |
 
 ## Modules
 
@@ -20,10 +20,10 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [google_compute_firewall.bastion](https://registry.terraform.io/providers/hashicorp/google/4.80.0/docs/resources/compute_firewall) | resource |
-| [google_compute_instance.bastion](https://registry.terraform.io/providers/hashicorp/google/4.80.0/docs/resources/compute_instance) | resource |
-| [google_service_account.bastion](https://registry.terraform.io/providers/hashicorp/google/4.80.0/docs/resources/service_account) | resource |
-| [google_compute_zones.available](https://registry.terraform.io/providers/hashicorp/google/4.80.0/docs/data-sources/compute_zones) | data source |
+| [google_compute_firewall.bastion](https://registry.terraform.io/providers/hashicorp/google/5.6.0/docs/resources/compute_firewall) | resource |
+| [google_compute_instance.bastion](https://registry.terraform.io/providers/hashicorp/google/5.6.0/docs/resources/compute_instance) | resource |
+| [google_service_account.bastion](https://registry.terraform.io/providers/hashicorp/google/5.6.0/docs/resources/service_account) | resource |
+| [google_compute_zones.available](https://registry.terraform.io/providers/hashicorp/google/5.6.0/docs/data-sources/compute_zones) | data source |
 
 ## Inputs
 

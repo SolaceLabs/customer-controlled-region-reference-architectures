@@ -1,6 +1,4 @@
 resource "google_container_node_pool" "this" {
-  provider = google-beta
-
   name              = var.node_pool_name
   location          = var.region
   cluster           = var.cluster_name

@@ -20,7 +20,6 @@ resource "google_service_account" "cluster" {
 ################################################################################
 
 data "google_container_engine_versions" "this" {
-  provider       = google-beta
   location       = var.region
   version_prefix = "${var.kubernetes_version}."
 }
@@ -31,8 +30,6 @@ resource "google_container_cluster" "cluster" {
   #checkov:skip=CKV_GCP_12:Solace is not opinionated on the use of Network Policies in the cluster
   #checkov:skip=CKV_GCP_66:Binary authorization cannot be used as-is with Solace images
   #checkov:skip=CKV_GCP_65:Solace is not opinionated on how Kubernetes RBAC users are managed
-
-  provider = google-beta
 
   name               = var.cluster_name
   location           = var.region
@@ -45,6 +42,8 @@ resource "google_container_cluster" "cluster" {
 
   initial_node_count       = 1
   remove_default_node_pool = true
+
+  deletion_protection = false
 
   networking_mode = "VPC_NATIVE"
 

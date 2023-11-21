@@ -93,6 +93,8 @@ PubSub+ Cloud  requires the use of `cluster-autoscaler` and `aws-load-balancer-c
 
 IRSA is used to provide permissions to both the `cluster-autoscaler` and `aws-load-balancer-controller`.
 
+By default, Amazon EKS is configured to efficiently scale up the number of pods on a worker node by having a large warm pool of IP addresses and Elastic Network Interfaces (ENIs). We recommend a 1:1 broker pod to worker node architecture to reduce the number of wasted IP addresses. To accomplish this, the `vpc-cni` add-on is configured with `WARM_IP_TARGET=1` and `WARM_ENI_TARGET=0`. For more details, see https://github.com/aws/amazon-vpc-cni-k8s/blob/master/docs/eni-and-ip-target.md.
+
 ### Access <a name="eks-access"></a>
 
 You have two options for cluster access:
@@ -227,16 +229,3 @@ helm repo update eks
 terraform output -raw -state=terraform/terraform.tfstate load_balancer_controller_helm_values | \
     helm install aws-load-balancer-controller eks/aws-load-balancer-controller --version 1.5.3 -n kube-system --values -
 ```
-
-### Configuring IP Address Usage <a name="eks-ip-range"></a>
-
-By default, Amazon EKS is configured to efficiently scale up the number of pods on a worker node by having a large warm pool of IP addresses and Elastic Network Interfaces (ENIs).
-We recommend the following:
-* 1:1 broker pod to worker node architecture to reduce the number of wasted IP addresses.
-* that you use these settings to limit the number of IP addresses that are used for each worker node:
-```bash
-kubectl set env ds aws-node -n kube-system WARM_IP_TARGET=1
-kubectl set env ds aws-node -n kube-system WARM_ENI_TARGET=0
-```
-
-For more details, see https://github.com/aws/amazon-vpc-cni-k8s/blob/master/docs/eni-and-ip-target.md.
