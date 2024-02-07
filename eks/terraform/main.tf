@@ -11,6 +11,8 @@ module "network" {
   vpc_cidr             = var.vpc_cidr
   public_subnet_cidrs  = var.public_subnet_cidrs
   private_subnet_cidrs = var.private_subnet_cidrs
+
+  pod_spread_policy = var.pod_spread_policy
 }
 
 ################################################################################
@@ -51,4 +53,6 @@ module "cluster" {
   node_group_max_size                = var.node_group_max_size
   kubernetes_api_public_access       = var.kubernetes_api_public_access
   kubernetes_api_authorized_networks = var.kubernetes_api_authorized_networks
+
+  pod_spread_policy = var.pod_spread_policy
 }

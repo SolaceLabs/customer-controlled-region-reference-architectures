@@ -26,3 +26,17 @@ variable "private_subnet_cidrs" {
   default     = []
   description = "The CIDRs of the three private subnets. These will contain the EKS cluster's master ENIs, worker nodes, and internal load-balancer ENIs (if desired)."
 }
+
+variable "pod_spread_policy" {
+  type        = string
+  default     = "full"
+  description = <<EOF
+    The pod_spread_policy controls which AZs host node groups for the primary, backup, and monitor node pools as well as which AZs will host the 
+    ENIs for the NLBs that front each event broker service. See the readme for more details.
+  EOF
+
+  validation {
+    condition     = var.pod_spread_policy == "full" || var.pod_spread_policy == "fixed"
+    error_message = "The pod_spread_policy value must be either 'full' or 'fixed'."
+  }
+}

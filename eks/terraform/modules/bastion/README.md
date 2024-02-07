@@ -4,13 +4,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.26.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.35.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.26.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.35.0 |
 
 ## Modules
 
@@ -20,18 +20,18 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_iam_instance_profile.bastion](https://registry.terraform.io/providers/hashicorp/aws/5.26.0/docs/resources/iam_instance_profile) | resource |
-| [aws_iam_role.bastion](https://registry.terraform.io/providers/hashicorp/aws/5.26.0/docs/resources/iam_role) | resource |
-| [aws_iam_role_policy_attachment.bastion_AmazonSSMManagedInstanceCore](https://registry.terraform.io/providers/hashicorp/aws/5.26.0/docs/resources/iam_role_policy_attachment) | resource |
-| [aws_instance.bastion](https://registry.terraform.io/providers/hashicorp/aws/5.26.0/docs/resources/instance) | resource |
-| [aws_key_pair.bastion](https://registry.terraform.io/providers/hashicorp/aws/5.26.0/docs/resources/key_pair) | resource |
-| [aws_security_group.bastion](https://registry.terraform.io/providers/hashicorp/aws/5.26.0/docs/resources/security_group) | resource |
-| [aws_security_group_rule.bastion_egress](https://registry.terraform.io/providers/hashicorp/aws/5.26.0/docs/resources/security_group_rule) | resource |
-| [aws_security_group_rule.bastion_ssh](https://registry.terraform.io/providers/hashicorp/aws/5.26.0/docs/resources/security_group_rule) | resource |
-| [aws_security_group_rule.cluster_from_bastion](https://registry.terraform.io/providers/hashicorp/aws/5.26.0/docs/resources/security_group_rule) | resource |
-| [aws_ami.amazon-linux](https://registry.terraform.io/providers/hashicorp/aws/5.26.0/docs/data-sources/ami) | data source |
-| [aws_iam_policy_document.bastion](https://registry.terraform.io/providers/hashicorp/aws/5.26.0/docs/data-sources/iam_policy_document) | data source |
-| [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/5.26.0/docs/data-sources/partition) | data source |
+| [aws_iam_instance_profile.bastion](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/iam_instance_profile) | resource |
+| [aws_iam_role.bastion](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/iam_role) | resource |
+| [aws_iam_role_policy_attachment.bastion_AmazonSSMManagedInstanceCore](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_instance.bastion](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/instance) | resource |
+| [aws_key_pair.bastion](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/key_pair) | resource |
+| [aws_security_group.bastion](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/security_group) | resource |
+| [aws_security_group_rule.bastion_egress](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.bastion_ssh](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.cluster_from_bastion](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/security_group_rule) | resource |
+| [aws_ami.amazon-linux](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/data-sources/ami) | data source |
+| [aws_iam_policy_document.bastion](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/data-sources/iam_policy_document) | data source |
+| [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/data-sources/partition) | data source |
 
 ## Inputs
 

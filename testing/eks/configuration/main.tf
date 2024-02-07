@@ -1,9 +1,6 @@
-resource "kubernetes_manifest" "storageclass_gp3" {
-  manifest = yamldecode(file(var.storage_class_path_gp3))
-}
-
-resource "kubernetes_manifest" "storageclass_gp2" {
-  manifest = merge(yamldecode(file(var.storage_class_path_gp2)), { metadata = { name = "gp2-test" } })
+resource "kubernetes_manifest" "storageclass" {
+  count    = length(var.storage_classes)
+  manifest = merge(yamldecode(file(var.storage_classes[count.index].path)), { metadata = { name = var.storage_classes[count.index].name } })
 }
 
 resource "helm_release" "cluster_autoscaler" {
@@ -12,7 +9,12 @@ resource "helm_release" "cluster_autoscaler" {
 
   repository = "https://kubernetes.github.io/autoscaler"
   chart      = "cluster-autoscaler"
-  version    = "9.29.0"
+  version    = "9.35.0"
+
+  set {
+    name  = "image.tag"
+    value = "1.28.2"
+  }
 
   values = [
     var.cluster_autoscaler_helm_values
@@ -25,7 +27,7 @@ resource "helm_release" "load_balancer_controller" {
 
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
-  version    = "1.5.3"
+  version    = "1.7.0"
 
   values = [
     var.load_balancer_controller_helm_values

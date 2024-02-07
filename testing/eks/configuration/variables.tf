@@ -14,10 +14,9 @@ variable "load_balancer_controller_helm_values" {
   type = string
 }
 
-variable "storage_class_path_gp2" {
-  type = string
-}
-
-variable "storage_class_path_gp3" {
-  type = string
+variable "storage_classes" {
+  type = list(object({
+    name = string
+    path = string
+  }))
 }

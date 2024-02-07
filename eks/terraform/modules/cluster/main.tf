@@ -21,7 +21,7 @@ data "aws_caller_identity" "current" {}
 
 module "cluster_autoscaler_irsa_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.30.0"
+  version = "5.34.0"
 
   role_name          = "${var.cluster_name}-cluster-autoscaler"
   policy_name_prefix = "${var.cluster_name}-"
@@ -39,7 +39,7 @@ module "cluster_autoscaler_irsa_role" {
 
 module "loadbalancer_controller_irsa_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.30.0"
+  version = "5.34.0"
 
   role_name          = "${var.cluster_name}-loadbalancer-controller"
   policy_name_prefix = "${var.cluster_name}-"
@@ -56,7 +56,7 @@ module "loadbalancer_controller_irsa_role" {
 
 module "ebs_csi_irsa_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.30.0"
+  version = "5.34.0"
 
   role_name          = "${var.cluster_name}-ebs-csi"
   policy_name_prefix = "${var.cluster_name}-"
@@ -73,7 +73,7 @@ module "ebs_csi_irsa_role" {
 
 module "vpc_cni_irsa_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.30.0"
+  version = "5.34.0"
 
   role_name          = "${var.cluster_name}-vpc-cni"
   policy_name_prefix = "${var.cluster_name}-"
@@ -501,7 +501,7 @@ module "node_group_prod1k" {
   cluster_name           = aws_eks_cluster.cluster.name
   node_group_name_prefix = "${var.cluster_name}-prod1k"
   security_group_ids     = [aws_security_group.worker_node.id]
-  subnet_ids             = var.private_subnet_ids
+  subnet_ids             = var.pod_spread_policy == "full" ? var.private_subnet_ids : slice(var.private_subnet_ids, 0, 2)
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.prod1k_instance_type
@@ -542,7 +542,7 @@ module "node_group_prod10k" {
   cluster_name           = aws_eks_cluster.cluster.name
   node_group_name_prefix = "${var.cluster_name}-prod10k"
   security_group_ids     = [aws_security_group.worker_node.id]
-  subnet_ids             = var.private_subnet_ids
+  subnet_ids             = var.pod_spread_policy == "full" ? var.private_subnet_ids : slice(var.private_subnet_ids, 0, 2)
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.prod10k_instance_type
@@ -582,7 +582,7 @@ module "node_group_prod100k" {
   cluster_name           = aws_eks_cluster.cluster.name
   node_group_name_prefix = "${var.cluster_name}-prod100k"
   security_group_ids     = [aws_security_group.worker_node.id]
-  subnet_ids             = var.private_subnet_ids
+  subnet_ids             = var.pod_spread_policy == "full" ? var.private_subnet_ids : slice(var.private_subnet_ids, 0, 2)
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.prod100k_instance_type
@@ -622,7 +622,7 @@ module "node_group_monitoring" {
   cluster_name           = aws_eks_cluster.cluster.name
   node_group_name_prefix = "${var.cluster_name}-monitoring"
   security_group_ids     = [aws_security_group.worker_node.id]
-  subnet_ids             = var.private_subnet_ids
+  subnet_ids             = var.pod_spread_policy == "full" ? var.private_subnet_ids : slice(var.private_subnet_ids, 2, 3)
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.monitoring_instance_type

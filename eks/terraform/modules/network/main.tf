@@ -43,7 +43,7 @@ resource "aws_subnet" "public" {
 
   tags = {
     Name                     = "${var.cluster_name}-public-${count.index}"
-    "kubernetes.io/role/elb" = "1"
+    "kubernetes.io/role/elb" = var.pod_spread_policy == "full" || count.index < 2 ? "1" : "0"
   }
 
   lifecycle {
@@ -62,7 +62,7 @@ resource "aws_subnet" "private" {
 
   tags = {
     Name                              = "${var.cluster_name}-private-${count.index}"
-    "kubernetes.io/role/internal-elb" = "1"
+    "kubernetes.io/role/internal-elb" = var.pod_spread_policy == "full" || count.index < 2 ? "1" : "0"
   }
 
   lifecycle {
