@@ -4,13 +4,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | 5.6.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | 5.15.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 5.6.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 5.15.0 |
 
 ## Modules
 
@@ -20,11 +20,11 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [google_compute_address.nat](https://registry.terraform.io/providers/hashicorp/google/5.6.0/docs/resources/compute_address) | resource |
-| [google_compute_network.this](https://registry.terraform.io/providers/hashicorp/google/5.6.0/docs/resources/compute_network) | resource |
-| [google_compute_router.router](https://registry.terraform.io/providers/hashicorp/google/5.6.0/docs/resources/compute_router) | resource |
-| [google_compute_router_nat.nat](https://registry.terraform.io/providers/hashicorp/google/5.6.0/docs/resources/compute_router_nat) | resource |
-| [google_compute_subnetwork.cluster](https://registry.terraform.io/providers/hashicorp/google/5.6.0/docs/resources/compute_subnetwork) | resource |
+| [google_compute_address.nat](https://registry.terraform.io/providers/hashicorp/google/5.15.0/docs/resources/compute_address) | resource |
+| [google_compute_network.this](https://registry.terraform.io/providers/hashicorp/google/5.15.0/docs/resources/compute_network) | resource |
+| [google_compute_router.router](https://registry.terraform.io/providers/hashicorp/google/5.15.0/docs/resources/compute_router) | resource |
+| [google_compute_router_nat.nat](https://registry.terraform.io/providers/hashicorp/google/5.15.0/docs/resources/compute_router_nat) | resource |
+| [google_compute_subnetwork.cluster](https://registry.terraform.io/providers/hashicorp/google/5.15.0/docs/resources/compute_subnetwork) | resource |
 
 ## Inputs
 
