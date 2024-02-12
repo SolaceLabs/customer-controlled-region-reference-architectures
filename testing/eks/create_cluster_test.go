@@ -13,7 +13,9 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const KubernetesVersion = "1.27"
+// cluster autoscaler version must match kubernetes version
+const KubernetesVersion = "1.28"
+const ClusterAutoscalerVersion = "v1.28.2"
 
 func testCluster(t *testing.T, configOptions *terraform.Options) {
 	kubeconfig := terraform.Output(t, configOptions, "kubeconfig")
@@ -103,6 +105,7 @@ func TestTerraformEksClusterComplete(t *testing.T) {
 			"load_balancer_controller_helm_values": loadBalancerValues,
 			"storage_class_path_gp2":               storageClassPathGp2,
 			"storage_class_path_gp3":               storageClassPathGp3,
+			"cluster_autoscaler_version":           ClusterAutoscalerVersion,
 		},
 		Upgrade: true,
 	})
@@ -201,6 +204,7 @@ func TestTerraformEksClusterExternalNetwork(t *testing.T) {
 			"load_balancer_controller_helm_values": loadBalancerValues,
 			"storage_class_path_gp2":               storageClassPathGp2,
 			"storage_class_path_gp3":               storageClassPathGp3,
+			"cluster_autoscaler_version":           ClusterAutoscalerVersion,
 		},
 		Upgrade: true,
 	})
