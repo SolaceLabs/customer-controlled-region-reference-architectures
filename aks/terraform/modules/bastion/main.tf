@@ -78,7 +78,7 @@ resource "azurerm_virtual_machine" "bastion" {
   location              = var.region
   resource_group_name   = var.resource_group_name
   network_interface_ids = [azurerm_network_interface.bastion[0].id]
-  vm_size               = "Standard_B1ls"
+  vm_size               = "Standard_B1s"
 
   delete_os_disk_on_termination = true
 
