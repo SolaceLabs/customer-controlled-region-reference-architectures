@@ -4,13 +4,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | 3.81.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | 3.91.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.81.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.91.0 |
 
 ## Modules
 
@@ -20,11 +20,11 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azurerm_route.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/3.81.0/docs/resources/route) | resource |
-| [azurerm_route_table.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/3.81.0/docs/resources/route_table) | resource |
-| [azurerm_subnet.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/3.81.0/docs/resources/subnet) | resource |
-| [azurerm_subnet_route_table_association.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/3.81.0/docs/resources/subnet_route_table_association) | resource |
-| [azurerm_virtual_network.this](https://registry.terraform.io/providers/hashicorp/azurerm/3.81.0/docs/resources/virtual_network) | resource |
+| [azurerm_route.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/3.91.0/docs/resources/route) | resource |
+| [azurerm_route_table.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/3.91.0/docs/resources/route_table) | resource |
+| [azurerm_subnet.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/3.91.0/docs/resources/subnet) | resource |
+| [azurerm_subnet_route_table_association.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/3.91.0/docs/resources/subnet_route_table_association) | resource |
+| [azurerm_virtual_network.this](https://registry.terraform.io/providers/hashicorp/azurerm/3.91.0/docs/resources/virtual_network) | resource |
 
 ## Inputs
 
