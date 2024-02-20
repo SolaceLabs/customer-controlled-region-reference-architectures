@@ -184,6 +184,10 @@ resource "aws_eks_cluster" "cluster" {
     resources = ["secrets"]
   }
 
+  access_config {
+    authentication_mode = var.kubernetes_cluster_access_identities ? "API" : null
+  }
+
   tags = {
     Name = var.cluster_name
   }
@@ -199,7 +203,43 @@ resource "aws_eks_cluster" "cluster" {
       condition     = !var.kubernetes_api_public_access || length(var.kubernetes_api_authorized_networks) > 0
       error_message = "At least one authorized network must be provided if public Kubernetes API is being created."
     }
+
+    precondition {
+      condition     = !var.kubernetes_cluster_access_identities || length(var.kubernetes_cluster_admin_arns) > 0
+      error_message = "At least one ARN must be provided in kubernetes_cluster_admin_arns if kubernetes_cluster_access_identities is true."
+    }
   }
+}
+
+resource "aws_eks_access_entry" "admin" {
+  count = length(var.kubernetes_cluster_admin_arns)
+
+  cluster_name  = aws_eks_cluster.cluster.name
+  principal_arn = var.kubernetes_cluster_admin_arns[count.index]
+  type          = "STANDARD"
+
+  lifecycle {
+    precondition {
+      condition     = var.kubernetes_cluster_access_identities
+      error_message = "The kubernetes_cluster_access_identities variable must be set to true if kubernetes_cluster_admin_arns is provided."
+    }
+  }
+}
+
+resource "aws_eks_access_policy_association" "admin" {
+  count = length(var.kubernetes_cluster_admin_arns)
+
+  cluster_name  = aws_eks_cluster.cluster.name
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+  principal_arn = var.kubernetes_cluster_admin_arns[count.index]
+
+  access_scope {
+    type = "cluster"
+  }
+
+  depends_on = [
+    aws_eks_access_entry.admin
+  ]
 }
 
 resource "aws_kms_key" "logs" {

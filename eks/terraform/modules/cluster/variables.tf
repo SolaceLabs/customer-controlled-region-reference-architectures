@@ -63,3 +63,15 @@ variable "pod_spread_policy" {
     error_message = "The pod_spread_policy value must be either 'full' or 'fixed'."
   }
 }
+
+variable "kubernetes_cluster_access_identities" {
+  type        = bool
+  default     = false
+  description = "When set to true, the cluster's access configuration is set to 'API'."
+}
+
+variable "kubernetes_cluster_admin_arns" {
+  type        = list(string)
+  default     = []
+  description = "When kubernetes_cluster_access_identities is set to true, user or role ARNs can be provided that will be given the AmazonEKSClusterAdminPolicy."
+}

@@ -108,3 +108,15 @@ variable "kubernetes_api_authorized_networks" {
   default     = []
   description = "The list of CIDRs that can access the Kubernetes API, in addition to the bastion host and worker nodes (which are added by default)."
 }
+
+variable "kubernetes_cluster_access_identities" {
+  type        = bool
+  default     = false
+  description = "When set to true, the cluster's access configuration is set to 'API'."
+}
+
+variable "kubernetes_cluster_admin_arns" {
+  type        = list(string)
+  default     = []
+  description = "When kubernetes_cluster_access_identities is set to true, user or role ARNs can be provided that will be given the AmazonEKSClusterAdminPolicy."
+}

@@ -33,6 +33,8 @@
 |------|------|
 | [aws_autoscaling_group_tag.default_name_tag](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/autoscaling_group_tag) | resource |
 | [aws_cloudwatch_log_group.cluster_logs](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/cloudwatch_log_group) | resource |
+| [aws_eks_access_entry.admin](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/eks_access_entry) | resource |
+| [aws_eks_access_policy_association.admin](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/eks_access_policy_association) | resource |
 | [aws_eks_addon.coredns](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/eks_addon) | resource |
 | [aws_eks_addon.csi-driver](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/eks_addon) | resource |
 | [aws_eks_addon.kube-proxy](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/eks_addon) | resource |
@@ -70,6 +72,8 @@
 | <a name="input_cluster_subnet_ids"></a> [cluster\_subnet\_ids](#input\_cluster\_subnet\_ids) | The IDs of the subnets where the cluster's private ENIs will reside. If not provided, IDs in private\_subnet\_ids will be used. | `list(string)` | `null` | no |
 | <a name="input_kubernetes_api_authorized_networks"></a> [kubernetes\_api\_authorized\_networks](#input\_kubernetes\_api\_authorized\_networks) | The list of CIDRs that can access the Kubernetes API, in addition to the bastion host and worker nodes (which are added by default). | `list(string)` | `[]` | no |
 | <a name="input_kubernetes_api_public_access"></a> [kubernetes\_api\_public\_access](#input\_kubernetes\_api\_public\_access) | When set to true, the Kubernetes API is accessible publically from the provided authorized networks. | `bool` | `false` | no |
+| <a name="input_kubernetes_cluster_access_identities"></a> [kubernetes\_cluster\_access\_identities](#input\_kubernetes\_cluster\_access\_identities) | When set to true, the cluster's access configuration is set to 'API'. | `bool` | `false` | no |
+| <a name="input_kubernetes_cluster_admin_arns"></a> [kubernetes\_cluster\_admin\_arns](#input\_kubernetes\_cluster\_admin\_arns) | When kubernetes\_cluster\_access\_identities is set to true, user or role ARNs can be provided that will be given the AmazonEKSClusterAdminPolicy. | `list(string)` | `[]` | no |
 | <a name="input_kubernetes_service_cidr"></a> [kubernetes\_service\_cidr](#input\_kubernetes\_service\_cidr) | The CIDR used to assign IPs to kubernetes services, internal to the cluster. | `string` | `"10.100.0.0/16"` | no |
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The kubernetes version to use. Only used a creation time, ignored once the cluster exists. | `string` | n/a | yes |
 | <a name="input_node_group_max_size"></a> [node\_group\_max\_size](#input\_node\_group\_max\_size) | The maximum size for the broker node groups in the cluster. | `number` | `10` | no |

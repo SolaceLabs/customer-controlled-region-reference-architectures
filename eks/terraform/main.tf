@@ -54,4 +54,7 @@ module "cluster" {
   node_group_max_size                = var.node_group_max_size
   kubernetes_api_public_access       = var.kubernetes_api_public_access
   kubernetes_api_authorized_networks = var.kubernetes_api_authorized_networks
+
+  kubernetes_cluster_access_identities = var.kubernetes_cluster_access_identities
+  kubernetes_cluster_admin_arns        = var.kubernetes_cluster_admin_arns
 }
