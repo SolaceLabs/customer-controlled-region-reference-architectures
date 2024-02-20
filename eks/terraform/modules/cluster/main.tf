@@ -165,7 +165,7 @@ resource "aws_eks_cluster" "cluster" {
 
   vpc_config {
     security_group_ids      = [aws_security_group.cluster.id]
-    subnet_ids              = var.private_subnet_ids
+    subnet_ids              = var.cluster_subnet_ids
     endpoint_private_access = "true"
     endpoint_public_access  = var.kubernetes_api_public_access
     public_access_cidrs     = var.kubernetes_api_authorized_networks

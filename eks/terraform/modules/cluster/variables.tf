@@ -13,6 +13,12 @@ variable "vpc_id" {
   description = "The ID of the VPC where the cluster will reside."
 }
 
+variable "cluster_subnet_ids" {
+  type        = list(string)
+  default     = null
+  description = "The IDs of the subnets where the cluster's private ENIs will reside. If not provided, IDs in private_subnet_ids will be used."
+}
+
 variable "private_subnet_ids" {
   type        = list(string)
   description = "The IDs of the private subnets where the worker nodes will reside."
