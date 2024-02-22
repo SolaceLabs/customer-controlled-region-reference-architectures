@@ -26,6 +26,7 @@ No modules.
 | [aws_autoscaling_group_tag.taints_tags](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/autoscaling_group_tag) | resource |
 | [aws_eks_node_group.this](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/eks_node_group) | resource |
 | [aws_launch_template.this](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/launch_template) | resource |
+| [aws_ssm_parameter.ami](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/data-sources/ssm_parameter) | data source |
 
 ## Inputs
 
@@ -33,6 +34,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name of the EKS cluster. | `string` | n/a | yes |
 | <a name="input_ip_family"></a> [ip\_family](#input\_ip\_family) | The IP family of the cluster, either 'ipv4' or 'ipv6'. | `string` | `null` | no |
+| <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The kubernetes version to use for the node group. | `string` | n/a | yes |
 | <a name="input_node_group_desired_size"></a> [node\_group\_desired\_size](#input\_node\_group\_desired\_size) | The desired size of the node groups. | `number` | `0` | no |
 | <a name="input_node_group_labels"></a> [node\_group\_labels](#input\_node\_group\_labels) | Kubernetes labels added to worker nodes in the node groups. | `map(string)` | n/a | yes |
 | <a name="input_node_group_max_size"></a> [node\_group\_max\_size](#input\_node\_group\_max\_size) | The maximum size of the node groups. | `number` | n/a | yes |
@@ -42,6 +44,7 @@ No modules.
 | <a name="input_node_group_taints"></a> [node\_group\_taints](#input\_node\_group\_taints) | Kubernetes taints added to worker nodes in the node groups. | `list(map(string))` | n/a | yes |
 | <a name="input_security_group_ids"></a> [security\_group\_ids](#input\_security\_group\_ids) | The security groups that will be attached to the worker nodes. | `list(string)` | n/a | yes |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | The subnets that the node groups will use - a node group is created in each subnet. | `list(string)` | n/a | yes |
+| <a name="input_worker_node_arch"></a> [worker\_node\_arch](#input\_worker\_node\_arch) | The CPU architecture to use for the worker nodes, must be either 'x86\_64' or 'arm64'. | `string` | n/a | yes |
 | <a name="input_worker_node_instance_type"></a> [worker\_node\_instance\_type](#input\_worker\_node\_instance\_type) | The instance type of the worker nodes. | `string` | n/a | yes |
 | <a name="input_worker_node_role_arn"></a> [worker\_node\_role\_arn](#input\_worker\_node\_role\_arn) | The ARN of the IAM role assigned to each worker node via an instance profile. | `string` | n/a | yes |
 | <a name="input_worker_node_volume_size"></a> [worker\_node\_volume\_size](#input\_worker\_node\_volume\_size) | The size of the worker node root disk. | `number` | n/a | yes |

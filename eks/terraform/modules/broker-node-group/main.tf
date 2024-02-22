@@ -1,3 +1,7 @@
+locals {
+  ami_name = var.worker_node_arch == "x86_64" ? "amazon-linux-2" : "amazon-linux-2-arm64"
+}
+
 resource "aws_launch_template" "this" {
   name = var.node_group_name_prefix
 
@@ -25,6 +29,10 @@ resource "aws_launch_template" "this" {
   }
 }
 
+data "aws_ssm_parameter" "ami" {
+  name = "/aws/service/eks/optimized-ami/${var.kubernetes_version}/${local.ami_name}/recommended/release_version"
+}
+
 resource "aws_eks_node_group" "this" {
   count = length(var.subnet_ids)
 
@@ -32,6 +40,11 @@ resource "aws_eks_node_group" "this" {
   node_group_name_prefix = "${var.node_group_name_prefix}-${count.index}-"
   node_role_arn          = var.worker_node_role_arn
   subnet_ids             = [var.subnet_ids[count.index]]
+
+  version         = var.kubernetes_version
+  release_version = nonsensitive(data.aws_ssm_parameter.ami.value)
+
+  ami_type = var.worker_node_arch == "x86_64" ? "AL2_x86_64" : "AL2_ARM_64"
 
   scaling_config {
     desired_size = var.node_group_desired_size

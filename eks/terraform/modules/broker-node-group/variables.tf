@@ -3,6 +3,11 @@ variable "cluster_name" {
   description = "The name of the EKS cluster."
 }
 
+variable "kubernetes_version" {
+  type        = string
+  description = "The kubernetes version to use for the node group."
+}
+
 variable "security_group_ids" {
   type        = list(string)
   description = "The security groups that will be attached to the worker nodes."
@@ -74,4 +79,13 @@ variable "ip_family" {
   type        = string
   default     = null
   description = "The IP family of the cluster, either 'ipv4' or 'ipv6'."
+}
+
+variable "worker_node_arch" {
+  type        = string
+  description = "The CPU architecture to use for the worker nodes, must be either 'x86_64' or 'arm64'."
+  validation {
+    condition     = var.worker_node_arch == "x86_64" || var.worker_node_arch == "arm64"
+    error_message = "The worker_node_arch value must be either 'x86_64' or 'arm64'."
+  }
 }
