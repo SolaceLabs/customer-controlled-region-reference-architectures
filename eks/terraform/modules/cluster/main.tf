@@ -19,6 +19,16 @@ data "aws_caller_identity" "current" {}
 # Cluster IAM
 ################################################################################
 
+data "tls_certificate" "eks_oidc_issuer" {
+  url = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
+}
+
+resource "aws_iam_openid_connect_provider" "cluster" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.eks_oidc_issuer.certificates[0].sha1_fingerprint]
+  url             = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
+}
+
 module "cluster_autoscaler_irsa_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "5.34.0"
@@ -80,6 +90,7 @@ module "vpc_cni_irsa_role" {
 
   attach_vpc_cni_policy = true
   vpc_cni_enable_ipv4   = true
+  vpc_cni_enable_ipv6   = var.ip_family == "ipv6"
 
   oidc_providers = {
     main = {
@@ -134,7 +145,7 @@ resource "aws_security_group" "cluster" {
 }
 
 resource "aws_security_group_rule" "cluster_from_worker_node" {
-  description              = "Allow all traffic to cluster master from worker nodes"
+  description              = "Allow all traffic to cluster from worker nodes"
   from_port                = 0
   to_port                  = 0
   protocol                 = "all"
@@ -165,14 +176,15 @@ resource "aws_eks_cluster" "cluster" {
 
   vpc_config {
     security_group_ids      = [aws_security_group.cluster.id]
-    subnet_ids              = var.cluster_subnet_ids
+    subnet_ids              = var.cluster_subnet_ids != null ? var.cluster_subnet_ids : var.private_subnet_ids
     endpoint_private_access = "true"
     endpoint_public_access  = var.kubernetes_api_public_access
     public_access_cidrs     = var.kubernetes_api_authorized_networks
   }
 
   kubernetes_network_config {
-    service_ipv4_cidr = var.kubernetes_service_cidr
+    service_ipv4_cidr = var.ip_family == "ipv4" ? var.kubernetes_service_cidr : null
+    ip_family         = var.ip_family
   }
 
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
@@ -303,16 +315,6 @@ resource "aws_cloudwatch_log_group" "cluster_logs" {
   ]
 }
 
-data "tls_certificate" "eks_oidc_issuer" {
-  url = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
-}
-
-resource "aws_iam_openid_connect_provider" "cluster" {
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = [data.tls_certificate.eks_oidc_issuer.certificates[0].sha1_fingerprint]
-  url             = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
-}
-
 ################################################################################
 # Add-ons
 ################################################################################
@@ -338,10 +340,15 @@ resource "aws_eks_addon" "vpc-cni" {
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
 
-  configuration_values = jsonencode({
+  configuration_values = var.ip_family == "ipv4" ? jsonencode({
     env = {
       WARM_IP_TARGET  = "1"
       WARM_ENI_TARGET = "0"
+    }
+    }) : jsonencode({
+    env = {
+      ENABLE_PREFIX_DELEGATION = "true"
+      WARM_PREFIX_TARGET       = "1"
     }
   })
 }
@@ -427,22 +434,25 @@ resource "aws_security_group" "worker_node" {
   description = "Security group for all worker nodes in the cluster"
   vpc_id      = var.vpc_id
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-    description = "Allow all egress"
-  }
-
   tags = {
     "Name"                                      = "${var.cluster_name}-worker-node"
     "kubernetes.io/cluster/${var.cluster_name}" = "owned"
   }
 }
 
+resource "aws_security_group_rule" "worker_node_egress" {
+  description       = "Allow all egress traffic from worker nodes"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "all"
+  type              = "egress"
+  security_group_id = aws_security_group.worker_node.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
+}
+
 resource "aws_security_group_rule" "worker_node_from_cluster" {
-  description              = "Allow all traffic to worker nodes from cluster master"
+  description              = "Allow all traffic to worker nodes from cluster"
   from_port                = 0
   to_port                  = 0
   protocol                 = "all"
@@ -483,7 +493,8 @@ resource "aws_launch_template" "default" {
   }
 
   metadata_options {
-    http_endpoint = "enabled"
+    http_endpoint      = "enabled"
+    http_protocol_ipv6 = var.ip_family == "ipv6" ? "enabled" : "disabled"
     #checkov:skip=CKV_AWS_341:Two hops are required for various build-in services to work properly
     http_put_response_hop_limit = 2
     instance_metadata_tags      = "enabled"
@@ -542,6 +553,7 @@ module "node_group_prod1k" {
   node_group_name_prefix = "${var.cluster_name}-prod1k"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.pod_spread_policy == "full" ? var.private_subnet_ids : slice(var.private_subnet_ids, 0, 2)
+  ip_family              = var.ip_family
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.prod1k_instance_type
@@ -583,6 +595,7 @@ module "node_group_prod10k" {
   node_group_name_prefix = "${var.cluster_name}-prod10k"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.pod_spread_policy == "full" ? var.private_subnet_ids : slice(var.private_subnet_ids, 0, 2)
+  ip_family              = var.ip_family
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.prod10k_instance_type
@@ -623,6 +636,7 @@ module "node_group_prod100k" {
   node_group_name_prefix = "${var.cluster_name}-prod100k"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.pod_spread_policy == "full" ? var.private_subnet_ids : slice(var.private_subnet_ids, 0, 2)
+  ip_family              = var.ip_family
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.prod100k_instance_type
@@ -663,6 +677,7 @@ module "node_group_monitoring" {
   node_group_name_prefix = "${var.cluster_name}-monitoring"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.pod_spread_policy == "full" ? var.private_subnet_ids : slice(var.private_subnet_ids, 2, 3)
+  ip_family              = var.ip_family
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.monitoring_instance_type

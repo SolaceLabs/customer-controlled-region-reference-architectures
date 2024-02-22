@@ -69,3 +69,9 @@ variable "worker_node_instance_type" {
   type        = string
   description = "The instance type of the worker nodes."
 }
+
+variable "ip_family" {
+  type        = string
+  default     = null
+  description = "The IP family of the cluster, either 'ipv4' or 'ipv6'."
+}

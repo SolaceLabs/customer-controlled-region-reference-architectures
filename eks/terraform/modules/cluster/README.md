@@ -58,6 +58,7 @@
 | [aws_security_group.cluster](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/security_group) | resource |
 | [aws_security_group.worker_node](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/security_group) | resource |
 | [aws_security_group_rule.cluster_from_worker_node](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.worker_node_egress](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.worker_node_from_cluster](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/security_group_rule) | resource |
 | [aws_security_group_rule.worker_node_to_worker_node](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/security_group_rule) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/data-sources/caller_identity) | data source |
@@ -70,14 +71,15 @@
 |------|-------------|------|---------|:--------:|
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name of the cluster and name (or name prefix) for all other infrastructure. | `string` | n/a | yes |
 | <a name="input_cluster_subnet_ids"></a> [cluster\_subnet\_ids](#input\_cluster\_subnet\_ids) | The IDs of the subnets where the cluster's private ENIs will reside. If not provided, IDs in private\_subnet\_ids will be used. | `list(string)` | `null` | no |
+| <a name="input_ip_family"></a> [ip\_family](#input\_ip\_family) | The IP family of the cluster, either 'ipv4' or 'ipv6'. This cannot be changed after the cluster is created. | `string` | `null` | no |
 | <a name="input_kubernetes_api_authorized_networks"></a> [kubernetes\_api\_authorized\_networks](#input\_kubernetes\_api\_authorized\_networks) | The list of CIDRs that can access the Kubernetes API, in addition to the bastion host and worker nodes (which are added by default). | `list(string)` | `[]` | no |
 | <a name="input_kubernetes_api_public_access"></a> [kubernetes\_api\_public\_access](#input\_kubernetes\_api\_public\_access) | When set to true, the Kubernetes API is accessible publically from the provided authorized networks. | `bool` | `false` | no |
 | <a name="input_kubernetes_cluster_access_identities"></a> [kubernetes\_cluster\_access\_identities](#input\_kubernetes\_cluster\_access\_identities) | When set to true, the cluster's access configuration is set to 'API'. | `bool` | `false` | no |
 | <a name="input_kubernetes_cluster_admin_arns"></a> [kubernetes\_cluster\_admin\_arns](#input\_kubernetes\_cluster\_admin\_arns) | When kubernetes\_cluster\_access\_identities is set to true, user or role ARNs can be provided that will be given the AmazonEKSClusterAdminPolicy. | `list(string)` | `[]` | no |
-| <a name="input_kubernetes_service_cidr"></a> [kubernetes\_service\_cidr](#input\_kubernetes\_service\_cidr) | The CIDR used to assign IPs to kubernetes services, internal to the cluster. | `string` | `"10.100.0.0/16"` | no |
+| <a name="input_kubernetes_service_cidr"></a> [kubernetes\_service\_cidr](#input\_kubernetes\_service\_cidr) | The CIDR used to assign IPs to kubernetes services, internal to the cluster. | `string` | `null` | no |
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The kubernetes version to use. Only used a creation time, ignored once the cluster exists. | `string` | n/a | yes |
 | <a name="input_node_group_max_size"></a> [node\_group\_max\_size](#input\_node\_group\_max\_size) | The maximum size for the broker node groups in the cluster. | `number` | `10` | no |
-| <a name="input_pod_spread_policy"></a> [pod\_spread\_policy](#input\_pod\_spread\_policy) | The pod\_spread\_policy controls which AZs host node groups for the primary, backup, and monitor node pools as well as which AZs will host the ENIs for the NLBs that front each event broker service. See the readme for more details. | `string` | `"full"` | no |
+| <a name="input_pod_spread_policy"></a> [pod\_spread\_policy](#input\_pod\_spread\_policy) | This controls which AZs host node groups for the primary, backup, and monitor node pools as well as which AZs will host the ENIs for the NLBs that front each event broker service. See the readme for more details. | `string` | `"full"` | no |
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | The IDs of the private subnets where the worker nodes will reside. | `list(string)` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | The AWS region where this cluster will reside. | `string` | n/a | yes |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The ID of the VPC where the cluster will reside. | `string` | n/a | yes |

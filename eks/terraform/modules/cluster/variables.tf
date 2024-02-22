@@ -31,8 +31,14 @@ variable "kubernetes_version" {
 
 variable "kubernetes_service_cidr" {
   type        = string
-  default     = "10.100.0.0/16"
+  default     = null
   description = "The CIDR used to assign IPs to kubernetes services, internal to the cluster."
+}
+
+variable "ip_family" {
+  type        = string
+  default     = null
+  description = "The IP family of the cluster, either 'ipv4' or 'ipv6'. This cannot be changed after the cluster is created."
 }
 
 variable "node_group_max_size" {
@@ -56,7 +62,7 @@ variable "kubernetes_api_authorized_networks" {
 variable "pod_spread_policy" {
   type        = string
   default     = "full"
-  description = "The pod_spread_policy controls which AZs host node groups for the primary, backup, and monitor node pools as well as which AZs will host the ENIs for the NLBs that front each event broker service. See the readme for more details."
+  description = "This controls which AZs host node groups for the primary, backup, and monitor node pools as well as which AZs will host the ENIs for the NLBs that front each event broker service. See the readme for more details."
 
   validation {
     condition     = var.pod_spread_policy == "full" || var.pod_spread_policy == "fixed"
