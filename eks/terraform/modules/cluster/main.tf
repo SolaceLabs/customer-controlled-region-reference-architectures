@@ -90,7 +90,6 @@ module "vpc_cni_irsa_role" {
 
   attach_vpc_cni_policy = true
   vpc_cni_enable_ipv4   = true
-  vpc_cni_enable_ipv6   = var.ip_family == "ipv6"
 
   oidc_providers = {
     main = {
@@ -183,8 +182,7 @@ resource "aws_eks_cluster" "cluster" {
   }
 
   kubernetes_network_config {
-    service_ipv4_cidr = var.ip_family == "ipv4" ? var.kubernetes_service_cidr : null
-    ip_family         = var.ip_family
+    service_ipv4_cidr = var.kubernetes_service_cidr
   }
 
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
@@ -340,15 +338,10 @@ resource "aws_eks_addon" "vpc-cni" {
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
 
-  configuration_values = var.ip_family == "ipv4" ? jsonencode({
+  configuration_values = jsonencode({
     env = {
       WARM_IP_TARGET  = "1"
       WARM_ENI_TARGET = "0"
-    }
-    }) : jsonencode({
-    env = {
-      ENABLE_PREFIX_DELEGATION = "true"
-      WARM_PREFIX_TARGET       = "1"
     }
   })
 }
@@ -493,8 +486,7 @@ resource "aws_launch_template" "default" {
   }
 
   metadata_options {
-    http_endpoint      = "enabled"
-    http_protocol_ipv6 = var.ip_family == "ipv6" ? "enabled" : "disabled"
+    http_endpoint = "enabled"
     #checkov:skip=CKV_AWS_341:Two hops are required for various build-in services to work properly
     http_put_response_hop_limit = 2
     instance_metadata_tags      = "enabled"
@@ -554,7 +546,6 @@ module "node_group_prod1k" {
   node_group_name_prefix = "${var.cluster_name}-prod1k"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.pod_spread_policy == "full" ? var.private_subnet_ids : slice(var.private_subnet_ids, 0, 2)
-  ip_family              = var.ip_family
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.prod1k_instance_type
@@ -597,7 +588,6 @@ module "node_group_prod10k" {
   node_group_name_prefix = "${var.cluster_name}-prod10k"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.pod_spread_policy == "full" ? var.private_subnet_ids : slice(var.private_subnet_ids, 0, 2)
-  ip_family              = var.ip_family
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.prod10k_instance_type
@@ -640,7 +630,6 @@ module "node_group_prod100k" {
   node_group_name_prefix = "${var.cluster_name}-prod100k"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.pod_spread_policy == "full" ? var.private_subnet_ids : slice(var.private_subnet_ids, 0, 2)
-  ip_family              = var.ip_family
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.prod100k_instance_type
@@ -683,7 +672,6 @@ module "node_group_monitoring" {
   node_group_name_prefix = "${var.cluster_name}-monitoring"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.pod_spread_policy == "full" ? var.private_subnet_ids : slice(var.private_subnet_ids, 2, 3)
-  ip_family              = var.ip_family
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.monitoring_instance_type

@@ -13,7 +13,7 @@ resource "helm_release" "cluster_autoscaler" {
 
   set {
     name  = "image.tag"
-    value = "1.28.2"
+    value = "v1.28.2"
   }
 
   values = [

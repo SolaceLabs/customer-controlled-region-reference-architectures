@@ -32,13 +32,7 @@ variable "kubernetes_version" {
 variable "kubernetes_service_cidr" {
   type        = string
   default     = null
-  description = "The CIDR used to assign IPs to kubernetes services, internal to the cluster. Only used if the ip family is set to 'ipv4'."
-}
-
-variable "ip_family" {
-  type        = string
-  default     = null
-  description = "The IP family of the cluster, either 'ipv4' or 'ipv6'. This cannot be changed after the cluster is created."
+  description = "The CIDR used to assign IPs to kubernetes services, internal to the cluster."
 }
 
 variable "node_group_max_size" {

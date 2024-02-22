@@ -20,8 +20,7 @@ resource "aws_launch_template" "this" {
   }
 
   metadata_options {
-    http_endpoint      = "enabled"
-    http_protocol_ipv6 = var.ip_family == "ipv6" ? "enabled" : "disabled"
+    http_endpoint = "enabled"
     #checkov:skip=CKV_AWS_341:Two hops are required for various build-in services to work properly
     http_put_response_hop_limit = 2
     instance_metadata_tags      = "disabled"

@@ -33,7 +33,6 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name of the EKS cluster. | `string` | n/a | yes |
-| <a name="input_ip_family"></a> [ip\_family](#input\_ip\_family) | The IP family of the cluster, either 'ipv4' or 'ipv6'. | `string` | `null` | no |
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The kubernetes version to use for the node group. | `string` | n/a | yes |
 | <a name="input_node_group_desired_size"></a> [node\_group\_desired\_size](#input\_node\_group\_desired\_size) | The desired size of the node groups. | `number` | `0` | no |
 | <a name="input_node_group_labels"></a> [node\_group\_labels](#input\_node\_group\_labels) | Kubernetes labels added to worker nodes in the node groups. | `map(string)` | n/a | yes |
