@@ -55,8 +55,8 @@ module "cluster" {
   kubernetes_api_public_access       = var.kubernetes_api_public_access
   kubernetes_api_authorized_networks = var.kubernetes_api_authorized_networks
 
-  kubernetes_cluster_access_identities = var.kubernetes_cluster_access_identities
-  kubernetes_cluster_admin_arns        = var.kubernetes_cluster_admin_arns
+  kubernetes_cluster_access     = var.kubernetes_cluster_access
+  kubernetes_cluster_admin_arns = var.kubernetes_cluster_admin_arns
 
   pod_spread_policy = var.pod_spread_policy
 }

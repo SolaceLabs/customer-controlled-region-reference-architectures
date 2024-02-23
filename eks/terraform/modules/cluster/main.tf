@@ -195,7 +195,7 @@ resource "aws_eks_cluster" "cluster" {
   }
 
   access_config {
-    authentication_mode = var.kubernetes_cluster_access_identities ? "API" : null
+    authentication_mode = var.kubernetes_cluster_access
   }
 
   tags = {
@@ -215,8 +215,8 @@ resource "aws_eks_cluster" "cluster" {
     }
 
     precondition {
-      condition     = !var.kubernetes_cluster_access_identities || length(var.kubernetes_cluster_admin_arns) > 0
-      error_message = "At least one ARN must be provided in kubernetes_cluster_admin_arns if kubernetes_cluster_access_identities is true."
+      condition     = var.kubernetes_cluster_access == "ConfigMap" || length(var.kubernetes_cluster_admin_arns) > 0
+      error_message = "At least one ARN must be provided in kubernetes_cluster_admin_arns if kubernetes_cluster_access is set to 'API'."
     }
   }
 }
@@ -230,8 +230,8 @@ resource "aws_eks_access_entry" "admin" {
 
   lifecycle {
     precondition {
-      condition     = var.kubernetes_cluster_access_identities
-      error_message = "The kubernetes_cluster_access_identities variable must be set to true if kubernetes_cluster_admin_arns is provided."
+      condition     = var.kubernetes_cluster_access == "API"
+      error_message = "The kubernetes_cluster_access variable must be set to 'API' if kubernetes_cluster_admin_arns is provided."
     }
   }
 }

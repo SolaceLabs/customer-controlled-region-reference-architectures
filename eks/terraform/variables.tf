@@ -120,14 +120,19 @@ variable "pod_spread_policy" {
   }
 }
 
-variable "kubernetes_cluster_access_identities" {
-  type        = bool
-  default     = false
-  description = "When set to true, the cluster's access configuration is set to 'API'."
+variable "kubernetes_cluster_access" {
+  type        = string
+  default     = "ConfigMap"
+  description = "This controls which authentication method to use for the cluster. See the readme for more details."
+
+  validation {
+    condition     = var.kubernetes_cluster_access == "ConfigMap" || var.kubernetes_cluster_access == "API"
+    error_message = "The kubernetes_cluster_access value must be either 'ConfigMap' or 'API'."
+  }
 }
 
 variable "kubernetes_cluster_admin_arns" {
   type        = list(string)
   default     = []
-  description = "When kubernetes_cluster_access_identities is set to true, user or role ARNs can be provided that will be given the AmazonEKSClusterAdminPolicy."
+  description = "When kubernetes_cluster_access is set to 'API', user or role ARNs can be provided that will be given assigned AmazonEKSClusterAdminPolicy for this cluster."
 }
