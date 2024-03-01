@@ -1,5 +1,5 @@
 output "local_cidr" {
-  value = "${chomp(data.http.ip.body)}/32"
+  value = "${chomp(data.http.ip.response_body)}/32"
 }
 
 output "bastion_ssh_public_key" {

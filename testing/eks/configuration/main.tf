@@ -12,7 +12,12 @@ resource "helm_release" "cluster_autoscaler" {
 
   repository = "https://kubernetes.github.io/autoscaler"
   chart      = "cluster-autoscaler"
-  version    = "9.29.0"
+  version    = "9.35.0"
+
+  set {
+    name  = "image.tag"
+    value = var.cluster_autoscaler_version
+  }
 
   values = [
     var.cluster_autoscaler_helm_values
@@ -25,7 +30,7 @@ resource "helm_release" "load_balancer_controller" {
 
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
-  version    = "1.5.3"
+  version    = "1.7.1"
 
   values = [
     var.load_balancer_controller_helm_values
