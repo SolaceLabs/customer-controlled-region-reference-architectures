@@ -4,13 +4,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.35.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.39.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.35.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.39.0 |
 
 ## Modules
 
@@ -20,13 +20,13 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_autoscaling_group_tag.labels_tags](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/autoscaling_group_tag) | resource |
-| [aws_autoscaling_group_tag.name_tag](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/autoscaling_group_tag) | resource |
-| [aws_autoscaling_group_tag.resources_tags](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/autoscaling_group_tag) | resource |
-| [aws_autoscaling_group_tag.taints_tags](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/autoscaling_group_tag) | resource |
-| [aws_eks_node_group.this](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/eks_node_group) | resource |
-| [aws_launch_template.this](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/resources/launch_template) | resource |
-| [aws_ssm_parameter.ami](https://registry.terraform.io/providers/hashicorp/aws/5.35.0/docs/data-sources/ssm_parameter) | data source |
+| [aws_autoscaling_group_tag.labels_tags](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
+| [aws_autoscaling_group_tag.name_tag](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
+| [aws_autoscaling_group_tag.resources_tags](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
+| [aws_autoscaling_group_tag.taints_tags](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
+| [aws_eks_node_group.this](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/eks_node_group) | resource |
+| [aws_launch_template.this](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/launch_template) | resource |
+| [aws_ssm_parameter.ami](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/data-sources/ssm_parameter) | data source |
 
 ## Inputs
 

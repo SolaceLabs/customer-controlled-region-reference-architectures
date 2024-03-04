@@ -10,6 +10,10 @@ variable "cluster_autoscaler_helm_values" {
   type = string
 }
 
+variable "cluster_autoscaler_version" {
+  type = string
+}
+
 variable "load_balancer_controller_helm_values" {
   type = string
 }

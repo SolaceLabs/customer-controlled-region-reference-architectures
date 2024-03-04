@@ -1,17 +1,43 @@
 package eks
 
 import (
-	"github.com/SolaceDev/sc-private-regions-terraform/testing/common"
-	"github.com/gruntwork-io/terratest/modules/k8s"
-	"github.com/gruntwork-io/terratest/modules/terraform"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"os"
 	"path/filepath"
 	"testing"
 	"time"
+
+	"github.com/SolaceDev/sc-private-regions-terraform/testing/common"
+	"github.com/gruntwork-io/terratest/modules/k8s"
+	"github.com/gruntwork-io/terratest/modules/terraform"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// cluster autoscaler version must match kubernetes version
 const KubernetesVersion = "1.28"
+const ClusterAutoscalerVersion = "v1.28.2"
+
+func testCluster(t *testing.T, configOptions *terraform.Options) {
+	kubeconfig := terraform.Output(t, configOptions, "kubeconfig")
+	kubeconfigPath := common.WriteKubeconfigToTempFile(kubeconfig)
+	defer os.Remove(kubeconfigPath)
+
+	options := k8s.NewKubectlOptions("", kubeconfigPath, "kube-system")
+
+	k8s.WaitUntilNumPodsCreated(t, options, metav1.ListOptions{LabelSelector: "app.kubernetes.io/name=aws-cluster-autoscaler"}, 2, 30, 5*time.Second)
+	k8s.WaitUntilNumPodsCreated(t, options, metav1.ListOptions{LabelSelector: "app.kubernetes.io/name=aws-load-balancer-controller"}, 2, 30, 5*time.Second)
+
+	common.TestServiceClassWithValues(t, kubeconfigPath, "prod1k", "gp2-test", []string{"./service-annotations.yaml"}, 1, true)
+	common.TestServiceClassWithValues(t, kubeconfigPath, "prod1k", "gp3", []string{"./service-annotations.yaml"}, 1, true)
+	common.TestServiceClassWithValues(t, kubeconfigPath, "prod1k", "gp3", []string{"./service-annotations.yaml"}, 2, false)
+
+	common.TestServiceClassWithValues(t, kubeconfigPath, "prod10k", "gp2-test", []string{"./service-annotations.yaml"}, 1, true)
+	common.TestServiceClassWithValues(t, kubeconfigPath, "prod10k", "gp3", []string{"./service-annotations.yaml"}, 1, true)
+	common.TestServiceClassWithValues(t, kubeconfigPath, "prod10k", "gp3", []string{"./service-annotations.yaml"}, 2, false)
+
+	common.TestServiceClassWithValues(t, kubeconfigPath, "prod100k", "gp2-test", []string{"./service-annotations.yaml"}, 1, false)
+
+	common.PrintTestComplete(t)
+}
 
 func TestTerraformEksClusterComplete(t *testing.T) {
 	t.Parallel()
@@ -66,9 +92,11 @@ func TestTerraformEksClusterComplete(t *testing.T) {
 		Vars: map[string]interface{}{
 			"cluster_name":                         clusterName,
 			"region":                               awsRegion,
-			"cluster_autoscaler_helm_values":       terraform.Output(t, underTestOptions, "cluster_autoscaler_helm_values"),
-			"load_balancer_controller_helm_values": terraform.Output(t, underTestOptions, "load_balancer_controller_helm_values"),
-			"storage_classes":                      getStorageClassList(),
+			"cluster_autoscaler_helm_values":       autoscalerValues,
+			"load_balancer_controller_helm_values": loadBalancerValues,
+			"storage_class_path_gp2":               storageClassPathGp2,
+			"storage_class_path_gp3":               storageClassPathGp3,
+			"cluster_autoscaler_version":           ClusterAutoscalerVersion,
 		},
 		Upgrade: true,
 	})
@@ -216,9 +244,11 @@ func TestTerraformEksClusterExternalNetwork(t *testing.T) {
 		Vars: map[string]interface{}{
 			"cluster_name":                         clusterName,
 			"region":                               awsRegion,
-			"cluster_autoscaler_helm_values":       terraform.Output(t, underTestOptions, "cluster_autoscaler_helm_values"),
-			"load_balancer_controller_helm_values": terraform.Output(t, underTestOptions, "load_balancer_controller_helm_values"),
-			"storage_classes":                      getStorageClassList(),
+			"cluster_autoscaler_helm_values":       autoscalerValues,
+			"load_balancer_controller_helm_values": loadBalancerValues,
+			"storage_class_path_gp2":               storageClassPathGp2,
+			"storage_class_path_gp3":               storageClassPathGp3,
+			"cluster_autoscaler_version":           ClusterAutoscalerVersion,
 		},
 		Upgrade: true,
 	})

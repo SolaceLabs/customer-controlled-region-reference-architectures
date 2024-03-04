@@ -13,7 +13,7 @@ resource "helm_release" "cluster_autoscaler" {
 
   set {
     name  = "image.tag"
-    value = "v1.28.2"
+    value = var.cluster_autoscaler_version
   }
 
   values = [
@@ -27,7 +27,7 @@ resource "helm_release" "load_balancer_controller" {
 
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
-  version    = "1.7.0"
+  version    = "1.7.1"
 
   values = [
     var.load_balancer_controller_helm_values

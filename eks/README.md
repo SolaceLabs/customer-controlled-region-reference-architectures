@@ -233,5 +233,5 @@ helm repo add eks https://aws.github.io/eks-charts
 helm repo update eks
 
 terraform output -raw -state=terraform/terraform.tfstate load_balancer_controller_helm_values | \
-    helm install aws-load-balancer-controller eks/aws-load-balancer-controller --version 1.7.0 -n kube-system --values -
+    helm install aws-load-balancer-controller eks/aws-load-balancer-controller --version 1.7.1 -n kube-system --values -
 ```
