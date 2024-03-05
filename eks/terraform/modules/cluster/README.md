@@ -69,7 +69,6 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_broker_worker_node_arch"></a> [broker\_worker\_node\_arch](#input\_broker\_worker\_node\_arch) | The CPU architecture to use for the broker worker nodes, must be either 'x86\_64' or 'arm64'. | `string` | `"x86_64"` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name of the cluster and name (or name prefix) for all other infrastructure. | `string` | n/a | yes |
 | <a name="input_cluster_subnet_ids"></a> [cluster\_subnet\_ids](#input\_cluster\_subnet\_ids) | The IDs of the subnets where the cluster's private ENIs will reside. If not provided, IDs in private\_subnet\_ids will be used. | `list(string)` | `null` | no |
 | <a name="input_kubernetes_api_authorized_networks"></a> [kubernetes\_api\_authorized\_networks](#input\_kubernetes\_api\_authorized\_networks) | The list of CIDRs that can access the Kubernetes API, in addition to the bastion host and worker nodes (which are added by default). | `list(string)` | `[]` | no |

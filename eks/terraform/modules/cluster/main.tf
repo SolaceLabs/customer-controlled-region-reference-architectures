@@ -3,10 +3,10 @@ locals {
   loadbalancer_controller_service_account = "aws-load-balancer-controller"
 
   default_instance_type    = "m5.large"
-  prod1k_instance_type     = var.broker_worker_node_arch == "x86_64" ? "r5.large" : "r6g.large"
-  prod10k_instance_type    = var.broker_worker_node_arch == "x86_64" ? "r5.xlarge" : "r6g.xlarge"
-  prod100k_instance_type   = var.broker_worker_node_arch == "x86_64" ? "r5.2xlarge" : "r6g.2xlarge"
-  monitoring_instance_type = var.broker_worker_node_arch == "x86_64" ? "t3.medium" : "t4g.medium"
+  prod1k_instance_type     = "r5.large"
+  prod10k_instance_type    = "r5.xlarge"
+  prod100k_instance_type   = "r5.2xlarge"
+  monitoring_instance_type = "t3.medium"
 
   worker_node_volume_size = 20
   worker_node_volume_type = "gp2"
@@ -551,7 +551,6 @@ module "node_group_prod1k" {
   worker_node_instance_type = local.prod1k_instance_type
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
-  worker_node_arch          = var.broker_worker_node_arch
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
@@ -593,7 +592,6 @@ module "node_group_prod10k" {
   worker_node_instance_type = local.prod10k_instance_type
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
-  worker_node_arch          = var.broker_worker_node_arch
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
@@ -635,7 +633,6 @@ module "node_group_prod100k" {
   worker_node_instance_type = local.prod100k_instance_type
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
-  worker_node_arch          = var.broker_worker_node_arch
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
@@ -677,7 +674,6 @@ module "node_group_monitoring" {
   worker_node_instance_type = local.monitoring_instance_type
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
-  worker_node_arch          = var.broker_worker_node_arch
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags

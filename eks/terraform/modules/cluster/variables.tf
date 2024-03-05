@@ -41,16 +41,6 @@ variable "node_group_max_size" {
   description = "The maximum size for the broker node groups in the cluster."
 }
 
-variable "broker_worker_node_arch" {
-  type        = string
-  default     = "x86_64"
-  description = "The CPU architecture to use for the broker worker nodes, must be either 'x86_64' or 'arm64'."
-  validation {
-    condition     = var.broker_worker_node_arch == "x86_64" || var.broker_worker_node_arch == "arm64"
-    error_message = "The broker_worker_node_arch value must be either 'x86_64' or 'arm64'."
-  }
-}
-
 variable "kubernetes_api_public_access" {
   type        = bool
   default     = false

@@ -1,8 +1,11 @@
 package common
 
 import (
+	"archive/zip"
 	"bufio"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -31,7 +34,30 @@ const (
 	Reset = "\033[0m"
 )
 
-func CopyTerraform(t *testing.T, sourcePath string) (string, error) {
+func CopyTerraformState(t *testing.T, sourcePath string, targetPath string) {
+	sourceState := fmt.Sprintf("%s/terraform.tfstate", sourcePath)
+
+	source, err := os.Open(sourceState)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer source.Close()
+
+	targetState := fmt.Sprintf("%s/terraform.tfstate", targetPath)
+
+	destination, err := os.Create(targetState)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer destination.Close()
+
+	_, err = io.Copy(destination, source)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func CopyTerraform(t *testing.T, sourcePath string) string {
 	filter := func(path string) bool {
 		if files.PathIsTerraformVersionFile(path) || files.PathIsTerraformLockFile(path) {
 			return true
@@ -45,10 +71,106 @@ func CopyTerraform(t *testing.T, sourcePath string) (string, error) {
 	base := filepath.Base(sourcePath)
 	targetPath := fmt.Sprintf("./terraform/%s/%s", t.Name(), base)
 
-	os.MkdirAll(targetPath, os.ModePerm)
+	err := os.MkdirAll(targetPath, os.ModePerm)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	logger.Log(t, fmt.Sprintf("Copying terraform project from %s to %s", sourcePath, targetPath))
-	return targetPath, files.CopyFolderContentsWithFilter(sourcePath, targetPath, filter)
+
+	err = files.CopyFolderContentsWithFilter(sourcePath, targetPath, filter)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return targetPath
+}
+
+func downloadFile(url string, path string) error {
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	zipFile := fmt.Sprintf("%s/file.zip", path)
+
+	out, err := os.Create(zipFile)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, resp.Body)
+	if err != nil {
+		return err
+	}
+
+	reader, err := zip.OpenReader(zipFile)
+	if err != nil {
+		return err
+	}
+	defer reader.Close()
+
+	for _, f := range reader.File {
+		err := unzipFile(f, path)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func unzipFile(f *zip.File, destination string) error {
+	filePath := filepath.Join(destination, f.Name)
+	if !strings.HasPrefix(filePath, filepath.Clean(destination)+string(os.PathSeparator)) {
+		return fmt.Errorf("invalid file path: %s", filePath)
+	}
+
+	if f.FileInfo().IsDir() {
+		if err := os.MkdirAll(filePath, os.ModePerm); err != nil {
+			return err
+		}
+		return nil
+	}
+
+	if err := os.MkdirAll(filepath.Dir(filePath), os.ModePerm); err != nil {
+		return err
+	}
+
+	destinationFile, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+	if err != nil {
+		return err
+	}
+	defer destinationFile.Close()
+
+	zippedFile, err := f.Open()
+	if err != nil {
+		return err
+	}
+	defer zippedFile.Close()
+
+	if _, err := io.Copy(destinationFile, zippedFile); err != nil {
+		return err
+	}
+	return nil
+}
+
+func CopyTerraformFromRepository(t *testing.T, kubernetesFlavour string, releaseVersion string) string {
+	url := fmt.Sprintf("https://github.com/SolaceLabs/customer-controlled-region-reference-architectures/releases/"+
+		"download/%s/customer-controlled-region-reference-architectures-%s-%s.zip", releaseVersion, kubernetesFlavour, releaseVersion)
+
+	targetPath := fmt.Sprintf("./terraform/%s", t.Name())
+	os.MkdirAll(targetPath, os.ModePerm)
+
+	logger.Log(t, fmt.Sprintf("Copying terraform project for %s version %s from Github to %s", kubernetesFlavour, releaseVersion, targetPath))
+
+	err := downloadFile(url, targetPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	return fmt.Sprintf("%s/%s/terraform", targetPath, kubernetesFlavour)
 }
 
 func WriteKubeconfigToTempFile(kubeconfig string) string {

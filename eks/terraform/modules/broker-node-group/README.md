@@ -43,7 +43,6 @@ No modules.
 | <a name="input_node_group_taints"></a> [node\_group\_taints](#input\_node\_group\_taints) | Kubernetes taints added to worker nodes in the node groups. | `list(map(string))` | n/a | yes |
 | <a name="input_security_group_ids"></a> [security\_group\_ids](#input\_security\_group\_ids) | The security groups that will be attached to the worker nodes. | `list(string)` | n/a | yes |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | The subnets that the node groups will use - a node group is created in each subnet. | `list(string)` | n/a | yes |
-| <a name="input_worker_node_arch"></a> [worker\_node\_arch](#input\_worker\_node\_arch) | The CPU architecture to use for the worker nodes, must be either 'x86\_64' or 'arm64'. | `string` | n/a | yes |
 | <a name="input_worker_node_instance_type"></a> [worker\_node\_instance\_type](#input\_worker\_node\_instance\_type) | The instance type of the worker nodes. | `string` | n/a | yes |
 | <a name="input_worker_node_role_arn"></a> [worker\_node\_role\_arn](#input\_worker\_node\_role\_arn) | The ARN of the IAM role assigned to each worker node via an instance profile. | `string` | n/a | yes |
 | <a name="input_worker_node_volume_size"></a> [worker\_node\_volume\_size](#input\_worker\_node\_volume\_size) | The size of the worker node root disk. | `number` | n/a | yes |

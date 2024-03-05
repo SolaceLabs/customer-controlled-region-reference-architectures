@@ -74,12 +74,3 @@ variable "worker_node_instance_type" {
   type        = string
   description = "The instance type of the worker nodes."
 }
-
-variable "worker_node_arch" {
-  type        = string
-  description = "The CPU architecture to use for the worker nodes, must be either 'x86_64' or 'arm64'."
-  validation {
-    condition     = var.worker_node_arch == "x86_64" || var.worker_node_arch == "arm64"
-    error_message = "The worker_node_arch value must be either 'x86_64' or 'arm64'."
-  }
-}
