@@ -535,7 +535,6 @@ module "node_group_prod1k" {
   source = "../broker-node-group"
 
   cluster_name           = aws_eks_cluster.cluster.name
-  kubernetes_version     = aws_eks_cluster.cluster.version
   node_group_name_prefix = "${var.cluster_name}-prod1k"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.pod_spread_policy == "full" ? var.private_subnet_ids : slice(var.private_subnet_ids, 0, 2)
@@ -576,7 +575,6 @@ module "node_group_prod10k" {
   source = "../broker-node-group"
 
   cluster_name           = aws_eks_cluster.cluster.name
-  kubernetes_version     = aws_eks_cluster.cluster.version
   node_group_name_prefix = "${var.cluster_name}-prod10k"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.pod_spread_policy == "full" ? var.private_subnet_ids : slice(var.private_subnet_ids, 0, 2)
@@ -617,7 +615,6 @@ module "node_group_prod100k" {
   source = "../broker-node-group"
 
   cluster_name           = aws_eks_cluster.cluster.name
-  kubernetes_version     = aws_eks_cluster.cluster.version
   node_group_name_prefix = "${var.cluster_name}-prod100k"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.pod_spread_policy == "full" ? var.private_subnet_ids : slice(var.private_subnet_ids, 0, 2)
@@ -658,7 +655,6 @@ module "node_group_monitoring" {
   source = "../broker-node-group"
 
   cluster_name           = aws_eks_cluster.cluster.name
-  kubernetes_version     = aws_eks_cluster.cluster.version
   node_group_name_prefix = "${var.cluster_name}-monitoring"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.pod_spread_policy == "full" ? var.private_subnet_ids : slice(var.private_subnet_ids, 2, 3)
