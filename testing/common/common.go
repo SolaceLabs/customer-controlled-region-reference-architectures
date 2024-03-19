@@ -160,7 +160,7 @@ func CopyTerraformFromRepository(t *testing.T, kubernetesFlavour string, release
 	url := fmt.Sprintf("https://github.com/SolaceLabs/customer-controlled-region-reference-architectures/releases/"+
 		"download/%s/customer-controlled-region-reference-architectures-%s-%s.zip", releaseVersion, kubernetesFlavour, releaseVersion)
 
-	targetPath := fmt.Sprintf("./terraform/%s", t.Name())
+	targetPath := fmt.Sprintf("./terraform/%s/%s", t.Name(), releaseVersion)
 	os.MkdirAll(targetPath, os.ModePerm)
 
 	logger.Log(t, fmt.Sprintf("Copying terraform project for %s version %s from Github to %s", kubernetesFlavour, releaseVersion, targetPath))

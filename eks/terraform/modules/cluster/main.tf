@@ -175,7 +175,7 @@ resource "aws_eks_cluster" "cluster" {
 
   vpc_config {
     security_group_ids      = [aws_security_group.cluster.id]
-    subnet_ids              = var.cluster_subnet_ids != null ? var.cluster_subnet_ids : var.private_subnet_ids
+    subnet_ids              = var.private_subnet_ids
     endpoint_private_access = "true"
     endpoint_public_access  = var.kubernetes_api_public_access
     public_access_cidrs     = var.kubernetes_api_authorized_networks
@@ -195,7 +195,8 @@ resource "aws_eks_cluster" "cluster" {
   }
 
   access_config {
-    authentication_mode = var.kubernetes_cluster_auth_mode
+    authentication_mode                         = var.kubernetes_cluster_auth_mode
+    bootstrap_cluster_creator_admin_permissions = var.kubernetes_cluster_auth_mode == "CONFIG_MAP" ? true : null
   }
 
   tags = {
@@ -212,11 +213,6 @@ resource "aws_eks_cluster" "cluster" {
     precondition {
       condition     = !var.kubernetes_api_public_access || length(var.kubernetes_api_authorized_networks) > 0
       error_message = "At least one authorized network must be provided if public Kubernetes API is being created."
-    }
-
-    precondition {
-      condition     = var.kubernetes_cluster_auth_mode == "CONFIG_MAP" || length(var.kubernetes_cluster_auth_mode) > 0
-      error_message = "At least one ARN must be provided in kubernetes_cluster_admin_arns if kubernetes_cluster_auth_mode is set to 'API'."
     }
   }
 }
@@ -427,21 +423,18 @@ resource "aws_security_group" "worker_node" {
   description = "Security group for all worker nodes in the cluster"
   vpc_id      = var.vpc_id
 
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow all egress"
+  }
+
   tags = {
     "Name"                                      = "${var.cluster_name}-worker-node"
     "kubernetes.io/cluster/${var.cluster_name}" = "owned"
   }
-}
-
-resource "aws_security_group_rule" "worker_node_egress" {
-  description       = "Allow all egress traffic from worker nodes"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "all"
-  type              = "egress"
-  security_group_id = aws_security_group.worker_node.id
-  cidr_blocks       = ["0.0.0.0/0"]
-  ipv6_cidr_blocks  = ["::/0"]
 }
 
 resource "aws_security_group_rule" "worker_node_from_cluster" {

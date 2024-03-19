@@ -46,7 +46,6 @@ module "cluster" {
   cluster_name = var.cluster_name
 
   vpc_id             = var.create_network ? module.network.vpc_id : var.vpc_id
-  cluster_subnet_ids = var.create_network ? module.network.private_subnets : var.private_subnet_ids
   private_subnet_ids = var.create_network ? module.network.private_subnets : var.private_subnet_ids
 
   kubernetes_version                 = var.kubernetes_version

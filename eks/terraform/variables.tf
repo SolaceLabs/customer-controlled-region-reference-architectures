@@ -122,13 +122,8 @@ variable "pod_spread_policy" {
 
 variable "kubernetes_cluster_auth_mode" {
   type        = string
-  default     = "CONFIG_MAP"
+  default     = null
   description = "This controls which authentication method to use for the cluster. See the readme for more details."
-
-  validation {
-    condition     = var.kubernetes_cluster_auth_mode == "CONFIG_MAP" || var.kubernetes_cluster_auth_mode == "API"
-    error_message = "The kubernetes_cluster_access value must be either 'CONFIG_MAP' or 'API'."
-  }
 }
 
 variable "kubernetes_cluster_admin_arns" {
