@@ -226,8 +226,8 @@ resource "aws_eks_access_entry" "admin" {
 
   lifecycle {
     precondition {
-      condition     = var.kubernetes_cluster_auth_mode == "API"
-      error_message = "The kubernetes_cluster_auth_mode variable must be set to 'API' if kubernetes_cluster_admin_arns is provided."
+      condition     = var.kubernetes_cluster_auth_mode == "API" || var.kubernetes_cluster_auth_mode == "API_AND_CONFIG_MAP"
+      error_message = "The kubernetes_cluster_auth_mode variable must be set to 'API' or 'API_AND_CONFIG_MAP' if kubernetes_cluster_admin_arns is provided."
     }
   }
 }

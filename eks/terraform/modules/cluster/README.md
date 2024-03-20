@@ -90,4 +90,5 @@
 | <a name="output_cluster_security_group_id"></a> [cluster\_security\_group\_id](#output\_cluster\_security\_group\_id) | n/a |
 | <a name="output_default_node_group_arn"></a> [default\_node\_group\_arn](#output\_default\_node\_group\_arn) | n/a |
 | <a name="output_load_balancer_controller_helm_values"></a> [load\_balancer\_controller\_helm\_values](#output\_load\_balancer\_controller\_helm\_values) | n/a |
+| <a name="output_worker_node_role_arn"></a> [worker\_node\_role\_arn](#output\_worker\_node\_role\_arn) | n/a |
 <!-- END_TF_DOCS -->
