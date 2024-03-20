@@ -47,17 +47,6 @@ variable "kubernetes_api_authorized_networks" {
   description = "The list of CIDRs that can access the Kubernetes API, in addition to the bastion host and worker nodes (which are added by default)."
 }
 
-variable "pod_spread_policy" {
-  type        = string
-  default     = "full"
-  description = "This controls which AZs host node groups for the primary, backup, and monitor node pools as well as which AZs will host the ENIs for the NLBs that front each event broker service. See the readme for more details."
-
-  validation {
-    condition     = var.pod_spread_policy == "full" || var.pod_spread_policy == "fixed"
-    error_message = "The pod_spread_policy value must be either 'full' or 'fixed'."
-  }
-}
-
 variable "kubernetes_cluster_auth_mode" {
   type        = string
   default     = null

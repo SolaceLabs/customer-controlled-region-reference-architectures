@@ -63,13 +63,7 @@ The default (system) node group spans all three availability zones. By default t
 
 ##### Event Broker Services <a name="eks-broker-services"></a>
 
-The count and arrangement of node groups for event broker services are based on the pod spread policy.
-
-The default 'full' pod spread policy means a total of 12 node groups for event broker services, three of each type spread across all three availability zones. The optional 'fixed' pod spread policy reduces the number of node groups to 8, with the messaging node groups in the first and second availability zones and the monitoring node group in the third.
-
-The benefit of the 'full' pod spread policy is the efficient use of the three subnets that contain worker nodes, as standalone brokers can be scheduled in any of the three availability zones. With the 'fixed' pod spread policy scheduling of standalone brokers is limited to the first two availability zones, but this policy has the benefit of using fewer public IP addresses as one two availability zones are required for NLB ENIs.
-
-There is no difference in zone impairment resiliency between the two pod spread policy options. In both cases pods are scheduled using pod anti-affinity against the worker node's zone label to ensure that each pod in a high-availability event broker service is in a separate availability zone no matter which pod spread policy is chosen.
+The cluster has a total of 12 node groups for event broker services. Each event broker service runs in pod (referred to as a *broker pod*).  Instead of spanning multiple availability zones, there are four sets of three node groups with each locked to a single availability zone. These node groups are locked to one availability zone to allow the cluster autoscaler to work properly. In the Terraform,  we use pod anti-affinity against the node's zone label to ensure that each pod in a high-availability event broker service is in a separate availability zone.
 
 These node groups are engineered to support a 1:1 ratio of the broker pod to worker node. We use labels and taints on each of these node groups to ensure that only Event Broker Service pods are scheduled on the worker nodes for each scaling tier.
 
