@@ -10,7 +10,7 @@ import (
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
-const KubernetesVersion = "1.28"
+const KubernetesVersion = "1.29"
 
 func testCluster(t *testing.T, configOptions *terraform.Options) {
 	kubeconfig := terraform.Output(t, configOptions, "kubeconfig")
