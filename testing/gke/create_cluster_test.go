@@ -11,7 +11,7 @@ import (
 
 // Prerequisite, set the GCP project with: export TF_VAR_project=<project>
 
-const KubernetesVersion = "1.28"
+const KubernetesVersion = "1.29"
 
 func testCluster(t *testing.T, configOptions *terraform.Options) {
 	kubeconfig := terraform.Output(t, configOptions, "kubeconfig")
