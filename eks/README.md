@@ -106,6 +106,14 @@ You have two options for cluster access:
 
 The worker node hosts are accessible via the AWS Systems Manager.
 
+### Authentication <a name="eks-authentication"></a>
+
+By default, the EKS cluster created by this terraform project is configured to use `ConfigMap` authentication mode as described [here](https://docs.aws.amazon.com/eks/latest/userguide/access-entries.html). With this method, access to the cluster is configured by adding user or role ARNs to the `aws-auth` ConfigMap in the cluster. This option has been kept as the default in this terraform project for backwards compatibility.
+
+We recommend, though, that you use the `access entries` mode instead, which allows for management of the users and roles that can access the cluster API, as well as their access levels, from outside the cluster. Further details of this option can be found in the link above. 
+
+To use the `access entries` mode with this terraform project, set the `kubernetes_cluster_auth_mode` to `API` and include at least one user or role ARN in the `kubernetes_cluster_admin_arns` variable. This mode may be made the default in a future major version of this project.
+
 ## Usage of Terraform for Amazon EKS <a name="eks-usage"></a>
 The following section is an overview of the steps to use this Terraform. Before you
 you begin, review the necessary [prerequistites](#eks-prerequisites).
