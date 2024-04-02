@@ -1,6 +1,9 @@
-resource "kubernetes_manifest" "storageclass" {
-  count    = length(var.storage_classes)
-  manifest = merge(yamldecode(file(var.storage_classes[count.index].path)), { metadata = { name = var.storage_classes[count.index].name } })
+resource "kubernetes_manifest" "storageclass_gp3" {
+  manifest = yamldecode(file(var.storage_class_path_gp3))
+}
+
+resource "kubernetes_manifest" "storageclass_gp2" {
+  manifest = merge(yamldecode(file(var.storage_class_path_gp2)), { metadata = { name = "gp2-test" } })
 }
 
 resource "helm_release" "cluster_autoscaler" {

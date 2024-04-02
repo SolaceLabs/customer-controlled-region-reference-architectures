@@ -48,7 +48,7 @@ func TestTerraformEksClusterComplete(t *testing.T) {
 	awsRegion := "eu-west-2"
 	clusterName := "terratest-complete"
 
-	prereqPath := common.CopyTerraform(t, "../prerequisites")
+	prereqPath, _ := common.CopyTerraform(t, "../prerequisites")
 	prereqOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: prereqPath,
 		NoColor:      true,
@@ -63,7 +63,7 @@ func TestTerraformEksClusterComplete(t *testing.T) {
 	localCidr := []string{terraform.Output(t, prereqOptions, "local_cidr")}
 	bastionPublicKey := terraform.Output(t, prereqOptions, "bastion_ssh_public_key")
 
-	underTestPath := common.CopyTerraform(t, "../../eks/terraform")
+	underTestPath, _ := common.CopyTerraform(t, "../../eks/terraform")
 	underTestOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: underTestPath,
 		NoColor:      true,
@@ -94,7 +94,7 @@ func TestTerraformEksClusterComplete(t *testing.T) {
 	storageClassPathGp2, _ := filepath.Abs("../../eks/kubernetes/storage-class-gp2.yaml")
 	storageClassPathGp3, _ := filepath.Abs("../../eks/kubernetes/storage-class-gp3.yaml")
 
-	configPath := common.CopyTerraform(t, "./configuration")
+	configPath, _ := common.CopyTerraform(t, "./configuration")
 	configOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: configPath,
 		NoColor:      true,
@@ -131,7 +131,7 @@ func TestTerraformEksClusterExternalNetwork(t *testing.T) {
 	awsRegion := "eu-west-3"
 	clusterName := "terratest-network"
 
-	prereqPath := common.CopyTerraform(t, "../prerequisites")
+	prereqPath, _ := common.CopyTerraform(t, "../prerequisites")
 	prereqOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: prereqPath,
 		NoColor:      true,
@@ -145,7 +145,7 @@ func TestTerraformEksClusterExternalNetwork(t *testing.T) {
 
 	localCidr := []string{terraform.Output(t, prereqOptions, "local_cidr")}
 
-	networkPath := common.CopyTerraform(t, "./network")
+	networkPath, _ := common.CopyTerraform(t, "./network")
 	networkOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: networkPath,
 		NoColor:      true,
@@ -164,7 +164,7 @@ func TestTerraformEksClusterExternalNetwork(t *testing.T) {
 	vpcId := terraform.Output(t, networkOptions, "vpc_id")
 	privateSubnets := terraform.OutputList(t, networkOptions, "private_subnets")
 
-	underTestPath := common.CopyTerraform(t, "../../eks/terraform")
+	underTestPath, _ := common.CopyTerraform(t, "../../eks/terraform")
 	underTestOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: underTestPath,
 		NoColor:      true,

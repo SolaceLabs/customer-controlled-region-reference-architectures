@@ -37,7 +37,7 @@ func TestTerraformGkeClusterComplete(t *testing.T) {
 	region := "europe-west1"
 	clusterName := "terratest-complete"
 
-	prereqPath := common.CopyTerraform(t, "../prerequisites")
+	prereqPath, _ := common.CopyTerraform(t, "../prerequisites")
 	prereqOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: prereqPath,
 		NoColor:      true,
@@ -52,7 +52,7 @@ func TestTerraformGkeClusterComplete(t *testing.T) {
 	localCidr := []string{terraform.Output(t, prereqOptions, "local_cidr")}
 	bastionPublicKey := terraform.Output(t, prereqOptions, "bastion_ssh_public_key")
 
-	underTestPath := common.CopyTerraform(t, "../../gke/terraform")
+	underTestPath, _ := common.CopyTerraform(t, "../../gke/terraform")
 	underTestOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: underTestPath,
 		NoColor:      true,
@@ -79,7 +79,7 @@ func TestTerraformGkeClusterComplete(t *testing.T) {
 
 	storageClassPath, _ := filepath.Abs("../../gke/kubernetes/storage-class.yaml")
 
-	configPath := common.CopyTerraform(t, "./configuration")
+	configPath, _ := common.CopyTerraform(t, "./configuration")
 	configOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: configPath,
 		NoColor:      true,
@@ -109,7 +109,7 @@ func TestTerraformGkeClusterExternalNetwork(t *testing.T) {
 	region := "us-east1"
 	clusterName := "terratest-network"
 
-	prereqPath := common.CopyTerraform(t, "../prerequisites")
+	prereqPath, _ := common.CopyTerraform(t, "../prerequisites")
 	prereqOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: prereqPath,
 		NoColor:      true,
@@ -123,7 +123,7 @@ func TestTerraformGkeClusterExternalNetwork(t *testing.T) {
 
 	localCidr := []string{terraform.Output(t, prereqOptions, "local_cidr")}
 
-	networkPath := common.CopyTerraform(t, "./network")
+	networkPath, _ := common.CopyTerraform(t, "./network")
 	networkOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: networkPath,
 		NoColor:      true,
@@ -142,7 +142,7 @@ func TestTerraformGkeClusterExternalNetwork(t *testing.T) {
 	networkName := terraform.Output(t, networkOptions, "network_name")
 	subnetworkName := terraform.Output(t, networkOptions, "subnetwork_name")
 
-	underTestPath := common.CopyTerraform(t, "../../gke/terraform")
+	underTestPath, _ := common.CopyTerraform(t, "../../gke/terraform")
 	underTestOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: underTestPath,
 		NoColor:      true,
@@ -171,7 +171,7 @@ func TestTerraformGkeClusterExternalNetwork(t *testing.T) {
 
 	storageClassPath, _ := filepath.Abs("../../gke/kubernetes/storage-class.yaml")
 
-	configPath := common.CopyTerraform(t, "./configuration")
+	configPath, _ := common.CopyTerraform(t, "./configuration")
 	configOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: configPath,
 		NoColor:      true,
