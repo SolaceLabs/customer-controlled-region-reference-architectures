@@ -3,6 +3,12 @@ variable "cluster_name" {
   description = "The name of the EKS cluster."
 }
 
+variable "worker_node_tags" {
+  type        = map(string)
+  default     = {}
+  description = "Tags that are added to the auto-scaling groups that back the cluster's node groups."
+}
+
 variable "security_group_ids" {
   type        = list(string)
   description = "The security groups that will be attached to the worker nodes."

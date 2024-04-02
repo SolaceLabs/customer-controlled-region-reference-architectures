@@ -8,6 +8,12 @@ variable "cluster_name" {
   description = "The name of the cluster and name (or name prefix) for all other infrastructure."
 }
 
+variable "worker_node_tags" {
+  type        = map(string)
+  default     = {}
+  description = "Tags that are added to the auto-scaling groups that back the cluster's node groups."
+}
+
 variable "vpc_id" {
   type        = string
   description = "The ID of the VPC where the cluster will reside."

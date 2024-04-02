@@ -73,6 +73,18 @@ resource "aws_autoscaling_group_tag" "name_tag" {
   }
 }
 
+resource "aws_autoscaling_group_tag" "worker_node_tag" {
+  count = length(var.worker_node_tags)
+
+  autoscaling_group_name = aws_eks_node_group.this[count.index].resources[0].autoscaling_groups[0].name
+
+  tag {
+    key                 = var.worker_node_tags[count.index].key
+    value               = var.worker_node_tags[count.index].value
+    propagate_at_launch = true
+  }
+}
+
 locals {
   labels_list = [
     for key, value in var.node_group_labels : {

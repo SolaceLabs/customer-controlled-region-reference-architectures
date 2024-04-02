@@ -491,6 +491,18 @@ resource "aws_autoscaling_group_tag" "default_name_tag" {
   }
 }
 
+resource "aws_autoscaling_group_tag" "worker_node_tag" {
+  count = length(var.worker_node_tags)
+
+  autoscaling_group_name = aws_eks_node_group.default.resources[0].autoscaling_groups[0].name
+
+  tag {
+    key                 = var.worker_node_tags[count.index].key
+    value               = var.worker_node_tags[count.index].value
+    propagate_at_launch = true
+  }
+}
+
 ################################################################################
 # Node Groups - Broker
 ################################################################################
@@ -507,6 +519,7 @@ module "node_group_prod1k" {
   worker_node_instance_type = local.prod1k_instance_type
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
+  worker_node_tags          = var.worker_node_tags
 
   node_group_max_size = var.node_group_max_size
 
@@ -548,6 +561,7 @@ module "node_group_prod10k" {
   worker_node_instance_type = local.prod10k_instance_type
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
+  worker_node_tags          = var.worker_node_tags
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
@@ -588,6 +602,7 @@ module "node_group_prod100k" {
   worker_node_instance_type = local.prod100k_instance_type
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
+  worker_node_tags          = var.worker_node_tags
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
@@ -628,6 +643,7 @@ module "node_group_monitoring" {
   worker_node_instance_type = local.monitoring_instance_type
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
+  worker_node_tags          = var.worker_node_tags
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags

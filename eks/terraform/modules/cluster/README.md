@@ -32,6 +32,7 @@
 | Name | Type |
 |------|------|
 | [aws_autoscaling_group_tag.default_name_tag](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
+| [aws_autoscaling_group_tag.worker_node_tag](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
 | [aws_cloudwatch_log_group.cluster_logs](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/cloudwatch_log_group) | resource |
 | [aws_eks_addon.coredns](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/eks_addon) | resource |
 | [aws_eks_addon.csi-driver](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/eks_addon) | resource |
@@ -75,6 +76,7 @@
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | The IDs of the private subnets where the worker nodes will reside. | `list(string)` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | The AWS region where this cluster will reside. | `string` | n/a | yes |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The ID of the VPC where the cluster will reside. | `string` | n/a | yes |
+| <a name="input_worker_node_tags"></a> [worker\_node\_tags](#input\_worker\_node\_tags) | Tags that are added to the auto-scaling groups that back the cluster's node groups. | `map(string)` | `{}` | no |
 
 ## Outputs
 
