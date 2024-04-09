@@ -19,6 +19,16 @@ data "aws_caller_identity" "current" {}
 # Cluster IAM
 ################################################################################
 
+data "tls_certificate" "eks_oidc_issuer" {
+  url = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
+}
+
+resource "aws_iam_openid_connect_provider" "cluster" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.eks_oidc_issuer.certificates[0].sha1_fingerprint]
+  url             = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
+}
+
 module "cluster_autoscaler_irsa_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "5.34.0"
@@ -134,7 +144,7 @@ resource "aws_security_group" "cluster" {
 }
 
 resource "aws_security_group_rule" "cluster_from_worker_node" {
-  description              = "Allow all traffic to cluster master from worker nodes"
+  description              = "Allow all traffic to cluster from worker nodes"
   from_port                = 0
   to_port                  = 0
   protocol                 = "all"
@@ -184,6 +194,11 @@ resource "aws_eks_cluster" "cluster" {
     resources = ["secrets"]
   }
 
+  access_config {
+    authentication_mode                         = var.kubernetes_cluster_auth_mode
+    bootstrap_cluster_creator_admin_permissions = var.kubernetes_cluster_auth_mode == "CONFIG_MAP" ? true : null
+  }
+
   tags = {
     Name = var.cluster_name
   }
@@ -200,6 +215,37 @@ resource "aws_eks_cluster" "cluster" {
       error_message = "At least one authorized network must be provided if public Kubernetes API is being created."
     }
   }
+}
+
+resource "aws_eks_access_entry" "admin" {
+  count = length(var.kubernetes_cluster_admin_arns)
+
+  cluster_name  = aws_eks_cluster.cluster.name
+  principal_arn = var.kubernetes_cluster_admin_arns[count.index]
+  type          = "STANDARD"
+
+  lifecycle {
+    precondition {
+      condition     = var.kubernetes_cluster_auth_mode == "API" || var.kubernetes_cluster_auth_mode == "API_AND_CONFIG_MAP"
+      error_message = "The kubernetes_cluster_auth_mode variable must be set to 'API' or 'API_AND_CONFIG_MAP' if kubernetes_cluster_admin_arns is provided."
+    }
+  }
+}
+
+resource "aws_eks_access_policy_association" "admin" {
+  count = length(var.kubernetes_cluster_admin_arns)
+
+  cluster_name  = aws_eks_cluster.cluster.name
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+  principal_arn = var.kubernetes_cluster_admin_arns[count.index]
+
+  access_scope {
+    type = "cluster"
+  }
+
+  depends_on = [
+    aws_eks_access_entry.admin
+  ]
 }
 
 resource "aws_kms_key" "logs" {
@@ -261,16 +307,6 @@ resource "aws_cloudwatch_log_group" "cluster_logs" {
   depends_on = [
     aws_kms_key_policy.logs
   ]
-}
-
-data "tls_certificate" "eks_oidc_issuer" {
-  url = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
-}
-
-resource "aws_iam_openid_connect_provider" "cluster" {
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = [data.tls_certificate.eks_oidc_issuer.certificates[0].sha1_fingerprint]
-  url             = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
 }
 
 ################################################################################
@@ -402,7 +438,7 @@ resource "aws_security_group" "worker_node" {
 }
 
 resource "aws_security_group_rule" "worker_node_from_cluster" {
-  description              = "Allow all traffic to worker nodes from cluster master"
+  description              = "Allow all traffic to worker nodes from cluster"
   from_port                = 0
   to_port                  = 0
   protocol                 = "all"
@@ -508,8 +544,7 @@ module "node_group_prod1k" {
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
 
-  node_group_max_size = var.node_group_max_size
-
+  node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
 
   node_group_labels = {
