@@ -7,6 +7,8 @@ parameters:
   csi.storage.k8s.io/fstype: xfs
   type: gp3
   encrypted: "true"
+  throughput: "125" # default
+  iops: "3000" # default
 reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer
 allowVolumeExpansion: true
