@@ -3,6 +3,11 @@ variable "cluster_name" {
   description = "The name of the EKS cluster."
 }
 
+variable "kubernetes_version" {
+  type        = string
+  description = "The kubernetes version to use. Only used a creation time, ignored once the cluster exists."
+}
+
 variable "worker_node_tags" {
   type        = map(string)
   default     = {}

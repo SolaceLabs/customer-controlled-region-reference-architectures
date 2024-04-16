@@ -31,8 +31,6 @@
 
 | Name | Type |
 |------|------|
-| [aws_autoscaling_group_tag.default_name_tag](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
-| [aws_autoscaling_group_tag.worker_node_tag](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
 | [aws_cloudwatch_log_group.cluster_logs](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/cloudwatch_log_group) | resource |
 | [aws_eks_access_entry.admin](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/eks_access_entry) | resource |
 | [aws_eks_access_policy_association.admin](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/eks_access_policy_association) | resource |

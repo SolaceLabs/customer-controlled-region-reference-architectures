@@ -21,18 +21,19 @@ No modules.
 | Name | Type |
 |------|------|
 | [aws_autoscaling_group_tag.labels_tags](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
-| [aws_autoscaling_group_tag.name_tag](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
 | [aws_autoscaling_group_tag.resources_tags](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
 | [aws_autoscaling_group_tag.taints_tags](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
-| [aws_autoscaling_group_tag.worker_node_tag](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
 | [aws_eks_node_group.this](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/eks_node_group) | resource |
 | [aws_launch_template.this](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/launch_template) | resource |
+| [aws_ec2_instance_type.worker_node](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/data-sources/ec2_instance_type) | data source |
+| [aws_ssm_parameter.eks_ami_release_version](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/data-sources/ssm_parameter) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name of the EKS cluster. | `string` | n/a | yes |
+| <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The kubernetes version to use. Only used a creation time, ignored once the cluster exists. | `string` | n/a | yes |
 | <a name="input_node_group_desired_size"></a> [node\_group\_desired\_size](#input\_node\_group\_desired\_size) | The desired size of the node groups. | `number` | `0` | no |
 | <a name="input_node_group_labels"></a> [node\_group\_labels](#input\_node\_group\_labels) | Kubernetes labels added to worker nodes in the node groups. | `map(string)` | n/a | yes |
 | <a name="input_node_group_max_size"></a> [node\_group\_max\_size](#input\_node\_group\_max\_size) | The maximum size of the node groups. | `number` | n/a | yes |

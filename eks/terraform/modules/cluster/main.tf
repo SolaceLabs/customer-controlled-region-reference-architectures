@@ -321,6 +321,12 @@ resource "aws_eks_addon" "csi-driver" {
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
 
+  configuration_values = jsonencode({
+    controller = {
+      extraVolumeTags = var.worker_node_tags
+    }
+  })
+
   depends_on = [
     aws_eks_node_group.default
   ]
@@ -485,6 +491,12 @@ resource "aws_launch_template" "default" {
     instance_metadata_tags      = "enabled"
     http_tokens                 = "required"
   }
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = merge(var.worker_node_tags, { "Name" = "${var.cluster_name}-default" })
+  }
 }
 
 resource "aws_eks_node_group" "default" {
@@ -517,28 +529,6 @@ resource "aws_eks_node_group" "default" {
   }
 }
 
-resource "aws_autoscaling_group_tag" "default_name_tag" {
-  autoscaling_group_name = aws_eks_node_group.default.resources[0].autoscaling_groups[0].name
-
-  tag {
-    key                 = "Name"
-    value               = "${var.cluster_name}-default"
-    propagate_at_launch = true
-  }
-}
-
-resource "aws_autoscaling_group_tag" "worker_node_tag" {
-  count = length(var.worker_node_tags)
-
-  autoscaling_group_name = aws_eks_node_group.default.resources[0].autoscaling_groups[0].name
-
-  tag {
-    key                 = var.worker_node_tags[count.index].key
-    value               = var.worker_node_tags[count.index].value
-    propagate_at_launch = true
-  }
-}
-
 ################################################################################
 # Node Groups - Broker
 ################################################################################
@@ -547,6 +537,7 @@ module "node_group_prod1k" {
   source = "../broker-node-group"
 
   cluster_name           = aws_eks_cluster.cluster.name
+  kubernetes_version     = var.kubernetes_version
   node_group_name_prefix = "${var.cluster_name}-prod1k"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.private_subnet_ids
@@ -588,6 +579,7 @@ module "node_group_prod10k" {
   source = "../broker-node-group"
 
   cluster_name           = aws_eks_cluster.cluster.name
+  kubernetes_version     = var.kubernetes_version
   node_group_name_prefix = "${var.cluster_name}-prod10k"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.private_subnet_ids
@@ -629,6 +621,7 @@ module "node_group_prod100k" {
   source = "../broker-node-group"
 
   cluster_name           = aws_eks_cluster.cluster.name
+  kubernetes_version     = var.kubernetes_version
   node_group_name_prefix = "${var.cluster_name}-prod100k"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.private_subnet_ids
@@ -670,6 +663,7 @@ module "node_group_monitoring" {
   source = "../broker-node-group"
 
   cluster_name           = aws_eks_cluster.cluster.name
+  kubernetes_version     = var.kubernetes_version
   node_group_name_prefix = "${var.cluster_name}-monitoring"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.private_subnet_ids
@@ -706,26 +700,34 @@ module "node_group_monitoring" {
 ################################################################################
 
 locals {
-  cluster_autoscaler_helm_values = <<HELMVALUES
-awsRegion: ${var.region}
-autoDiscovery:
-  clusterName: ${var.cluster_name}
-extraArgs:
-  scale-down-delay-after-add: 5m
-  scale-down-unneeded-time: 5m
-replicaCount: 2
-rbac:
-  serviceAccount:
-    name: ${local.cluster_autoscaler_service_account}
-    annotations:
-      eks.amazonaws.com/role-arn: ${try(module.cluster_autoscaler_irsa_role.iam_role_arn, "")}
-HELMVALUES
+  cluster_autoscaler_helm_values = yamlencode({
+    awsRegion : var.region,
+    autoDiscovery : {
+      clusterName : var.cluster_name
+    },
+    extraArgs : {
+      "scale-down-delay-after-add" : "5m",
+      "scale-down-unneeded-time" : "5m"
+    },
+    replicaCount : 2,
+    rbac : {
+      serviceAccount : {
+        name : local.cluster_autoscaler_service_account,
+        annotations : {
+          "eks.amazonaws.com/role-arn" : try(module.cluster_autoscaler_irsa_role.iam_role_arn, "")
+        }
+      }
+    }
+  })
 
-  load_balancer_controller_helm_values = <<HELMVALUES
-clusterName: ${var.cluster_name}
-serviceAccount:
-  name: ${local.loadbalancer_controller_service_account}
-  annotations:
-    eks.amazonaws.com/role-arn: ${try(module.loadbalancer_controller_irsa_role.iam_role_arn, "")}
-HELMVALUES
+  load_balancer_controller_helm_values = yamlencode({
+    clusterName : var.cluster_name,
+    serviceAccount : {
+      name : local.loadbalancer_controller_service_account,
+      annotations : {
+        "eks.amazonaws.com/role-arn" : try(module.loadbalancer_controller_irsa_role.iam_role_arn, "")
+      }
+    },
+    defaultTags : var.worker_node_tags
+  })
 }

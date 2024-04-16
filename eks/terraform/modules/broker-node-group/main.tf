@@ -1,3 +1,12 @@
+locals {
+  arm64_instance = contains(data.aws_ec2_instance_type.worker_node.supported_architectures, "arm64")
+  ami_name       = local.arm64_instance ? "amazon-linux-2-arm64" : "amazon-linux-2"
+}
+
+data "aws_ec2_instance_type" "worker_node" {
+  instance_type = var.worker_node_instance_type
+}
+
 resource "aws_launch_template" "this" {
   name = var.node_group_name_prefix
 
@@ -22,6 +31,16 @@ resource "aws_launch_template" "this" {
     instance_metadata_tags      = "disabled"
     http_tokens                 = "required"
   }
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = merge(var.worker_node_tags, { "Name" = var.node_group_name_prefix })
+  }
+}
+
+data "aws_ssm_parameter" "eks_ami_release_version" {
+  name = "/aws/service/eks/optimized-ami/${var.kubernetes_version}/${local.ami_name}/recommended/release_version"
 }
 
 resource "aws_eks_node_group" "this" {
@@ -31,6 +50,12 @@ resource "aws_eks_node_group" "this" {
   node_group_name_prefix = "${var.node_group_name_prefix}-${count.index}-"
   node_role_arn          = var.worker_node_role_arn
   subnet_ids             = [var.subnet_ids[count.index]]
+
+  ami_type        = local.arm64_instance ? "AL2_ARM_64" : "AL2_x86_64"
+  version         = var.kubernetes_version
+  release_version = nonsensitive(data.aws_ssm_parameter.eks_ami_release_version.value)
+
+  #capacity_type = "SPOT"
 
   scaling_config {
     desired_size = var.node_group_desired_size
@@ -58,30 +83,6 @@ resource "aws_eks_node_group" "this" {
     ignore_changes = [
       scaling_config[0].desired_size
     ]
-  }
-}
-
-resource "aws_autoscaling_group_tag" "name_tag" {
-  count = length(aws_eks_node_group.this)
-
-  autoscaling_group_name = aws_eks_node_group.this[count.index].resources[0].autoscaling_groups[0].name
-
-  tag {
-    key                 = "Name"
-    value               = var.node_group_name_prefix
-    propagate_at_launch = true
-  }
-}
-
-resource "aws_autoscaling_group_tag" "worker_node_tag" {
-  count = length(var.worker_node_tags)
-
-  autoscaling_group_name = aws_eks_node_group.this[count.index].resources[0].autoscaling_groups[0].name
-
-  tag {
-    key                 = var.worker_node_tags[count.index].key
-    value               = var.worker_node_tags[count.index].value
-    propagate_at_launch = true
   }
 }
 

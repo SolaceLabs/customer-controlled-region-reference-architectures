@@ -10,9 +10,9 @@ terraform {
 }
 
 provider "aws" {
-  region = var.region
+  region     = var.region
   retry_mode = "adaptive"
-  
+
   default_tags {
     tags = var.default_tags
   }
