@@ -540,7 +540,7 @@ module "node_group_prod1k" {
   kubernetes_version     = var.kubernetes_version
   node_group_name_prefix = "${var.cluster_name}-prod1k"
   security_group_ids     = [aws_security_group.worker_node.id]
-  subnet_ids             = var.private_subnet_ids
+  subnet_ids             = var.pod_spread_policy == "fixed" ? slice(var.private_subnet_ids, 0, 2) : var.private_subnet_ids
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.prod1k_instance_type
@@ -582,7 +582,7 @@ module "node_group_prod10k" {
   kubernetes_version     = var.kubernetes_version
   node_group_name_prefix = "${var.cluster_name}-prod10k"
   security_group_ids     = [aws_security_group.worker_node.id]
-  subnet_ids             = var.private_subnet_ids
+  subnet_ids             = var.pod_spread_policy == "fixed" ? slice(var.private_subnet_ids, 0, 2) : var.private_subnet_ids
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.prod10k_instance_type
@@ -624,7 +624,7 @@ module "node_group_prod100k" {
   kubernetes_version     = var.kubernetes_version
   node_group_name_prefix = "${var.cluster_name}-prod100k"
   security_group_ids     = [aws_security_group.worker_node.id]
-  subnet_ids             = var.private_subnet_ids
+  subnet_ids             = var.pod_spread_policy == "fixed" ? slice(var.private_subnet_ids, 0, 2) : var.private_subnet_ids
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.prod100k_instance_type
@@ -666,7 +666,7 @@ module "node_group_monitoring" {
   kubernetes_version     = var.kubernetes_version
   node_group_name_prefix = "${var.cluster_name}-monitoring"
   security_group_ids     = [aws_security_group.worker_node.id]
-  subnet_ids             = var.private_subnet_ids
+  subnet_ids             = var.pod_spread_policy == "fixed" ? slice(var.private_subnet_ids, 2, 3) : var.private_subnet_ids
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.monitoring_instance_type
