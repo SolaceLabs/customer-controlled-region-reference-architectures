@@ -3,6 +3,12 @@ variable "region" {
   description = "The Azure region where this network will reside."
 }
 
+variable "common_tags" {
+  type        = map(string)
+  default     = {}
+  description = "Tags that are added to all resources created by this module."
+}
+
 variable "create_network" {
   type        = bool
   default     = true

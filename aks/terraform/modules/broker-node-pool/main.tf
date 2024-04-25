@@ -2,6 +2,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "this" {
   count = length(var.availability_zones)
 
   name = "${var.node_pool_name}${count.index}"
+  tags = var.common_tags
 
   kubernetes_cluster_id = var.cluster_id
 

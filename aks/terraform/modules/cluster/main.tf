@@ -22,6 +22,7 @@ resource "azurerm_user_assigned_identity" "cluster" {
   name                = "${var.cluster_name}-identity"
   resource_group_name = var.resource_group_name
   location            = var.region
+  tags                = var.common_tags
 }
 
 resource "azurerm_role_assignment" "cluster_subnet" {
@@ -43,9 +44,11 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   #checkov:skip=CKV_AZURE_7:Network Policy setting not supported when network plugin is 'kubenet'
   #checkov:skip=CKV_AZURE_116:Solace is not opinionated on the use of Azure Policy for Kubernetes
 
-  name                    = var.cluster_name
-  location                = var.region
-  resource_group_name     = var.resource_group_name
+  name                = var.cluster_name
+  location            = var.region
+  resource_group_name = var.resource_group_name
+  tags                = var.common_tags
+
   dns_prefix              = var.cluster_name
   private_cluster_enabled = var.kubernetes_api_public_access ? false : true
   kubernetes_version      = var.kubernetes_version
@@ -74,6 +77,10 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     vnet_subnet_id  = var.subnet_id
     max_pods        = local.worker_node_max_pods
     zones           = local.availability_zones
+
+    upgrade_settings {
+      max_surge = "10%"
+    }
   }
 
   network_profile {
@@ -143,6 +150,7 @@ resource "azurerm_log_analytics_workspace" "cluster" {
   name                = "${var.cluster_name}-logs"
   location            = var.region
   resource_group_name = var.resource_group_name
+  tags                = var.common_tags
 
   sku               = "PerGB2018"
   retention_in_days = 30

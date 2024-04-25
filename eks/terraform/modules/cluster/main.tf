@@ -323,7 +323,7 @@ resource "aws_eks_addon" "csi-driver" {
 
   configuration_values = jsonencode({
     controller = {
-      extraVolumeTags = var.worker_node_tags
+      extraVolumeTags = var.common_tags
     }
   })
 
@@ -493,10 +493,10 @@ resource "aws_launch_template" "default" {
   }
 
   dynamic "tag_specifications" {
-    for_each = length(var.worker_node_tags) > 0 ? [0] : []
+    for_each = length(var.common_tags) > 0 ? [0] : []
     content {
       resource_type = "instance"
-      tags          = var.worker_node_tags
+      tags          = var.common_tags
     }
   }
 }
@@ -557,7 +557,7 @@ module "node_group_prod1k" {
   worker_node_instance_type = local.prod1k_instance_type
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
-  worker_node_tags          = var.worker_node_tags
+  worker_node_tags          = var.common_tags
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
@@ -599,7 +599,7 @@ module "node_group_prod10k" {
   worker_node_instance_type = local.prod10k_instance_type
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
-  worker_node_tags          = var.worker_node_tags
+  worker_node_tags          = var.common_tags
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
@@ -641,7 +641,7 @@ module "node_group_prod100k" {
   worker_node_instance_type = local.prod100k_instance_type
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
-  worker_node_tags          = var.worker_node_tags
+  worker_node_tags          = var.common_tags
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
@@ -683,7 +683,7 @@ module "node_group_monitoring" {
   worker_node_instance_type = local.monitoring_instance_type
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
-  worker_node_tags          = var.worker_node_tags
+  worker_node_tags          = var.common_tags
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
@@ -739,6 +739,6 @@ locals {
         "eks.amazonaws.com/role-arn" : try(module.loadbalancer_controller_irsa_role.iam_role_arn, "")
       }
     },
-    defaultTags : var.worker_node_tags
+    defaultTags : var.common_tags
   })
 }

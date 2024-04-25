@@ -8,10 +8,10 @@ variable "cluster_name" {
   description = "The name of the cluster and name (or name prefix) for all other infrastructure."
 }
 
-variable "worker_node_tags" {
+variable "common_tags" {
   type        = map(string)
   default     = {}
-  description = "Tags that are added to worker nodes."
+  description = "Tags that are added to all resources created by this module, in the cases where this cannot be accomplished with 'default_tags' on the AWS provider."
 }
 
 variable "vpc_id" {

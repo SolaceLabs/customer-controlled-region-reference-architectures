@@ -14,6 +14,6 @@ provider "aws" {
   retry_mode = "adaptive"
 
   default_tags {
-    tags = var.default_tags
+    tags = var.common_tags
   }
 }

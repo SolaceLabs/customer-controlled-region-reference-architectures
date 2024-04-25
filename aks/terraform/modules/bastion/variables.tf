@@ -3,6 +3,12 @@ variable "region" {
   description = "The Azure region where this cluster will reside."
 }
 
+variable "common_tags" {
+  type        = map(string)
+  default     = {}
+  description = "Tags that are added to all resources created by this module."
+}
+
 variable "cluster_name" {
   type        = string
   description = "The name of the cluster and name (or name prefix) for all other infrastructure."

@@ -55,5 +55,5 @@ module "cluster" {
   kubernetes_cluster_auth_mode  = var.kubernetes_cluster_auth_mode
   kubernetes_cluster_admin_arns = var.kubernetes_cluster_admin_arns
 
-  worker_node_tags = var.default_tags
+  common_tags = var.common_tags
 }
