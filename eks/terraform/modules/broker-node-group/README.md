@@ -21,11 +21,11 @@ No modules.
 | Name | Type |
 |------|------|
 | [aws_autoscaling_group_tag.labels_tags](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
+| [aws_autoscaling_group_tag.name_tag](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
 | [aws_autoscaling_group_tag.resources_tags](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
 | [aws_autoscaling_group_tag.taints_tags](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/autoscaling_group_tag) | resource |
 | [aws_eks_node_group.this](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/eks_node_group) | resource |
 | [aws_launch_template.this](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/launch_template) | resource |
-| [aws_ec2_instance_type.worker_node](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/data-sources/ec2_instance_type) | data source |
 | [aws_ssm_parameter.eks_ami_release_version](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/data-sources/ssm_parameter) | data source |
 
 ## Inputs
@@ -45,7 +45,7 @@ No modules.
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | The subnets that the node groups will use - a node group is created in each subnet. | `list(string)` | n/a | yes |
 | <a name="input_worker_node_instance_type"></a> [worker\_node\_instance\_type](#input\_worker\_node\_instance\_type) | The instance type of the worker nodes. | `string` | n/a | yes |
 | <a name="input_worker_node_role_arn"></a> [worker\_node\_role\_arn](#input\_worker\_node\_role\_arn) | The ARN of the IAM role assigned to each worker node via an instance profile. | `string` | n/a | yes |
-| <a name="input_worker_node_tags"></a> [worker\_node\_tags](#input\_worker\_node\_tags) | Tags that are added to the auto-scaling groups that back the cluster's node groups. | `map(string)` | `{}` | no |
+| <a name="input_worker_node_tags"></a> [worker\_node\_tags](#input\_worker\_node\_tags) | Tags that are added to worker nodes. | `map(string)` | `{}` | no |
 | <a name="input_worker_node_volume_size"></a> [worker\_node\_volume\_size](#input\_worker\_node\_volume\_size) | The size of the worker node root disk. | `number` | n/a | yes |
 | <a name="input_worker_node_volume_type"></a> [worker\_node\_volume\_type](#input\_worker\_node\_volume\_type) | The volume type of the worker node root disk. | `string` | n/a | yes |
 

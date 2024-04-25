@@ -11,8 +11,6 @@ module "network" {
   vpc_cidr             = var.vpc_cidr
   public_subnet_cidrs  = var.public_subnet_cidrs
   private_subnet_cidrs = var.private_subnet_cidrs
-
-  pod_spread_policy = var.pod_spread_policy
 }
 
 ################################################################################
@@ -58,6 +56,4 @@ module "cluster" {
   kubernetes_cluster_admin_arns = var.kubernetes_cluster_admin_arns
 
   worker_node_tags = var.default_tags
-
-  pod_spread_policy = var.pod_spread_policy
 }

@@ -11,7 +11,7 @@ variable "kubernetes_version" {
 variable "worker_node_tags" {
   type        = map(string)
   default     = {}
-  description = "Tags that are added to the auto-scaling groups that back the cluster's node groups."
+  description = "Tags that are added to worker nodes."
 }
 
 variable "security_group_ids" {
