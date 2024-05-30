@@ -32,10 +32,6 @@ resource "aws_launch_template" "this" {
   }
 }
 
-data "aws_ssm_parameter" "eks_ami_release_version" {
-  name = "/aws/service/eks/optimized-ami/${var.kubernetes_version}/amazon-linux-2/recommended/release_version"
-}
-
 resource "aws_eks_node_group" "this" {
   count = length(var.subnet_ids)
 
@@ -43,10 +39,6 @@ resource "aws_eks_node_group" "this" {
   node_group_name_prefix = "${var.node_group_name_prefix}-${count.index}-"
   node_role_arn          = var.worker_node_role_arn
   subnet_ids             = [var.subnet_ids[count.index]]
-
-  ami_type        = "AL2_x86_64"
-  version         = var.kubernetes_version
-  release_version = nonsensitive(data.aws_ssm_parameter.eks_ami_release_version.value)
 
   scaling_config {
     desired_size = var.node_group_desired_size
