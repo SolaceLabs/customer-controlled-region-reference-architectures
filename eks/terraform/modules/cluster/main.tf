@@ -548,7 +548,6 @@ module "node_group_prod1k" {
   source = "../broker-node-group"
 
   cluster_name           = aws_eks_cluster.cluster.name
-  kubernetes_version     = var.kubernetes_version
   node_group_name_prefix = "${var.cluster_name}-prod1k"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.private_subnet_ids
@@ -590,7 +589,6 @@ module "node_group_prod10k" {
   source = "../broker-node-group"
 
   cluster_name           = aws_eks_cluster.cluster.name
-  kubernetes_version     = var.kubernetes_version
   node_group_name_prefix = "${var.cluster_name}-prod10k"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.private_subnet_ids
@@ -632,7 +630,6 @@ module "node_group_prod100k" {
   source = "../broker-node-group"
 
   cluster_name           = aws_eks_cluster.cluster.name
-  kubernetes_version     = var.kubernetes_version
   node_group_name_prefix = "${var.cluster_name}-prod100k"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.private_subnet_ids
@@ -674,7 +671,6 @@ module "node_group_monitoring" {
   source = "../broker-node-group"
 
   cluster_name           = aws_eks_cluster.cluster.name
-  kubernetes_version     = var.kubernetes_version
   node_group_name_prefix = "${var.cluster_name}-monitoring"
   security_group_ids     = [aws_security_group.worker_node.id]
   subnet_ids             = var.private_subnet_ids
