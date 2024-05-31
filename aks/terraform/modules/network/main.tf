@@ -4,6 +4,7 @@ resource "azurerm_virtual_network" "this" {
   name                = "${var.cluster_name}-vnet"
   location            = var.region
   resource_group_name = var.resource_group_name
+  tags                = var.common_tags
   address_space       = [var.vnet_cidr]
 
   lifecycle {
@@ -39,6 +40,7 @@ resource "azurerm_route_table" "cluster" {
   name                = "${var.cluster_name}-cluster"
   location            = var.region
   resource_group_name = var.resource_group_name
+  tags                = var.common_tags
 }
 
 resource "azurerm_route" "cluster" {

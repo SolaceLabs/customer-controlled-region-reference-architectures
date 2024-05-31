@@ -22,6 +22,14 @@ resource "aws_launch_template" "this" {
     instance_metadata_tags      = "disabled"
     http_tokens                 = "required"
   }
+
+  dynamic "tag_specifications" {
+    for_each = length(var.worker_node_tags) > 0 ? [0] : []
+    content {
+      resource_type = "instance"
+      tags          = var.worker_node_tags
+    }
+  }
 }
 
 resource "aws_eks_node_group" "this" {

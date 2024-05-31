@@ -321,6 +321,12 @@ resource "aws_eks_addon" "csi-driver" {
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
 
+  configuration_values = jsonencode({
+    controller = {
+      extraVolumeTags = var.common_tags
+    }
+  })
+
   depends_on = [
     aws_eks_node_group.default
   ]
@@ -485,6 +491,14 @@ resource "aws_launch_template" "default" {
     instance_metadata_tags      = "enabled"
     http_tokens                 = "required"
   }
+
+  dynamic "tag_specifications" {
+    for_each = length(var.common_tags) > 0 ? [0] : []
+    content {
+      resource_type = "instance"
+      tags          = var.common_tags
+    }
+  }
 }
 
 resource "aws_eks_node_group" "default" {
@@ -526,7 +540,6 @@ resource "aws_autoscaling_group_tag" "default_name_tag" {
     propagate_at_launch = true
   }
 }
-
 ################################################################################
 # Node Groups - Broker
 ################################################################################
@@ -543,6 +556,7 @@ module "node_group_prod1k" {
   worker_node_instance_type = local.prod1k_instance_type
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
+  worker_node_tags          = var.common_tags
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
@@ -583,6 +597,7 @@ module "node_group_prod10k" {
   worker_node_instance_type = local.prod10k_instance_type
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
+  worker_node_tags          = var.common_tags
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
@@ -623,6 +638,7 @@ module "node_group_prod100k" {
   worker_node_instance_type = local.prod100k_instance_type
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
+  worker_node_tags          = var.common_tags
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
@@ -663,6 +679,7 @@ module "node_group_monitoring" {
   worker_node_instance_type = local.monitoring_instance_type
   worker_node_volume_size   = local.worker_node_volume_size
   worker_node_volume_type   = local.worker_node_volume_type
+  worker_node_tags          = var.common_tags
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
@@ -690,26 +707,34 @@ module "node_group_monitoring" {
 ################################################################################
 
 locals {
-  cluster_autoscaler_helm_values = <<HELMVALUES
-awsRegion: ${var.region}
-autoDiscovery:
-  clusterName: ${var.cluster_name}
-extraArgs:
-  scale-down-delay-after-add: 5m
-  scale-down-unneeded-time: 5m
-replicaCount: 2
-rbac:
-  serviceAccount:
-    name: ${local.cluster_autoscaler_service_account}
-    annotations:
-      eks.amazonaws.com/role-arn: ${try(module.cluster_autoscaler_irsa_role.iam_role_arn, "")}
-HELMVALUES
+  cluster_autoscaler_helm_values = yamlencode({
+    awsRegion : var.region,
+    autoDiscovery : {
+      clusterName : var.cluster_name
+    },
+    extraArgs : {
+      "scale-down-delay-after-add" : "5m",
+      "scale-down-unneeded-time" : "5m"
+    },
+    replicaCount : 2,
+    rbac : {
+      serviceAccount : {
+        name : local.cluster_autoscaler_service_account,
+        annotations : {
+          "eks.amazonaws.com/role-arn" : try(module.cluster_autoscaler_irsa_role.iam_role_arn, "")
+        }
+      }
+    }
+  })
 
-  load_balancer_controller_helm_values = <<HELMVALUES
-clusterName: ${var.cluster_name}
-serviceAccount:
-  name: ${local.loadbalancer_controller_service_account}
-  annotations:
-    eks.amazonaws.com/role-arn: ${try(module.loadbalancer_controller_irsa_role.iam_role_arn, "")}
-HELMVALUES
+  load_balancer_controller_helm_values = yamlencode({
+    clusterName : var.cluster_name,
+    serviceAccount : {
+      name : local.loadbalancer_controller_service_account,
+      annotations : {
+        "eks.amazonaws.com/role-arn" : try(module.loadbalancer_controller_irsa_role.iam_role_arn, "")
+      }
+    },
+    defaultTags : var.common_tags
+  })
 }

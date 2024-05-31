@@ -1,3 +1,9 @@
+variable "common_tags" {
+  type        = map(string)
+  default     = {}
+  description = "Tags that are added to all resources created by this module."
+}
+
 variable "cluster_id" {
   type        = string
   description = "The ID of the cluster."

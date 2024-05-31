@@ -1,6 +1,7 @@
 resource "azurerm_resource_group" "cluster" {
   name     = "${var.cluster_name}-cluster"
   location = var.region
+  tags     = var.common_tags
 }
 
 ################################################################################
@@ -14,6 +15,7 @@ module "network" {
 
   resource_group_name = azurerm_resource_group.cluster.name
   region              = azurerm_resource_group.cluster.location
+  common_tags         = var.common_tags
   cluster_name        = var.cluster_name
 
   vnet_cidr = var.vnet_cidr
@@ -30,6 +32,7 @@ module "bastion" {
 
   resource_group_name = azurerm_resource_group.cluster.name
   region              = azurerm_resource_group.cluster.location
+  common_tags         = var.common_tags
   cluster_name        = var.cluster_name
 
   subnet_id = var.create_network ? module.network.subnet_id : var.subnet_id
@@ -47,6 +50,7 @@ module "cluster" {
 
   resource_group_name = azurerm_resource_group.cluster.name
   region              = azurerm_resource_group.cluster.location
+  common_tags         = var.common_tags
   cluster_name        = var.cluster_name
 
   subnet_id      = var.create_network ? module.network.subnet_id : var.subnet_id

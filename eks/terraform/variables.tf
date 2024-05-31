@@ -8,6 +8,12 @@ variable "cluster_name" {
   description = "The name of the cluster and name (or name prefix) for all other infrastructure."
 }
 
+variable "common_tags" {
+  type        = map(string)
+  default     = {}
+  description = "Tags that are added to all resources created by this module."
+}
+
 ################################################################################
 # Network
 ################################################################################

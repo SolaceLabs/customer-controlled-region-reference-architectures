@@ -9,6 +9,7 @@ resource "azurerm_public_ip" "bastion" {
   name                = local.bastion_prefix
   location            = var.region
   resource_group_name = var.resource_group_name
+  tags                = var.common_tags
   allocation_method   = "Static"
   sku                 = "Standard"
 }
@@ -19,6 +20,7 @@ resource "azurerm_network_security_group" "bastion" {
   name                = local.bastion_prefix
   location            = var.region
   resource_group_name = var.resource_group_name
+  tags                = var.common_tags
 
   security_rule {
     name                       = "ssh"
@@ -53,6 +55,7 @@ resource "azurerm_network_interface" "bastion" {
   name                = local.bastion_prefix
   location            = var.region
   resource_group_name = var.resource_group_name
+  tags                = var.common_tags
 
   ip_configuration {
     name                          = local.bastion_prefix
@@ -78,6 +81,7 @@ resource "azurerm_virtual_machine" "bastion" {
   name                  = local.bastion_prefix
   location              = var.region
   resource_group_name   = var.resource_group_name
+  tags                  = var.common_tags
   network_interface_ids = [azurerm_network_interface.bastion[0].id]
   vm_size               = "Standard_B1s"
 

@@ -31,6 +31,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name of the cluster. | `string` | n/a | yes |
+| <a name="input_common_tags"></a> [common\_tags](#input\_common\_tags) | Tags that are added to all resources created by this module. | `map(string)` | `{}` | no |
 | <a name="input_create_network"></a> [create\_network](#input\_create\_network) | When set to false, networking (VNET, Subnets, etc) must be created externally. | `bool` | `true` | no |
 | <a name="input_region"></a> [region](#input\_region) | The Azure region where this network will reside. | `string` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The name of the resource group that will contain the network. | `string` | n/a | yes |
