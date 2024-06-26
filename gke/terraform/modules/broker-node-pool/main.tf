@@ -10,6 +10,7 @@ resource "google_container_node_pool" "this" {
     image_type      = "UBUNTU_CONTAINERD" #checkov:skip=CKV_GCP_22:Ubuntu is required for XFS support
     oauth_scopes    = var.worker_node_oauth_scopes
     service_account = var.worker_node_service_account
+    resource_labels = var.common_labels
 
     labels = var.node_pool_labels
 

@@ -19,6 +19,8 @@ resource "google_compute_instance" "bastion" {
   machine_type = "e2-small"
   zone         = data.google_compute_zones.available.names[0]
 
+  labels = var.common_labels
+
   boot_disk {
     initialize_params {
       size  = 20

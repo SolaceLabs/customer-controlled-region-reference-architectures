@@ -35,9 +35,10 @@ module "bastion" {
 module "cluster" {
   source = "./modules/cluster"
 
-  project      = var.project
-  region       = var.region
-  cluster_name = var.cluster_name
+  project       = var.project
+  region        = var.region
+  cluster_name  = var.cluster_name
+  common_labels = var.common_labels
 
   kubernetes_version = var.kubernetes_version
 
