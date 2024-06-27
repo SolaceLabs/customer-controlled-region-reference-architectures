@@ -3,6 +3,12 @@ variable "cluster_name" {
   description = "The name of the cluster and name (or name prefix) for all other infrastructure."
 }
 
+variable "common_labels" {
+  type        = map(string)
+  default     = {}
+  description = "Labels that are added to all resources created by this module."
+}
+
 variable "create_bastion" {
   type        = bool
   default     = true

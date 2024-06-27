@@ -7,7 +7,7 @@ locals {
   prod1k_machine_type     = "n2-highmem-2"
   prod10k_machine_type    = "n2-highmem-4"
   prod100k_machine_type   = "n2-highmem-8"
-  monitoring_machine_type = "n2-standard-2"
+  monitoring_machine_type = "e2-standard-2"
 }
 
 resource "google_service_account" "cluster" {
@@ -37,6 +37,8 @@ resource "google_container_cluster" "cluster" {
   subnetwork         = var.subnetwork_name
   min_master_version = data.google_container_engine_versions.this.latest_master_version
 
+  resource_labels = var.common_labels
+
   enable_intranode_visibility = true
   enable_l4_ilb_subsetting    = true
 
@@ -46,6 +48,12 @@ resource "google_container_cluster" "cluster" {
   deletion_protection = false
 
   networking_mode = "VPC_NATIVE"
+
+  monitoring_config {
+    managed_prometheus {
+      enabled = false
+    }
+  }
 
   ip_allocation_policy {
     cluster_ipv4_cidr_block  = var.secondary_cidr_range_pods
@@ -110,6 +118,7 @@ resource "google_container_node_pool" "system" {
     image_type      = "COS_CONTAINERD"
     oauth_scopes    = local.worker_node_oauth_scopes
     service_account = google_service_account.cluster.email
+    resource_labels = var.common_labels
 
     shielded_instance_config {
       enable_secure_boot          = true
@@ -135,7 +144,8 @@ module "node_group_prod1k" {
 
   region             = var.region
   cluster_name       = google_container_cluster.cluster.name
-  node_pool_name     = "${var.cluster_name}-prod1k"
+  common_labels      = var.common_labels
+  node_pool_name     = "prod1k"
   availability_zones = data.google_compute_zones.available.names
 
   worker_node_machine_type    = local.prod1k_machine_type
@@ -169,7 +179,8 @@ module "node_group_prod10k" {
 
   region             = var.region
   cluster_name       = google_container_cluster.cluster.name
-  node_pool_name     = "${var.cluster_name}-prod10k"
+  common_labels      = var.common_labels
+  node_pool_name     = "prod10k"
   availability_zones = data.google_compute_zones.available.names
 
   worker_node_machine_type    = local.prod10k_machine_type
@@ -203,7 +214,8 @@ module "node_group_prod100k" {
 
   region             = var.region
   cluster_name       = google_container_cluster.cluster.name
-  node_pool_name     = "${var.cluster_name}-prod100k"
+  common_labels      = var.common_labels
+  node_pool_name     = "prod100k"
   availability_zones = data.google_compute_zones.available.names
 
   worker_node_machine_type    = local.prod100k_machine_type
@@ -237,7 +249,8 @@ module "node_group_monitoring" {
 
   region             = var.region
   cluster_name       = google_container_cluster.cluster.name
-  node_pool_name     = "${var.cluster_name}-monitoring"
+  common_labels      = var.common_labels
+  node_pool_name     = "monitoring"
   availability_zones = data.google_compute_zones.available.names
 
   worker_node_machine_type    = local.monitoring_machine_type

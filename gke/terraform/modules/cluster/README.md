@@ -4,13 +4,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | 5.18.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | 5.31.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 5.18.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 5.31.1 |
 
 ## Modules
 
@@ -25,17 +25,18 @@
 
 | Name | Type |
 |------|------|
-| [google_container_cluster.cluster](https://registry.terraform.io/providers/hashicorp/google/5.18.0/docs/resources/container_cluster) | resource |
-| [google_container_node_pool.system](https://registry.terraform.io/providers/hashicorp/google/5.18.0/docs/resources/container_node_pool) | resource |
-| [google_service_account.cluster](https://registry.terraform.io/providers/hashicorp/google/5.18.0/docs/resources/service_account) | resource |
-| [google_compute_zones.available](https://registry.terraform.io/providers/hashicorp/google/5.18.0/docs/data-sources/compute_zones) | data source |
-| [google_container_engine_versions.this](https://registry.terraform.io/providers/hashicorp/google/5.18.0/docs/data-sources/container_engine_versions) | data source |
+| [google_container_cluster.cluster](https://registry.terraform.io/providers/hashicorp/google/5.31.1/docs/resources/container_cluster) | resource |
+| [google_container_node_pool.system](https://registry.terraform.io/providers/hashicorp/google/5.31.1/docs/resources/container_node_pool) | resource |
+| [google_service_account.cluster](https://registry.terraform.io/providers/hashicorp/google/5.31.1/docs/resources/service_account) | resource |
+| [google_compute_zones.available](https://registry.terraform.io/providers/hashicorp/google/5.31.1/docs/data-sources/compute_zones) | data source |
+| [google_container_engine_versions.this](https://registry.terraform.io/providers/hashicorp/google/5.31.1/docs/data-sources/container_engine_versions) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name of the cluster and name (or name prefix) for all other infrastructure. | `string` | n/a | yes |
+| <a name="input_common_labels"></a> [common\_labels](#input\_common\_labels) | Labels that are added to all resources created by this module. | `map(string)` | `{}` | no |
 | <a name="input_kubernetes_api_authorized_networks"></a> [kubernetes\_api\_authorized\_networks](#input\_kubernetes\_api\_authorized\_networks) | The list of CIDRs that can access the Kubernetes API, in addition to the bastion host and worker nodes (which are added by default). | `list(string)` | `[]` | no |
 | <a name="input_kubernetes_api_public_access"></a> [kubernetes\_api\_public\_access](#input\_kubernetes\_api\_public\_access) | When set to true, the Kubernetes API is accessible publically from the provided authorized networks. | `bool` | `false` | no |
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The kubernetes version to use. Only used a creation time, ignored once the cluster exists. | `string` | n/a | yes |
