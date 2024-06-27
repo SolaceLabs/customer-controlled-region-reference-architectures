@@ -12,4 +12,6 @@ terraform {
 provider "google" {
   project = var.project
   region  = var.region
+
+  default_labels = var.common_labels
 }
