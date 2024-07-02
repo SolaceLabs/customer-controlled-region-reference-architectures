@@ -64,6 +64,12 @@ variable "create_bastion" {
   description = "Whether to create a bastion host. If Kubernetes API is private-only then a way to access it must be configured separately."
 }
 
+variable "bastion_subnet_id" {
+  type        = string
+  default     = null
+  description = "When 'create_network' is set to false but a bastion is desired, the bastion's subnet ID must be provided."
+}
+
 variable "bastion_public_access" {
   type        = bool
   default     = true

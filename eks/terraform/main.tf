@@ -22,10 +22,10 @@ module "bastion" {
 
   cluster_name = var.cluster_name
 
-  create_bastion = var.create_bastion && var.create_network
+  create_bastion = var.create_bastion
 
-  vpc_id    = var.create_network ? module.network.vpc_id : null
-  subnet_id = var.create_network ? module.network.public_subnets[2] : null
+  vpc_id    = var.create_network ? module.network.vpc_id : var.vpc_id
+  subnet_id = var.create_network ? module.network.public_subnets[2] : var.bastion_subnet_id
 
   bastion_public_access           = var.bastion_public_access
   bastion_ssh_authorized_networks = var.bastion_ssh_authorized_networks
