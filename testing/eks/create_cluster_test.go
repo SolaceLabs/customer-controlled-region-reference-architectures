@@ -144,6 +144,7 @@ func TestTerraformEksClusterExternalNetwork(t *testing.T) {
 	terraform.InitAndApply(t, prereqOptions)
 
 	localCidr := []string{terraform.Output(t, prereqOptions, "local_cidr")}
+	bastionPublicKey := terraform.Output(t, prereqOptions, "bastion_ssh_public_key")
 
 	networkPath, _ := common.CopyTerraform(t, "./network")
 	networkOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
@@ -162,6 +163,7 @@ func TestTerraformEksClusterExternalNetwork(t *testing.T) {
 	terraform.InitAndApply(t, networkOptions)
 
 	vpcId := terraform.Output(t, networkOptions, "vpc_id")
+	publicSubnets := terraform.OutputList(t, networkOptions, "public_subnets")
 	privateSubnets := terraform.OutputList(t, networkOptions, "private_subnets")
 
 	underTestPath, _ := common.CopyTerraform(t, "../../eks/terraform")
@@ -175,7 +177,10 @@ func TestTerraformEksClusterExternalNetwork(t *testing.T) {
 			"create_network":                     false,
 			"vpc_id":                             vpcId,
 			"private_subnet_ids":                 privateSubnets,
-			"create_bastion":                     false,
+			"create_bastion":                     true,
+			"bastion_ssh_authorized_networks":    localCidr,
+			"bastion_ssh_public_key":             bastionPublicKey,
+			"bastion_subnet_id":                  publicSubnets[0],
 			"kubernetes_api_public_access":       true,
 			"kubernetes_api_authorized_networks": localCidr,
 		},
@@ -214,6 +219,10 @@ func TestTerraformEksClusterExternalNetwork(t *testing.T) {
 	}
 
 	terraform.InitAndApply(t, configOptions)
+
+	bastionPublicIp := terraform.Output(t, underTestOptions, "bastion_public_ip")
+	bastionPrivateKey := terraform.Output(t, prereqOptions, "bastion_ssh_private_key")
+	common.TestSshToBastionHost(t, bastionPublicIp, "ec2-user", bastionPrivateKey)
 
 	testCluster(t, configOptions)
 }
