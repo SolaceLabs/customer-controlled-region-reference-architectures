@@ -40,6 +40,10 @@ resource "aws_eks_node_group" "this" {
   node_role_arn          = var.worker_node_role_arn
   subnet_ids             = [var.subnet_ids[count.index]]
 
+  instance_types = [
+    var.worker_node_instance_type
+  ]
+
   scaling_config {
     desired_size = var.node_group_desired_size
     min_size     = var.node_group_min_size
