@@ -2,7 +2,6 @@ resource "aws_launch_template" "this" {
   name = var.node_group_name_prefix
 
   vpc_security_group_ids = var.security_group_ids
-  instance_type          = var.worker_node_instance_type
 
   block_device_mappings {
     device_name = "/dev/xvda"
@@ -39,6 +38,7 @@ resource "aws_eks_node_group" "this" {
   node_group_name_prefix = "${var.node_group_name_prefix}-${count.index}-"
   node_role_arn          = var.worker_node_role_arn
   subnet_ids             = [var.subnet_ids[count.index]]
+  version = "1.28"
 
   instance_types = [
     var.worker_node_instance_type
