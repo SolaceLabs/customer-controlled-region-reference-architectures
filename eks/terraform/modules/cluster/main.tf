@@ -740,10 +740,7 @@ locals {
     replicaCount : 2,
     rbac : {
       serviceAccount : {
-        name : local.cluster_autoscaler_service_account,
-        annotations : {
-          "eks.amazonaws.com/role-arn" : try(module.cluster_autoscaler_irsa_role.iam_role_arn, "")
-        }
+        name : local.cluster_autoscaler_service_account
       }
     }
   })
@@ -751,10 +748,7 @@ locals {
   load_balancer_controller_helm_values = yamlencode({
     clusterName : var.cluster_name,
     serviceAccount : {
-      name : local.loadbalancer_controller_service_account,
-      annotations : {
-        "eks.amazonaws.com/role-arn" : try(module.loadbalancer_controller_irsa_role.iam_role_arn, "")
-      }
+      name : local.loadbalancer_controller_service_account
     },
     defaultTags : var.common_tags
   })
