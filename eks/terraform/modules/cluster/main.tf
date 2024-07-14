@@ -1,7 +1,7 @@
 locals {
   cluster_autoscaler_service_account      = "cluster-autoscaler"
   loadbalancer_controller_service_account = "aws-load-balancer-controller"
-  ebs_csi_controller_service_account      = "ebs-csi-controller"
+  ebs_csi_controller_service_account      = "ebs-csi-controller-sa"
   vpc_cni_service_account                 = "aws-node"
   contorllers_namespace                   = "kube-system"
 
