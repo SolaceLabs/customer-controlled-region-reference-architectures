@@ -51,7 +51,7 @@ module "aws_lb_controller_pod_identity" {
   # Pod Identity Associations
   association_defaults = {
     namespace       = local.contorllers_namespace
-    service_account = local.loadbalancer_controller_service_account
+    service_account = local.ebs_csi_controller_service_account
   }
 
   associations = {
@@ -60,7 +60,6 @@ module "aws_lb_controller_pod_identity" {
     }
   }
 
-  tags = local.tags
 }
 
 module "aws_ebs_csi_pod_identity" {
@@ -323,7 +322,6 @@ resource "aws_cloudwatch_log_group" "cluster_logs" {
 resource "aws_eks_addon" "csi-driver" {
   cluster_name             = aws_eks_cluster.cluster.name
   addon_name               = "aws-ebs-csi-driver"
-  service_account_role_arn = module.ebs_csi_irsa_role.iam_role_arn
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
@@ -342,7 +340,6 @@ resource "aws_eks_addon" "csi-driver" {
 resource "aws_eks_addon" "vpc-cni" {
   cluster_name             = aws_eks_cluster.cluster.name
   addon_name               = "vpc-cni"
-  service_account_role_arn = module.vpc_cni_irsa_role.iam_role_arn
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
