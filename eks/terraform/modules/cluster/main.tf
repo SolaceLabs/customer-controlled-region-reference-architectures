@@ -22,7 +22,7 @@ module "cluster_autoscaler_pod_identity" {
   source  = "terraform-aws-modules/eks-pod-identity/aws"
   version = "1.2.1"
 
-  name = "${var.cluster_name}-cluster-autoscaler"
+  name = "${var.cluster_name}-ca"
 
   attach_cluster_autoscaler_policy = true
   cluster_autoscaler_cluster_names = [aws_eks_cluster.cluster.id]
@@ -44,7 +44,7 @@ module "aws_lb_controller_pod_identity" {
   source  = "terraform-aws-modules/eks-pod-identity/aws"
   version = "1.2.1"
 
-  name = "${var.cluster_name}-loadbalancer-controller"
+  name = "${var.cluster_name}-lbc"
 
   attach_aws_lb_controller_policy = true
 
