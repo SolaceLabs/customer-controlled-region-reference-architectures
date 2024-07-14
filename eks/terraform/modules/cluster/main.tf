@@ -382,10 +382,6 @@ resource "aws_eks_addon" "pod-identity" {
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
-
-  depends_on = [
-    aws_eks_node_group.default
-  ]
 }
 
 ################################################################################
