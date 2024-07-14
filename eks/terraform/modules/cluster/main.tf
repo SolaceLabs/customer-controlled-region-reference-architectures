@@ -51,7 +51,7 @@ module "aws_lb_controller_pod_identity" {
   # Pod Identity Associations
   association_defaults = {
     namespace       = local.contorllers_namespace
-    service_account = local.ebs_csi_controller_service_account
+    service_account = local.loadbalancer_controller_service_account
   }
 
   associations = {
@@ -73,7 +73,7 @@ module "aws_ebs_csi_pod_identity" {
   # Pod Identity Associations
   association_defaults = {
     namespace       = local.contorllers_namespace
-    service_account = local.cluster_autoscaler_service_account
+    service_account = local.ebs_csi_controller_service_account
   }
 
   associations = {
