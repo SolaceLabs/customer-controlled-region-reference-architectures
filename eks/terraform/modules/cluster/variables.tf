@@ -64,3 +64,9 @@ variable "kubernetes_cluster_admin_arns" {
   default     = []
   description = "When kubernetes_cluster_auth_mode is set to 'API', user or role ARNs can be provided that will be given assigned AmazonEKSClusterAdminPolicy for this cluster."
 }
+
+variable "use_random_suffix_in_node_group_name" {
+  description = "Whether to use auto generated random suffix in node group name"
+  type        = bool
+  default     = true
+}
