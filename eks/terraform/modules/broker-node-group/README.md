@@ -41,6 +41,7 @@ No modules.
 | <a name="input_node_group_taints"></a> [node\_group\_taints](#input\_node\_group\_taints) | Kubernetes taints added to worker nodes in the node groups. | `list(map(string))` | n/a | yes |
 | <a name="input_security_group_ids"></a> [security\_group\_ids](#input\_security\_group\_ids) | The security groups that will be attached to the worker nodes. | `list(string)` | n/a | yes |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | The subnets that the node groups will use - a node group is created in each subnet. | `list(string)` | n/a | yes |
+| <a name="input_use_random_suffix_in_node_group_name"></a> [use\_random\_suffix\_in\_node\_group\_name](#input\_use\_random\_suffix\_in\_node\_group\_name) | Whether to use auto generated random suffix in node group name | `bool` | `true` | no |
 | <a name="input_worker_node_instance_type"></a> [worker\_node\_instance\_type](#input\_worker\_node\_instance\_type) | The instance type of the worker nodes. | `string` | n/a | yes |
 | <a name="input_worker_node_role_arn"></a> [worker\_node\_role\_arn](#input\_worker\_node\_role\_arn) | The ARN of the IAM role assigned to each worker node via an instance profile. | `string` | n/a | yes |
 | <a name="input_worker_node_tags"></a> [worker\_node\_tags](#input\_worker\_node\_tags) | Tags that are added to worker nodes. | `map(string)` | `{}` | no |

@@ -503,7 +503,8 @@ resource "aws_launch_template" "default" {
 
 resource "aws_eks_node_group" "default" {
   cluster_name           = aws_eks_cluster.cluster.name
-  node_group_name_prefix = "${var.cluster_name}-default-"
+  node_group_name_prefix = var.use_random_suffix_in_node_group_name ? "${var.cluster_name}-default-" : null
+  node_group_name        = var.use_random_suffix_in_node_group_name ? null : "${var.cluster_name}-default"
   node_role_arn          = aws_iam_role.worker_node.arn
   subnet_ids             = var.private_subnet_ids
 
@@ -547,10 +548,11 @@ resource "aws_autoscaling_group_tag" "default_name_tag" {
 module "node_group_prod1k" {
   source = "../broker-node-group"
 
-  cluster_name           = aws_eks_cluster.cluster.name
-  node_group_name_prefix = "${var.cluster_name}-prod1k"
-  security_group_ids     = [aws_security_group.worker_node.id]
-  subnet_ids             = var.private_subnet_ids
+  cluster_name                         = aws_eks_cluster.cluster.name
+  use_random_suffix_in_node_group_name = var.use_random_suffix_in_node_group_name
+  node_group_name_prefix               = "${var.cluster_name}-prod1k"
+  security_group_ids                   = [aws_security_group.worker_node.id]
+  subnet_ids                           = var.private_subnet_ids
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.prod1k_instance_type
@@ -588,10 +590,11 @@ module "node_group_prod1k" {
 module "node_group_prod10k" {
   source = "../broker-node-group"
 
-  cluster_name           = aws_eks_cluster.cluster.name
-  node_group_name_prefix = "${var.cluster_name}-prod10k"
-  security_group_ids     = [aws_security_group.worker_node.id]
-  subnet_ids             = var.private_subnet_ids
+  cluster_name                         = aws_eks_cluster.cluster.name
+  use_random_suffix_in_node_group_name = var.use_random_suffix_in_node_group_name
+  node_group_name_prefix               = "${var.cluster_name}-prod10k"
+  security_group_ids                   = [aws_security_group.worker_node.id]
+  subnet_ids                           = var.private_subnet_ids
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.prod10k_instance_type
@@ -629,10 +632,11 @@ module "node_group_prod10k" {
 module "node_group_prod100k" {
   source = "../broker-node-group"
 
-  cluster_name           = aws_eks_cluster.cluster.name
-  node_group_name_prefix = "${var.cluster_name}-prod100k"
-  security_group_ids     = [aws_security_group.worker_node.id]
-  subnet_ids             = var.private_subnet_ids
+  cluster_name                         = aws_eks_cluster.cluster.name
+  use_random_suffix_in_node_group_name = var.use_random_suffix_in_node_group_name
+  node_group_name_prefix               = "${var.cluster_name}-prod100k"
+  security_group_ids                   = [aws_security_group.worker_node.id]
+  subnet_ids                           = var.private_subnet_ids
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.prod100k_instance_type
@@ -670,10 +674,11 @@ module "node_group_prod100k" {
 module "node_group_monitoring" {
   source = "../broker-node-group"
 
-  cluster_name           = aws_eks_cluster.cluster.name
-  node_group_name_prefix = "${var.cluster_name}-monitoring"
-  security_group_ids     = [aws_security_group.worker_node.id]
-  subnet_ids             = var.private_subnet_ids
+  cluster_name                         = aws_eks_cluster.cluster.name
+  use_random_suffix_in_node_group_name = var.use_random_suffix_in_node_group_name
+  node_group_name_prefix               = "${var.cluster_name}-monitoring"
+  security_group_ids                   = [aws_security_group.worker_node.id]
+  subnet_ids                           = var.private_subnet_ids
 
   worker_node_role_arn      = aws_iam_role.worker_node.arn
   worker_node_instance_type = local.monitoring_instance_type

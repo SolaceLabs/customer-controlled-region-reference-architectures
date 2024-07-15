@@ -75,3 +75,9 @@ variable "worker_node_instance_type" {
   type        = string
   description = "The instance type of the worker nodes."
 }
+
+variable "use_random_suffix_in_node_group_name" {
+  description = "Whether to use auto generated random suffix in node group name"
+  type        = bool
+  default     = true
+}
