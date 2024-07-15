@@ -35,10 +35,10 @@ resource "aws_launch_template" "this" {
 resource "aws_eks_node_group" "this" {
   count = length(var.subnet_ids)
 
-  cluster_name           = var.cluster_name
-  node_group_name_prefix = "${var.node_group_name_prefix}-${count.index}-"
-  node_role_arn          = var.worker_node_role_arn
-  subnet_ids             = [var.subnet_ids[count.index]]
+  cluster_name    = var.cluster_name
+  node_group_name = "${var.node_group_name_prefix}-${count.index}"
+  node_role_arn   = var.worker_node_role_arn
+  subnet_ids      = [var.subnet_ids[count.index]]
 
   scaling_config {
     desired_size = var.node_group_desired_size
