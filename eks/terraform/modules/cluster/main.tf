@@ -233,8 +233,9 @@ resource "aws_cloudwatch_log_group" "cluster_logs" {
 ################################################################################
 
 resource "aws_eks_addon" "csi-driver" {
-  cluster_name = aws_eks_cluster.cluster.name
-  addon_name   = "aws-ebs-csi-driver"
+  cluster_name             = aws_eks_cluster.cluster.name
+  addon_name               = "aws-ebs-csi-driver"
+  service_account_role_arn = var.use_irsa_v1 ? module.ebs_csi_irsa_role.iam_role_arn : null
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
@@ -251,8 +252,9 @@ resource "aws_eks_addon" "csi-driver" {
 }
 
 resource "aws_eks_addon" "vpc-cni" {
-  cluster_name = aws_eks_cluster.cluster.name
-  addon_name   = "vpc-cni"
+  cluster_name             = aws_eks_cluster.cluster.name
+  addon_name               = "vpc-cni"
+  service_account_role_arn = var.use_irsa_v1 ? module.vpc_cni_irsa_role.iam_role_arn : null
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
@@ -652,7 +654,7 @@ locals {
     rbac : {
       serviceAccount : {
         name : local.cluster_autoscaler_service_account,
-        annotations: try(var.use_irsa_v1 ? {
+        annotations : try(var.use_irsa_v1 ? {
           "eks.amazonaws.com/role-arn" : module.cluster_autoscaler_irsa_role[0].iam_role_arn
         } : null)
       }
@@ -663,7 +665,7 @@ locals {
     clusterName : var.cluster_name,
     serviceAccount : {
       name : local.loadbalancer_controller_service_account,
-      annotations: try(var.use_irsa_v1 ? {
+      annotations : try(var.use_irsa_v1 ? {
         "eks.amazonaws.com/role-arn" : module.loadbalancer_controller_irsa_role[0].iam_role_arn
       } : null)
     }

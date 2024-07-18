@@ -193,7 +193,7 @@ module "aws_ebs_csi_pod_identity" {
 
 module "aws_vpc_cni_pod_identity" {
   count = var.use_irsa_v2 ? 1 : 0
-  
+
   source  = "terraform-aws-modules/eks-pod-identity/aws"
   version = "1.2.1"
 
