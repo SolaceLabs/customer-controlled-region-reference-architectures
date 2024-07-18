@@ -32,7 +32,7 @@ module "cluster_autoscaler_irsa_role" {
 
   oidc_providers = {
     main = {
-      provider_arn               = aws_iam_openid_connect_provider.cluster.arn
+      provider_arn               = aws_iam_openid_connect_provider.cluster[0].arn
       namespace_service_accounts = ["kube-system:${local.cluster_autoscaler_service_account}"]
     }
   }
@@ -57,7 +57,7 @@ module "loadbalancer_controller_irsa_role" {
 
   oidc_providers = {
     main = {
-      provider_arn               = aws_iam_openid_connect_provider.cluster.arn
+      provider_arn               = aws_iam_openid_connect_provider.cluster[0].arn
       namespace_service_accounts = ["kube-system:${local.loadbalancer_controller_service_account}"]
     }
   }
@@ -81,7 +81,7 @@ module "ebs_csi_irsa_role" {
 
   oidc_providers = {
     main = {
-      provider_arn               = aws_iam_openid_connect_provider.cluster.arn
+      provider_arn               = aws_iam_openid_connect_provider.cluster[0].arn
       namespace_service_accounts = ["kube-system:ebs-csi-controller-sa"]
     }
   }
@@ -106,7 +106,7 @@ module "vpc_cni_irsa_role" {
 
   oidc_providers = {
     main = {
-      provider_arn               = aws_iam_openid_connect_provider.cluster.arn
+      provider_arn               = aws_iam_openid_connect_provider.cluster[0].arn
       namespace_service_accounts = ["kube-system:aws-node"]
     }
   }
