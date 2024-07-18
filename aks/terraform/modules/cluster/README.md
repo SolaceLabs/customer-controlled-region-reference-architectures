@@ -64,5 +64,6 @@
 
 | Name | Description |
 |------|-------------|
+| <a name="output_cluster_id"></a> [cluster\_id](#output\_cluster\_id) | n/a |
 | <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | n/a |
 <!-- END_TF_DOCS -->
