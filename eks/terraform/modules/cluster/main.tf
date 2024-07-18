@@ -18,93 +18,6 @@ locals {
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
 
-module "cluster_autoscaler_pod_identity" {
-  source  = "terraform-aws-modules/eks-pod-identity/aws"
-  version = "1.2.1"
-
-  name = "${var.cluster_name}-ca"
-
-  attach_cluster_autoscaler_policy = true
-  cluster_autoscaler_cluster_names = [aws_eks_cluster.cluster.id]
-
-  # Pod Identity Associations
-  association_defaults = {
-    namespace       = local.contorllers_namespace
-    service_account = local.cluster_autoscaler_service_account
-  }
-
-  associations = {
-    cluster-autoscaler = {
-      cluster_name = aws_eks_cluster.cluster.id
-    }
-  }
-}
-
-module "aws_lb_controller_pod_identity" {
-  source  = "terraform-aws-modules/eks-pod-identity/aws"
-  version = "1.2.1"
-
-  name = "${var.cluster_name}-lbc"
-
-  attach_aws_lb_controller_policy = true
-
-  # Pod Identity Associations
-  association_defaults = {
-    namespace       = local.contorllers_namespace
-    service_account = local.loadbalancer_controller_service_account
-  }
-
-  associations = {
-    aws-lbc = {
-      cluster_name = aws_eks_cluster.cluster.id
-    }
-  }
-
-}
-
-module "aws_ebs_csi_pod_identity" {
-  source  = "terraform-aws-modules/eks-pod-identity/aws"
-  version = "1.2.1"
-
-  name = "${var.cluster_name}-ebs-csi"
-
-  attach_aws_ebs_csi_policy = true
-
-  # Pod Identity Associations
-  association_defaults = {
-    namespace       = local.contorllers_namespace
-    service_account = local.ebs_csi_controller_service_account
-  }
-
-  associations = {
-    ebs-csi = {
-      cluster_name = aws_eks_cluster.cluster.id
-    }
-  }
-}
-
-module "aws_vpc_cni_pod_identity" {
-  source  = "terraform-aws-modules/eks-pod-identity/aws"
-  version = "1.2.1"
-
-  name = "${var.cluster_name}-vpc-cni"
-
-  attach_aws_vpc_cni_policy = true
-  aws_vpc_cni_enable_ipv4   = true
-
-  # Pod Identity Associations
-  association_defaults = {
-    namespace       = local.contorllers_namespace
-    service_account = local.vpc_cni_service_account
-  }
-
-  associations = {
-    vpc-cni = {
-      cluster_name = aws_eks_cluster.cluster.id
-    }
-  }
-}
-
 resource "aws_iam_role" "cluster" {
   name        = "${var.cluster_name}-cluster"
   description = "IAM role for the EKS cluster"
@@ -320,8 +233,8 @@ resource "aws_cloudwatch_log_group" "cluster_logs" {
 ################################################################################
 
 resource "aws_eks_addon" "csi-driver" {
-  cluster_name             = aws_eks_cluster.cluster.name
-  addon_name               = "aws-ebs-csi-driver"
+  cluster_name = aws_eks_cluster.cluster.name
+  addon_name   = "aws-ebs-csi-driver"
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
@@ -338,8 +251,8 @@ resource "aws_eks_addon" "csi-driver" {
 }
 
 resource "aws_eks_addon" "vpc-cni" {
-  cluster_name             = aws_eks_cluster.cluster.name
-  addon_name               = "vpc-cni"
+  cluster_name = aws_eks_cluster.cluster.name
+  addon_name   = "vpc-cni"
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
@@ -377,6 +290,8 @@ resource "aws_eks_addon" "kube-proxy" {
 }
 
 resource "aws_eks_addon" "pod-identity" {
+  count = var.use_irsa_v2 ? 1 : 0
+
   cluster_name = aws_eks_cluster.cluster.name
   addon_name   = "eks-pod-identity-agent"
 
@@ -736,7 +651,10 @@ locals {
     replicaCount : 2,
     rbac : {
       serviceAccount : {
-        name : local.cluster_autoscaler_service_account
+        name : local.cluster_autoscaler_service_account,
+        annotations: try(var.use_irsa_v1 ? {
+          "eks.amazonaws.com/role-arn" : module.cluster_autoscaler_irsa_role[0].iam_role_arn
+        } : null)
       }
     }
   })
@@ -744,8 +662,11 @@ locals {
   load_balancer_controller_helm_values = yamlencode({
     clusterName : var.cluster_name,
     serviceAccount : {
-      name : local.loadbalancer_controller_service_account
-    },
+      name : local.loadbalancer_controller_service_account,
+      annotations: try(var.use_irsa_v1 ? {
+        "eks.amazonaws.com/role-arn" : module.loadbalancer_controller_irsa_role[0].iam_role_arn
+      } : null)
+    }
     defaultTags : var.common_tags
   })
 }
