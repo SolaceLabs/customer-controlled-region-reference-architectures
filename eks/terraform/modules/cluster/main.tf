@@ -231,42 +231,6 @@ resource "aws_cloudwatch_log_group" "cluster_logs" {
 ################################################################################
 # Add-ons
 ################################################################################
-
-resource "aws_eks_addon" "csi-driver" {
-  cluster_name             = aws_eks_cluster.cluster.name
-  addon_name               = "aws-ebs-csi-driver"
-  service_account_role_arn = var.use_irsa_v1 ? module.ebs_csi_irsa_role[0].iam_role_arn : null
-
-  resolve_conflicts_on_create = "OVERWRITE"
-  resolve_conflicts_on_update = "PRESERVE"
-
-  configuration_values = jsonencode({
-    controller = {
-      extraVolumeTags = var.common_tags
-    }
-  })
-
-  depends_on = [
-    aws_eks_node_group.default
-  ]
-}
-
-resource "aws_eks_addon" "vpc-cni" {
-  cluster_name             = aws_eks_cluster.cluster.name
-  addon_name               = "vpc-cni"
-  service_account_role_arn = var.use_irsa_v1 ? module.vpc_cni_irsa_role[0].iam_role_arn : null
-
-  resolve_conflicts_on_create = "OVERWRITE"
-  resolve_conflicts_on_update = "PRESERVE"
-
-  configuration_values = jsonencode({
-    env = {
-      WARM_IP_TARGET  = "1"
-      WARM_ENI_TARGET = "0"
-    }
-  })
-}
-
 resource "aws_eks_addon" "coredns" {
   cluster_name = aws_eks_cluster.cluster.name
   addon_name   = "coredns"
@@ -299,6 +263,108 @@ resource "aws_eks_addon" "pod-identity" {
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
+}
+
+/*
+* Due to a bug in the AWS provider, where service_account_role_arn can be removed from the addon after being added
+* And in order to support the use of IRSA v1 and v2 in this module, we need to have the creation of csi-driver and vpc-cni addons associated 
+* with each mode, i.e if switch from IRSA v1 to IRSA v2, the csi-driver and the vpc-cni addons will be removed and re-created with the new mode.
+* Here's the github issue: https://github.com/hashicorp/terraform-provider-aws/issues/30645
+*/
+
+
+#### CSI Driver and VPC CNI Addons for IRSA v1 ####
+
+resource "aws_eks_addon" "csi-driver-IRSAv1" {
+  count = var.use_irsa_v1 ? 1 : 0
+
+  cluster_name             = aws_eks_cluster.cluster.name
+  addon_name               = "aws-ebs-csi-driver"
+  service_account_role_arn = module.ebs_csi_irsa_role[0].iam_role_arn
+
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "PRESERVE"
+  preserve = true
+
+  configuration_values = jsonencode({
+    controller = {
+      extraVolumeTags = var.common_tags
+    }
+  })
+
+  depends_on = [
+    aws_eks_node_group.default
+  ]
+}
+
+moved {
+  from = aws_eks_addon.csi-driver
+  to   = aws_eks_addon.csi-driver-IRSAv1[0]
+}
+
+resource "aws_eks_addon" "vpc-cni-IRSAv1" {
+  count = var.use_irsa_v1 ? 1 : 0
+
+  cluster_name             = aws_eks_cluster.cluster.name
+  addon_name               = "vpc-cni"
+  service_account_role_arn = module.vpc_cni_irsa_role[0].iam_role_arn
+
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "PRESERVE"
+  preserve = true
+
+  configuration_values = jsonencode({
+    env = {
+      WARM_IP_TARGET  = "1"
+      WARM_ENI_TARGET = "0"
+    }
+  })
+}
+
+moved {
+  from = aws_eks_addon.vpc-cni
+  to   = aws_eks_addon.vpc-cni-IRSAv1[0]
+}
+
+#### CSI Driver and VPC CNI Addons for IRSA v2 ####
+
+resource "aws_eks_addon" "csi-driver-IRSAv2" {
+  count = var.use_irsa_v2 ? 1 : 0
+
+  cluster_name             = aws_eks_cluster.cluster.name
+  addon_name               = "aws-ebs-csi-driver"
+
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "PRESERVE"
+  preserve = true
+
+  configuration_values = jsonencode({
+    controller = {
+      extraVolumeTags = var.common_tags
+    }
+  })
+
+  depends_on = [
+    aws_eks_node_group.default
+  ]
+}
+
+resource "aws_eks_addon" "vpc-cni-IRSAv2" {
+  count = var.use_irsa_v1 ? 1 : 0
+
+  cluster_name             = aws_eks_cluster.cluster.name
+  addon_name               = "vpc-cni"
+
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "PRESERVE"
+  preserve = true
+
+  configuration_values = jsonencode({
+    env = {
+      WARM_IP_TARGET  = "1"
+      WARM_ENI_TARGET = "0"
+    }
+  })
 }
 
 ################################################################################
