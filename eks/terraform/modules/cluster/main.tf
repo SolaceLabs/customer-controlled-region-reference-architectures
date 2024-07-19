@@ -275,7 +275,7 @@ resource "aws_eks_addon" "pod-identity" {
 
 #### CSI Driver and VPC CNI Addons for IRSA v1 ####
 
-resource "aws_eks_addon" "csi-driver-IRSAv1" {
+resource "aws_eks_addon" "csi-driver" {
   count = var.use_irsa_v1 ? 1 : 0
 
   cluster_name             = aws_eks_cluster.cluster.name
@@ -299,10 +299,10 @@ resource "aws_eks_addon" "csi-driver-IRSAv1" {
 
 moved {
   from = aws_eks_addon.csi-driver
-  to   = aws_eks_addon.csi-driver-IRSAv1[0]
+  to   = aws_eks_addon.csi-driver[0]
 }
 
-resource "aws_eks_addon" "vpc-cni-IRSAv1" {
+resource "aws_eks_addon" "vpc-cni" {
   count = var.use_irsa_v1 ? 1 : 0
 
   cluster_name             = aws_eks_cluster.cluster.name
@@ -323,7 +323,7 @@ resource "aws_eks_addon" "vpc-cni-IRSAv1" {
 
 moved {
   from = aws_eks_addon.vpc-cni
-  to   = aws_eks_addon.vpc-cni-IRSAv1[0]
+  to   = aws_eks_addon.vpc-cni[0]
 }
 
 #### CSI Driver and VPC CNI Addons for IRSA v2 ####
