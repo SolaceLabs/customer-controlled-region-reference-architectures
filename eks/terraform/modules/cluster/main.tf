@@ -350,7 +350,7 @@ resource "aws_eks_addon" "csi-driver-IRSAv2" {
 }
 
 resource "aws_eks_addon" "vpc-cni-IRSAv2" {
-  count = var.use_irsa_v1 ? 1 : 0
+  count = var.use_irsa_v2 ? 1 : 0
 
   cluster_name             = aws_eks_cluster.cluster.name
   addon_name               = "vpc-cni"
