@@ -70,3 +70,15 @@ variable "use_random_suffix_in_node_group_name" {
   type        = bool
   default     = true
 }
+
+variable "use_irsa_v1" {
+  type        = bool
+  default     = true
+  description = "When set to true, the module will use IRSA v1 for attaching IAM roles to service accounts."
+}
+
+variable "use_irsa_v2" {
+  type        = bool
+  default     = false
+  description = "When set to true, the module will use IRSA v2 for attaching IAM roles to service accounts."
+}

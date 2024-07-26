@@ -1,6 +1,9 @@
 locals {
   cluster_autoscaler_service_account      = "cluster-autoscaler"
   loadbalancer_controller_service_account = "aws-load-balancer-controller"
+  ebs_csi_controller_service_account      = "ebs-csi-controller-sa"
+  vpc_cni_service_account                 = "aws-node"
+  contorllers_namespace                   = "kube-system"
 
   default_instance_type    = "m5.large"
   prod1k_instance_type     = "r5.large"
@@ -14,90 +17,6 @@ locals {
 
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
-
-################################################################################
-# Cluster IAM
-################################################################################
-
-data "tls_certificate" "eks_oidc_issuer" {
-  url = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
-}
-
-resource "aws_iam_openid_connect_provider" "cluster" {
-  client_id_list  = ["sts.amazonaws.com"]
-  thumbprint_list = [data.tls_certificate.eks_oidc_issuer.certificates[0].sha1_fingerprint]
-  url             = aws_eks_cluster.cluster.identity[0].oidc[0].issuer
-}
-
-module "cluster_autoscaler_irsa_role" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
-
-  role_name          = "${var.cluster_name}-cluster-autoscaler"
-  policy_name_prefix = "${var.cluster_name}-"
-
-  attach_cluster_autoscaler_policy = true
-  cluster_autoscaler_cluster_ids   = [aws_eks_cluster.cluster.id]
-
-  oidc_providers = {
-    main = {
-      provider_arn               = aws_iam_openid_connect_provider.cluster.arn
-      namespace_service_accounts = ["kube-system:${local.cluster_autoscaler_service_account}"]
-    }
-  }
-}
-
-module "loadbalancer_controller_irsa_role" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
-
-  role_name          = "${var.cluster_name}-loadbalancer-controller"
-  policy_name_prefix = "${var.cluster_name}-"
-
-  attach_load_balancer_controller_policy = true
-
-  oidc_providers = {
-    main = {
-      provider_arn               = aws_iam_openid_connect_provider.cluster.arn
-      namespace_service_accounts = ["kube-system:${local.loadbalancer_controller_service_account}"]
-    }
-  }
-}
-
-module "ebs_csi_irsa_role" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
-
-  role_name          = "${var.cluster_name}-ebs-csi"
-  policy_name_prefix = "${var.cluster_name}-"
-
-  attach_ebs_csi_policy = true
-
-  oidc_providers = {
-    main = {
-      provider_arn               = aws_iam_openid_connect_provider.cluster.arn
-      namespace_service_accounts = ["kube-system:ebs-csi-controller-sa"]
-    }
-  }
-}
-
-module "vpc_cni_irsa_role" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
-
-  role_name          = "${var.cluster_name}-vpc-cni"
-  policy_name_prefix = "${var.cluster_name}-"
-
-  attach_vpc_cni_policy = true
-  vpc_cni_enable_ipv4   = true
-
-  oidc_providers = {
-    main = {
-      provider_arn               = aws_iam_openid_connect_provider.cluster.arn
-      namespace_service_accounts = ["kube-system:aws-node"]
-    }
-  }
-}
 
 resource "aws_iam_role" "cluster" {
   name        = "${var.cluster_name}-cluster"
@@ -313,10 +232,16 @@ resource "aws_cloudwatch_log_group" "cluster_logs" {
 # Add-ons
 ################################################################################
 
+/*
+* Due to a bug in the AWS provider, where service_account_role_arn can be removed from the addon after being added
+* If user wants to switch to IRSA v1, they need to remove IAM role from the addon and reapply it manually so the changes will be applied
+* Here's the github issue: https://github.com/hashicorp/terraform-provider-aws/issues/30645
+*/
+
 resource "aws_eks_addon" "csi-driver" {
   cluster_name             = aws_eks_cluster.cluster.name
   addon_name               = "aws-ebs-csi-driver"
-  service_account_role_arn = module.ebs_csi_irsa_role.iam_role_arn
+  service_account_role_arn = var.use_irsa_v1 ? module.ebs_csi_irsa_role.iam_role_arn : null
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
@@ -335,7 +260,7 @@ resource "aws_eks_addon" "csi-driver" {
 resource "aws_eks_addon" "vpc-cni" {
   cluster_name             = aws_eks_cluster.cluster.name
   addon_name               = "vpc-cni"
-  service_account_role_arn = module.vpc_cni_irsa_role.iam_role_arn
+  service_account_role_arn = var.use_irsa_v1 ? module.vpc_cni_irsa_role.iam_role_arn : null
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
@@ -370,6 +295,16 @@ resource "aws_eks_addon" "kube-proxy" {
   depends_on = [
     aws_eks_node_group.default
   ]
+}
+
+resource "aws_eks_addon" "pod-identity" {
+  count = var.use_irsa_v2 ? 1 : 0
+
+  cluster_name = aws_eks_cluster.cluster.name
+  addon_name   = "eks-pod-identity-agent"
+
+  resolve_conflicts_on_create = "OVERWRITE"
+  resolve_conflicts_on_update = "PRESERVE"
 }
 
 ################################################################################
@@ -725,9 +660,9 @@ locals {
     rbac : {
       serviceAccount : {
         name : local.cluster_autoscaler_service_account,
-        annotations : {
-          "eks.amazonaws.com/role-arn" : try(module.cluster_autoscaler_irsa_role.iam_role_arn, "")
-        }
+        annotations : try(var.use_irsa_v1 ? {
+          "eks.amazonaws.com/role-arn" : module.cluster_autoscaler_irsa_role[0].iam_role_arn
+        } : null)
       }
     }
   })
@@ -736,10 +671,10 @@ locals {
     clusterName : var.cluster_name,
     serviceAccount : {
       name : local.loadbalancer_controller_service_account,
-      annotations : {
-        "eks.amazonaws.com/role-arn" : try(module.loadbalancer_controller_irsa_role.iam_role_arn, "")
-      }
-    },
+      annotations : try(var.use_irsa_v1 ? {
+        "eks.amazonaws.com/role-arn" : module.loadbalancer_controller_irsa_role[0].iam_role_arn
+      } : null)
+    }
     defaultTags : var.common_tags
   })
 }
