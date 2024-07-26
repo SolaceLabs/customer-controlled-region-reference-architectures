@@ -60,7 +60,7 @@ The machine types, labels, and taints for each event broker service node group a
 | prod1k     | n2-highmem-2  | nodeType:messaging<br>serviceClass:prod1k   | nodeType:messaging:NoExecute<br>serviceClass:prod1k:NoExecute   |
 | prod10k    | n2-highmem-4  | nodeType:messaging<br>serviceClass:prod10k  | nodeType:messaging:NoExecute<br>serviceClass:prod10k:NoExecute  |
 | prod100k   | n2-highmem-8  | nodeType:messaging<br>serviceClass:prod100k | nodeType:messaging:NoExecute<br>serviceClass:prod100k:NoExecute |
-| monitoring | n2-standard-2 | nodeType:monitoring                         | nodeType:monitoring:NoExecute                                   |
+| monitoring | e2-standard-2 | nodeType:monitoring                         | nodeType:monitoring:NoExecute                                   |
 
 ### Access <a name="gke-access"></a>
 
