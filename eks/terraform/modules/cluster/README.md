@@ -18,7 +18,11 @@
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_aws_ebs_csi_pod_identity"></a> [aws\_ebs\_csi\_pod\_identity](#module\_aws\_ebs\_csi\_pod\_identity) | terraform-aws-modules/eks-pod-identity/aws | 1.2.1 |
+| <a name="module_aws_lb_controller_pod_identity"></a> [aws\_lb\_controller\_pod\_identity](#module\_aws\_lb\_controller\_pod\_identity) | terraform-aws-modules/eks-pod-identity/aws | 1.2.1 |
+| <a name="module_aws_vpc_cni_pod_identity"></a> [aws\_vpc\_cni\_pod\_identity](#module\_aws\_vpc\_cni\_pod\_identity) | terraform-aws-modules/eks-pod-identity/aws | 1.2.1 |
 | <a name="module_cluster_autoscaler_irsa_role"></a> [cluster\_autoscaler\_irsa\_role](#module\_cluster\_autoscaler\_irsa\_role) | terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks | 5.34.0 |
+| <a name="module_cluster_autoscaler_pod_identity"></a> [cluster\_autoscaler\_pod\_identity](#module\_cluster\_autoscaler\_pod\_identity) | terraform-aws-modules/eks-pod-identity/aws | 1.2.1 |
 | <a name="module_ebs_csi_irsa_role"></a> [ebs\_csi\_irsa\_role](#module\_ebs\_csi\_irsa\_role) | terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks | 5.34.0 |
 | <a name="module_loadbalancer_controller_irsa_role"></a> [loadbalancer\_controller\_irsa\_role](#module\_loadbalancer\_controller\_irsa\_role) | terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks | 5.34.0 |
 | <a name="module_node_group_monitoring"></a> [node\_group\_monitoring](#module\_node\_group\_monitoring) | ../broker-node-group | n/a |
@@ -38,6 +42,7 @@
 | [aws_eks_addon.coredns](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/eks_addon) | resource |
 | [aws_eks_addon.csi-driver](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/eks_addon) | resource |
 | [aws_eks_addon.kube-proxy](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/eks_addon) | resource |
+| [aws_eks_addon.pod-identity](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/eks_addon) | resource |
 | [aws_eks_addon.vpc-cni](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/eks_addon) | resource |
 | [aws_eks_cluster.cluster](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/eks_cluster) | resource |
 | [aws_eks_node_group.default](https://registry.terraform.io/providers/hashicorp/aws/5.39.0/docs/resources/eks_node_group) | resource |
@@ -79,6 +84,8 @@
 | <a name="input_node_group_max_size"></a> [node\_group\_max\_size](#input\_node\_group\_max\_size) | The maximum size for the broker node groups in the cluster. | `number` | `10` | no |
 | <a name="input_private_subnet_ids"></a> [private\_subnet\_ids](#input\_private\_subnet\_ids) | The IDs of the private subnets where the worker nodes will reside. | `list(string)` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | The AWS region where this cluster will reside. | `string` | n/a | yes |
+| <a name="input_use_irsa_v1"></a> [use\_irsa\_v1](#input\_use\_irsa\_v1) | When set to true, the module will use IRSA v1 for attaching IAM roles to service accounts. | `bool` | `true` | no |
+| <a name="input_use_irsa_v2"></a> [use\_irsa\_v2](#input\_use\_irsa\_v2) | When set to true, the module will use IRSA v2 for attaching IAM roles to service accounts. | `bool` | `false` | no |
 | <a name="input_use_random_suffix_in_node_group_name"></a> [use\_random\_suffix\_in\_node\_group\_name](#input\_use\_random\_suffix\_in\_node\_group\_name) | Whether to use auto generated random suffix in node group name | `bool` | `true` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The ID of the VPC where the cluster will reside. | `string` | n/a | yes |
 

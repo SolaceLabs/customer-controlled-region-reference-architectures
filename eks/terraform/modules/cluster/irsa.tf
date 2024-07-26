@@ -118,7 +118,7 @@ moved {
 }
 
 ################################################################################
-# IRSA v1
+# IRSA v2
 ################################################################################
 module "cluster_autoscaler_pod_identity" {
   count = var.use_irsa_v2 ? 1 : 0
@@ -129,7 +129,7 @@ module "cluster_autoscaler_pod_identity" {
   name = "${var.cluster_name}-ca"
 
   attach_cluster_autoscaler_policy = true
-  use_name_prefix                  = true
+  use_name_prefix                  = false
   cluster_autoscaler_cluster_names = [aws_eks_cluster.cluster.id]
 
   # Pod Identity Associations
@@ -154,7 +154,7 @@ module "aws_lb_controller_pod_identity" {
   name = "${var.cluster_name}-lbc"
 
   attach_aws_lb_controller_policy = true
-  use_name_prefix                 = true
+  use_name_prefix                 = false
 
   # Pod Identity Associations
   association_defaults = {
@@ -179,7 +179,7 @@ module "aws_ebs_csi_pod_identity" {
   name = "${var.cluster_name}-ebs-csi"
 
   attach_aws_ebs_csi_policy = true
-  use_name_prefix           = true
+  use_name_prefix           = false
 
   # Pod Identity Associations
   association_defaults = {
@@ -204,7 +204,7 @@ module "aws_vpc_cni_pod_identity" {
 
   attach_aws_vpc_cni_policy = true
   aws_vpc_cni_enable_ipv4   = true
-  use_name_prefix           = true
+  use_name_prefix           = false
 
   # Pod Identity Associations
   association_defaults = {
