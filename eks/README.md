@@ -87,13 +87,13 @@ The Terrafrom project deploys the following add-ons:
  * coredns
  * kube-proxy
 
-IAM Roles for Service Accounts (IRSA) is used to provide add-ons with the appropriate AWS IAM permissions to operate: https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html
+PubSub+ Cloud also requires the use of `cluster-autoscaler` and `aws-load-balancer-controller` to operate. Instructions can be found below on how to deploy them into the cluster using the Helm values provided by the Terrafrom project.
 
-PubSub+ Cloud  requires the use of `cluster-autoscaler` and `aws-load-balancer-controller` to operate. Instructions can be found below on how to deploy them into the cluster using the Helm values provided by the Terrafrom project. 
+By default, [IAM Roles for Service Accounts](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html) (IRSA) is used to provide add-ons as well as the `cluster-autoscaler` and `aws-load-balancer-controller` with the appropriate AWS IAM permissions to operate.
 
-IRSA is used to provide permissions to both the `cluster-autoscaler` and `aws-load-balancer-controller`.
+Optionally, [EKS Pod Identities](https://docs.aws.amazon.com/eks/latest/userguide/pod-identities.html) can be used instead by setting the [appropriate variables](terraform/README.md)). We recommend the use of Pod Identities for any new clusters and will make it the default in a feature major release of this project. The `eks-pod-identity-agent` add-on will be deployed (in addition to the ones above) to enable Pod Identities.
 
-By default, Amazon EKS is configured to efficiently scale up the number of pods on a worker node by having a large warm pool of IP addresses and Elastic Network Interfaces (ENIs). We recommend a 1:1 broker pod to worker node architecture to reduce the number of wasted IP addresses. To accomplish this, the `vpc-cni` add-on is configured with `WARM_IP_TARGET=1` and `WARM_ENI_TARGET=0`. For more details, see https://github.com/aws/amazon-vpc-cni-k8s/blob/master/docs/eni-and-ip-target.md.
+Amazon EKS is configured to efficiently scale up the number of pods on a worker node by having a large warm pool of IP addresses and Elastic Network Interfaces (ENIs). We recommend a 1:1 broker pod to worker node architecture to reduce the number of wasted IP addresses. To accomplish this, the `vpc-cni` add-on is configured with `WARM_IP_TARGET=1` and `WARM_ENI_TARGET=0`. For more details, see https://github.com/aws/amazon-vpc-cni-k8s/blob/master/docs/eni-and-ip-target.md.
 
 ### Access <a name="eks-access"></a>
 
