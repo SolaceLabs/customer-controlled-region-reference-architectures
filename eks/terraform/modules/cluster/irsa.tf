@@ -126,7 +126,8 @@ module "cluster_autoscaler_pod_identity" {
   source  = "terraform-aws-modules/eks-pod-identity/aws"
   version = "1.2.1"
 
-  name = "${var.cluster_name}-ca"
+  name               = "${var.cluster_name}-ca"
+  policy_name_prefix = "${var.cluster_name}-"
 
   attach_cluster_autoscaler_policy = true
   use_name_prefix                  = false
@@ -151,7 +152,8 @@ module "aws_lb_controller_pod_identity" {
   source  = "terraform-aws-modules/eks-pod-identity/aws"
   version = "1.2.1"
 
-  name = "${var.cluster_name}-lbc"
+  name               = "${var.cluster_name}-lbc"
+  policy_name_prefix = "${var.cluster_name}-"
 
   attach_aws_lb_controller_policy = true
   use_name_prefix                 = false
@@ -176,7 +178,8 @@ module "aws_ebs_csi_pod_identity" {
   source  = "terraform-aws-modules/eks-pod-identity/aws"
   version = "1.2.1"
 
-  name = "${var.cluster_name}-ebs-csi"
+  name               = "${var.cluster_name}-ebs-csi"
+  policy_name_prefix = "${var.cluster_name}-"
 
   attach_aws_ebs_csi_policy = true
   use_name_prefix           = false
@@ -200,7 +203,8 @@ module "aws_vpc_cni_pod_identity" {
   source  = "terraform-aws-modules/eks-pod-identity/aws"
   version = "1.2.1"
 
-  name = "${var.cluster_name}-vpc-cni"
+  name               = "${var.cluster_name}-vpc-cni"
+  policy_name_prefix = "${var.cluster_name}-"
 
   attach_aws_vpc_cni_policy = true
   aws_vpc_cni_enable_ipv4   = true
