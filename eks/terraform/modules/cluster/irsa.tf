@@ -124,7 +124,7 @@ module "cluster_autoscaler_pod_identity" {
   count = var.use_irsa_v2 ? 1 : 0
 
   source  = "terraform-aws-modules/eks-pod-identity/aws"
-  version = "1.2.1"
+  version = "1.3.0"
 
   name               = "${var.cluster_name}-ca"
   policy_name_prefix = "${var.cluster_name}-"
@@ -150,7 +150,7 @@ module "aws_lb_controller_pod_identity" {
   count = var.use_irsa_v2 ? 1 : 0
 
   source  = "terraform-aws-modules/eks-pod-identity/aws"
-  version = "1.2.1"
+  version = "1.3.0"
 
   name               = "${var.cluster_name}-lbc"
   policy_name_prefix = "${var.cluster_name}-"
@@ -176,7 +176,7 @@ module "aws_ebs_csi_pod_identity" {
   count = var.use_irsa_v2 ? 1 : 0
 
   source  = "terraform-aws-modules/eks-pod-identity/aws"
-  version = "1.2.1"
+  version = "1.3.0"
 
   name               = "${var.cluster_name}-ebs-csi"
   policy_name_prefix = "${var.cluster_name}-"
@@ -201,7 +201,7 @@ module "aws_vpc_cni_pod_identity" {
   count = var.use_irsa_v2 ? 1 : 0
 
   source  = "terraform-aws-modules/eks-pod-identity/aws"
-  version = "1.2.1"
+  version = "1.3.0"
 
   name               = "${var.cluster_name}-vpc-cni"
   policy_name_prefix = "${var.cluster_name}-"
