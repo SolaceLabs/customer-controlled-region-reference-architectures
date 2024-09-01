@@ -22,7 +22,7 @@ module "cluster_autoscaler_irsa_role" {
   count = var.use_irsa_v1 ? 1 : 0
 
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
+  version = "5.44.0"
 
   role_name          = "${var.cluster_name}-cluster-autoscaler"
   policy_name_prefix = "${var.cluster_name}-"
@@ -48,7 +48,7 @@ module "loadbalancer_controller_irsa_role" {
   count = var.use_irsa_v1 ? 1 : 0
 
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
+  version = "5.44.0"
 
   role_name          = "${var.cluster_name}-loadbalancer-controller"
   policy_name_prefix = "${var.cluster_name}-"
@@ -72,7 +72,7 @@ module "ebs_csi_irsa_role" {
   count = var.use_irsa_v1 ? 1 : 0
 
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
+  version = "5.44.0"
 
   role_name          = "${var.cluster_name}-ebs-csi"
   policy_name_prefix = "${var.cluster_name}-"
@@ -96,7 +96,7 @@ module "vpc_cni_irsa_role" {
   count = var.use_irsa_v1 ? 1 : 0
 
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "5.34.0"
+  version = "5.44.0"
 
   role_name          = "${var.cluster_name}-vpc-cni"
   policy_name_prefix = "${var.cluster_name}-"
