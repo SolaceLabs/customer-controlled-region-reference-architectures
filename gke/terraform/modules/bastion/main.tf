@@ -1,7 +1,12 @@
+locals {
+  # Ensure the account id is unique and less than 30 characters
+  google_service_account_bastion_id = "${substr(var.cluster_name, 0, 22)}-bastion"
+}
+
 resource "google_service_account" "bastion" {
   count = var.create_bastion ? 1 : 0
 
-  account_id   = "${var.cluster_name}-bastion"
+  account_id   = local.google_service_account_bastion_id
   display_name = "Service account for ${var.cluster_name} bastion"
 }
 

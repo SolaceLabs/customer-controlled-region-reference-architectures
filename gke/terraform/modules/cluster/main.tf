@@ -8,10 +8,13 @@ locals {
   prod10k_machine_type    = "n2-highmem-4"
   prod100k_machine_type   = "n2-highmem-8"
   monitoring_machine_type = "e2-standard-2"
+
+  # Ensure the account id is unique and less than 30 characters
+  google_service_account_cluster_id = "${substr(var.cluster_name, 0, 24)}-nodes"
 }
 
 resource "google_service_account" "cluster" {
-  account_id   = "${var.cluster_name}-nodes"
+  account_id   = local.google_service_account_cluster_id
   display_name = "Service account for ${var.cluster_name} worker nodes"
 }
 
