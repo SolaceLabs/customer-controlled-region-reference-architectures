@@ -34,14 +34,19 @@ variable "subnetwork_name" {
   description = "The name of the subnetwork where the cluster will reside."
 }
 
-variable "secondary_cidr_range_pods" {
+variable "secondary_range_name_default_pods" {
   type        = string
-  description = "The secondary CIDR for the cluster's pods."
+  description = "The name of the seconary CIDR range for the cluster's default node pool."
 }
 
-variable "secondary_cidr_range_services" {
+variable "secondary_range_name_messaging_pods" {
   type        = string
-  description = "The secondary CIDR for the cluster's services."
+  description = "The name of the seconary CIDR range for the cluster's messaging node pools."
+}
+
+variable "secondary_range_name_services" {
+  type        = string
+  description = "The name of the seconary CIDR range for the cluster's services."
 }
 
 variable "kubernetes_version" {
@@ -52,12 +57,6 @@ variable "kubernetes_version" {
 variable "master_ipv4_cidr_block" {
   type        = string
   description = "The CIDR used to assign IPs to the Kubernetes API endpoints."
-}
-
-variable "max_pods_per_node_system" {
-  type        = number
-  default     = 16
-  description = "The maximum number of pods per worker node for the system node pool."
 }
 
 variable "max_pods_per_node_messaging" {

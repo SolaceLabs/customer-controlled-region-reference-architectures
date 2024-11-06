@@ -4,7 +4,7 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 5.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 6.0 |
 
 ## Providers
 
@@ -37,14 +37,17 @@ No resources.
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The kubernetes version to use. Only used a creation time, ignored once the cluster exists. | `string` | n/a | yes |
 | <a name="input_master_ipv4_cidr_block"></a> [master\_ipv4\_cidr\_block](#input\_master\_ipv4\_cidr\_block) | The CIDR used to assign IPs to the Kubernetes API endpoints. This range must be unique within the VPC. | `string` | `"172.16.0.32/28"` | no |
 | <a name="input_max_pods_per_node_messaging"></a> [max\_pods\_per\_node\_messaging](#input\_max\_pods\_per\_node\_messaging) | The maximum number of pods per worker node for the messaging node pools. | `number` | `8` | no |
-| <a name="input_max_pods_per_node_system"></a> [max\_pods\_per\_node\_system](#input\_max\_pods\_per\_node\_system) | The maximum number of pods per worker node for the system node pool. | `number` | `16` | no |
 | <a name="input_network_cidr_range"></a> [network\_cidr\_range](#input\_network\_cidr\_range) | The CIDR for the cluster's network. Worker nodes, load balancers, and other infrastructure is assigned an IP address from this range. | `string` | `""` | no |
 | <a name="input_network_name"></a> [network\_name](#input\_network\_name) | When 'create\_network' is set to false, the network name must be provided. | `string` | `""` | no |
 | <a name="input_node_pool_max_size"></a> [node\_pool\_max\_size](#input\_node\_pool\_max\_size) | The maximum number of worker nodes for the messaging node pools. | `string` | `20` | no |
 | <a name="input_project"></a> [project](#input\_project) | The GCP project that the cluster will reside in. | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | The GCP region that the cluster will reside in. | `string` | n/a | yes |
-| <a name="input_secondary_cidr_range_pods"></a> [secondary\_cidr\_range\_pods](#input\_secondary\_cidr\_range\_pods) | The secondary CIDR for the cluster's pods. GKE assigns each worker node a /24 for pods from this address range. | `string` | n/a | yes |
-| <a name="input_secondary_cidr_range_services"></a> [secondary\_cidr\_range\_services](#input\_secondary\_cidr\_range\_services) | The secondary CIDR for the cluster's services. Cluster IP services are assigned an IP from this addres range. | `string` | n/a | yes |
+| <a name="input_secondary_cidr_range_default_pods"></a> [secondary\_cidr\_range\_default\_pods](#input\_secondary\_cidr\_range\_default\_pods) | The secondary CIDR for the cluster's default node pool. | `string` | n/a | yes |
+| <a name="input_secondary_cidr_range_messaging_pods"></a> [secondary\_cidr\_range\_messaging\_pods](#input\_secondary\_cidr\_range\_messaging\_pods) | The secondary CIDR for the cluster's messaging node pools. | `string` | n/a | yes |
+| <a name="input_secondary_cidr_range_services"></a> [secondary\_cidr\_range\_services](#input\_secondary\_cidr\_range\_services) | The secondary CIDR for the cluster's services. | `string` | n/a | yes |
+| <a name="input_secondary_range_name_default_pods"></a> [secondary\_range\_name\_default\_pods](#input\_secondary\_range\_name\_default\_pods) | When 'create\_network' is set to false, the name of the seconary CIDR range for the cluster's default node pool must be provided. | `string` | `""` | no |
+| <a name="input_secondary_range_name_messaging_pods"></a> [secondary\_range\_name\_messaging\_pods](#input\_secondary\_range\_name\_messaging\_pods) | When 'create\_network' is set to false, the name of the seconary CIDR range for the cluster's messaging node pools must be provided. | `string` | `""` | no |
+| <a name="input_secondary_range_name_services"></a> [secondary\_range\_name\_services](#input\_secondary\_range\_name\_services) | When 'create\_network' is set to false, the name of the seconary CIDR range for the cluster's services must be provided. | `string` | `""` | no |
 | <a name="input_subnetwork_name"></a> [subnetwork\_name](#input\_subnetwork\_name) | When 'create\_network' is set to false, the subnetwork name must be provided. | `string` | `""` | no |
 
 ## Outputs

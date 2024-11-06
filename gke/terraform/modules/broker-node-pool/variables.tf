@@ -57,3 +57,8 @@ variable "node_pool_max_size" {
   type        = string
   description = "The maximum number of worker nodes for the node pool."
 }
+
+variable "secondary_range_name" {
+  type        = string
+  description = "The name of the secondary CIDR range for the node pool."
+}

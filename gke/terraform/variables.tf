@@ -35,6 +35,21 @@ variable "network_cidr_range" {
   description = "The CIDR for the cluster's network. Worker nodes, load balancers, and other infrastructure is assigned an IP address from this range."
 }
 
+variable "secondary_cidr_range_default_pods" {
+  type        = string
+  description = "The secondary CIDR for the cluster's default node pool."
+}
+
+variable "secondary_cidr_range_messaging_pods" {
+  type        = string
+  description = "The secondary CIDR for the cluster's messaging node pools."
+}
+
+variable "secondary_cidr_range_services" {
+  type        = string
+  description = "The secondary CIDR for the cluster's services."
+}
+
 variable "network_name" {
   type        = string
   default     = ""
@@ -45,6 +60,24 @@ variable "subnetwork_name" {
   type        = string
   default     = ""
   description = "When 'create_network' is set to false, the subnetwork name must be provided."
+}
+
+variable "secondary_range_name_default_pods" {
+  type        = string
+  default     = ""
+  description = "When 'create_network' is set to false, the name of the seconary CIDR range for the cluster's default node pool must be provided."
+}
+
+variable "secondary_range_name_messaging_pods" {
+  type        = string
+  default     = ""
+  description = "When 'create_network' is set to false, the name of the seconary CIDR range for the cluster's messaging node pools must be provided."
+}
+
+variable "secondary_range_name_services" {
+  type        = string
+  default     = ""
+  description = "When 'create_network' is set to false, the name of the seconary CIDR range for the cluster's services must be provided."
 }
 
 ################################################################################
@@ -73,16 +106,6 @@ variable "bastion_ssh_public_key" {
 # Cluster
 ################################################################################
 
-variable "secondary_cidr_range_pods" {
-  type        = string
-  description = "The secondary CIDR for the cluster's pods. GKE assigns each worker node a /24 for pods from this address range."
-}
-
-variable "secondary_cidr_range_services" {
-  type        = string
-  description = "The secondary CIDR for the cluster's services. Cluster IP services are assigned an IP from this addres range."
-}
-
 variable "kubernetes_version" {
   type        = string
   description = "The kubernetes version to use. Only used a creation time, ignored once the cluster exists."
@@ -92,12 +115,6 @@ variable "master_ipv4_cidr_block" {
   type        = string
   description = "The CIDR used to assign IPs to the Kubernetes API endpoints. This range must be unique within the VPC."
   default     = "172.16.0.32/28"
-}
-
-variable "max_pods_per_node_system" {
-  type        = number
-  default     = 16
-  description = "The maximum number of pods per worker node for the system node pool."
 }
 
 variable "max_pods_per_node_messaging" {

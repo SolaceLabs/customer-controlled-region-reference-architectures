@@ -56,8 +56,8 @@ resource "google_container_cluster" "cluster" {
   }
 
   ip_allocation_policy {
-    cluster_ipv4_cidr_block  = var.secondary_cidr_range_pods
-    services_ipv4_cidr_block = var.secondary_cidr_range_services
+    cluster_secondary_range_name  = var.secondary_range_name_default_pods
+    services_secondary_range_name = var.secondary_range_name_services
   }
 
   private_cluster_config {
@@ -111,8 +111,6 @@ resource "google_container_node_pool" "system" {
   location = var.region
   cluster  = google_container_cluster.cluster.name
 
-  max_pods_per_node = var.max_pods_per_node_system
-
   node_config {
     machine_type    = local.system_machine_type
     image_type      = "COS_CONTAINERD"
@@ -147,6 +145,8 @@ module "node_group_prod1k" {
   common_labels      = var.common_labels
   node_pool_name     = "prod1k"
   availability_zones = data.google_compute_zones.available.names
+
+  secondary_range_name = var.secondary_range_name_messaging_pods
 
   worker_node_machine_type    = local.prod1k_machine_type
   worker_node_oauth_scopes    = local.worker_node_oauth_scopes
@@ -183,6 +183,8 @@ module "node_group_prod10k" {
   node_pool_name     = "prod10k"
   availability_zones = data.google_compute_zones.available.names
 
+  secondary_range_name = var.secondary_range_name_messaging_pods
+
   worker_node_machine_type    = local.prod10k_machine_type
   worker_node_oauth_scopes    = local.worker_node_oauth_scopes
   worker_node_service_account = google_service_account.cluster.email
@@ -218,6 +220,8 @@ module "node_group_prod100k" {
   node_pool_name     = "prod100k"
   availability_zones = data.google_compute_zones.available.names
 
+  secondary_range_name = var.secondary_range_name_messaging_pods
+
   worker_node_machine_type    = local.prod100k_machine_type
   worker_node_oauth_scopes    = local.worker_node_oauth_scopes
   worker_node_service_account = google_service_account.cluster.email
@@ -252,6 +256,8 @@ module "node_group_monitoring" {
   common_labels      = var.common_labels
   node_pool_name     = "monitoring"
   availability_zones = data.google_compute_zones.available.names
+
+  secondary_range_name = var.secondary_range_name_messaging_pods
 
   worker_node_machine_type    = local.monitoring_machine_type
   worker_node_oauth_scopes    = local.worker_node_oauth_scopes

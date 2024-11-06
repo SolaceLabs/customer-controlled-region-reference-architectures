@@ -14,3 +14,18 @@ variable "network_cidr_range" {
   default     = null
   description = "The CIDR for the cluster's network."
 }
+
+variable "secondary_cidr_range_default_pods" {
+  type        = string
+  description = "The secondary CIDR for the cluster's default node pool."
+}
+
+variable "secondary_cidr_range_messaging_pods" {
+  type        = string
+  description = "The secondary CIDR for the cluster's messaging node pools."
+}
+
+variable "secondary_cidr_range_services" {
+  type        = string
+  description = "The secondary CIDR for the cluster's services."
+}
