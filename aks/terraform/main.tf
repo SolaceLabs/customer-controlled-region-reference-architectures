@@ -19,6 +19,7 @@ module "network" {
   cluster_name        = var.cluster_name
 
   vnet_cidr = var.vnet_cidr
+  cluster_subnet_cidr = var.vnet_cidr
 }
 
 ################################################################################

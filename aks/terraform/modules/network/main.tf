@@ -23,7 +23,8 @@ resource "azurerm_subnet" "cluster" {
   name                                      = "cluster"
   resource_group_name                       = var.resource_group_name
   virtual_network_name                      = azurerm_virtual_network.this[0].name
-  address_prefixes                          = [var.vnet_cidr]
+  #address_prefixes                         = [var.vnet_cidr]
+  address_prefixes                          = [var.cluster_subnet_cidr]
   private_endpoint_network_policies_enabled = false
 }
 
@@ -49,6 +50,7 @@ resource "azurerm_route" "cluster" {
   name                = "local"
   resource_group_name = var.resource_group_name
   route_table_name    = azurerm_route_table.cluster[0].name
-  address_prefix      = var.vnet_cidr
+  #address_prefix     = var.vnet_cidr
+  address_prefix      = var.cluster_subnet_cidr
   next_hop_type       = "VnetLocal"
 }
