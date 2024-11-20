@@ -6,7 +6,8 @@ resource "google_container_node_pool" "this" {
   node_locations    = var.availability_zones
 
   network_config {
-    pod_range = var.secondary_range_name
+    enable_private_nodes = true
+    pod_range            = var.secondary_range_name
   }
 
   node_config {

@@ -31,10 +31,11 @@ resource "google_container_cluster" "cluster" {
   #checkov:skip=CKV_GCP_66:Binary authorization cannot be used as-is with Solace images
   #checkov:skip=CKV_GCP_65:Solace is not opinionated on how Kubernetes RBAC users are managed
 
-  name               = var.cluster_name
-  location           = var.region
-  network            = var.network_name
-  subnetwork         = var.subnetwork_name
+  name       = var.cluster_name
+  location   = var.region
+  network    = var.network_name
+  subnetwork = var.subnetwork_name
+
   min_master_version = data.google_container_engine_versions.this.latest_master_version
 
   resource_labels = var.common_labels
@@ -42,8 +43,9 @@ resource "google_container_cluster" "cluster" {
   enable_intranode_visibility = true
   enable_l4_ilb_subsetting    = true
 
-  initial_node_count       = 1
-  remove_default_node_pool = true
+  initial_node_count        = 1
+  default_max_pods_per_node = 16
+  remove_default_node_pool  = true
 
   deletion_protection = false
 
@@ -56,7 +58,7 @@ resource "google_container_cluster" "cluster" {
   }
 
   ip_allocation_policy {
-    cluster_secondary_range_name  = var.secondary_range_name_default_pods
+    cluster_secondary_range_name  = var.secondary_range_name_pods
     services_secondary_range_name = var.secondary_range_name_services
   }
 
@@ -110,6 +112,12 @@ resource "google_container_node_pool" "system" {
   name     = "system"
   location = var.region
   cluster  = google_container_cluster.cluster.name
+
+  max_pods_per_node = var.max_pods_per_node_system
+
+  network_config {
+    enable_private_nodes = true
+  }
 
   node_config {
     machine_type    = local.system_machine_type

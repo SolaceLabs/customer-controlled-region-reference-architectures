@@ -107,7 +107,7 @@ For example:
 region = "eastus2"
 
 cluster_name       = "solace-eastus2"
-kubernetes_version = "1.27"
+kubernetes_version = "1.29"
 
 vnet_cidr = "10.1.1.0/24"
 

@@ -9,6 +9,16 @@ resource "google_compute_subnetwork" "cluster" {
   network       = google_compute_network.network.name
 
   private_ip_google_access = true
+
+  secondary_ip_range {
+    range_name    = "services"
+    ip_cidr_range = "172.25.0.0/16"
+  }
+
+  secondary_ip_range {
+    range_name    = "pods"
+    ip_cidr_range = "10.2.0.0/16"
+  }
 }
 
 resource "google_compute_router" "router" {
