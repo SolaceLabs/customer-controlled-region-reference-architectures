@@ -28,5 +28,11 @@ variable "cluster_name" {
 variable "vnet_cidr" {
   type        = string
   default     = null
-  description = "The CIDR of the cluster's VNET and cluster subnet."
+  description = "The CIDR of the cluster's VNET."
+}
+
+variable "cluster_subnet_cidr" {
+  type        = string
+  default     = null
+  description = "The CIDR of the cluster's subnet."
 }

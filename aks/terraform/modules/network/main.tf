@@ -25,6 +25,13 @@ resource "azurerm_subnet" "cluster" {
   virtual_network_name                      = azurerm_virtual_network.this[0].name
   address_prefixes                          = [var.cluster_subnet_cidr]
   private_endpoint_network_policies_enabled = false
+
+  lifecycle {
+    precondition {
+      condition     = can(cidrhost(var.cluster_subnet_cidr, 0))
+      error_message = "A valid IPv4 CIDR must be provided for 'cluster_subnet_cidr' variable."
+    }
+  }
 }
 
 resource "azurerm_subnet_route_table_association" "cluster" {
