@@ -39,9 +39,24 @@ The VPC is an optional component. If the VPC that will host the cluster already 
 
 Currently, there are two options for networking in GKE - VPC-native or route-based. This Terraform project uses VPC-native, which is Google Cloud's recommended option and the only option available when the cluster is configured to have private nodes.
 
+Three CIDR ranges are required, with an optional fourth CIDR range, as described below:
+
+| Name           | Required? | Routable?                                        | Use                                                                                                                                                     |
+|----------------|-----------|--------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| network        | Yes       | Yes, it needs to be routable                     | Used by all VMs in the VPC including worker nodes, as well as internal load balancers                                                                   |
+| services       | Yes       | No                                               | Used by kubernetes services, not exposed outside the cluster                                                                                            |
+| pods           | Yes       | Yes, if the 'messaging pods' CIDR is not defined | Used to assign CIDR ranges to worker nodes for pod IPs. If the 'messaging pods' range is provided, this is used for just the system (default) node pool |
+| messaging pods | No        | Yes, it needs to be routable                     | Used to assign CIDR ranges to worker nodes that host messaging (broker) pods their IPs                                                                  |
+
+The size of the CIDR ranges assigned to worker nodes for pod IPs is dependent on the 'max_pod_per_node' settings, which are configurable in this terraform project. The default of 16 for system nodes and 8 for messaging nodes means that /27 and /28 CIDR ranges (respectively) are assigned to the worker nodes. 
+
+Using a separate messaging pods range is useful when the routable CIDRs available is constrained. For example, with a network CIDR of 10.1.1.0/24 and messaging pods CIDR of 10.1.2.0/24, a total of 16 worker nodes can host messaging pods, which means a total of 5 HA broker services can be created in the cluster. A messaging pods CIDR of 10.1.2.0/25 would allow for just 2 HA broker services.
+
+The requirement that a CIDR be 'routable' is only true when private networking (peering, etc) is the desired mechanism of communication to or from broker services.
+
 #### Node Pools
 
-The cluster has the following node groups:
+The cluster has the following node pools:
 
 ##### Default (System)
 
@@ -49,11 +64,11 @@ By default the pool has three worker nodes (one in each availability zone), and 
 
 ##### Event Broker Services
 
-The cluster has a total of 4 node groups for event broker services. Because GKE node pools are made up of separate managed instance groups that are locked to a single availability zone, the cluster autoscaler can properly handle our use of pod anti-affinity against the node's zone label to ensure that each pod in a high-availability event broker service is in a separate availability zone.
+The cluster has a total of 4 node pools for event broker services. Because GKE node pools are made up of separate managed instance groups that are locked to a single availability zone, the cluster autoscaler can properly handle our use of pod anti-affinity against the node's zone label to ensure that each pod in a high-availability event broker service is in a separate availability zone.
 
-These node groups are engineered to support a 1:1 ratio of event broker service pod to worker node. We use labels and taints on each of these node groups to ensure that only event broker service pods are scheduled on the worker nodes for each scaling tier.
+These node pools are engineered to support a 1:1 ratio of event broker service pod to worker node. We use labels and taints on each of these node pools to ensure that only event broker service pods are scheduled on the worker nodes for each scaling tier.
 
-The machine types, labels, and taints for each event broker service node group are as follows:
+The machine types, labels, and taints for each event broker service node pool are as follows:
 
 | Name       | Machine  type | Labels                                      | Taints                                                          |
 |------------|---------------|---------------------------------------------|-----------------------------------------------------------------|
@@ -105,16 +120,16 @@ project = "project123"
 region  = "us-east1"
 
 cluster_name       = "solace-us-east1"
-kubernetes_version = "1.27"
+kubernetes_version = "1.29"
 
-network_cidr_range            = "10.10.0.0/16"
-secondary_cidr_range_pods     = "10.11.0.0/16"
-secondary_cidr_range_services = "10.12.0.0/16"
+network_cidr_range                  = "10.10.1.0/24"
+secondary_cidr_range_services       = "172.25.0.0/16"
+secondary_cidr_range_pods           = "172.26.0.0/16"
+secondary_cidr_range_messaging_pods = "10.10.2.0/24"
 
 bastion_ssh_authorized_networks = ["192.168.1.1/32"]
 bastion_ssh_public_key          = "ssh-rsa abc123..."
 ```
-
 
 2. Apply the Terraform using the following command:
 
@@ -145,3 +160,11 @@ Create a Storage Class with these recommended settings:
 ```bash
 kubectl apply -f kubernetes/storage-class.yaml
 ```
+
+## v1 to v2
+
+### Breaking Changes
+
+The v2 version of this terraform project introduces a breaking change in the way that the secondary CIDRs are configured for services and pods in the clusters. In the v1 project, this was done via the cluster itself but there are limitations in the size of the CIDRs that make it impossible to run very small GKE clusters. The v2 project updates this to create secondary ranges directly in the cluster's subnetwork, which provides the flexibility to tailor the ranges to support smaller clusters that are more efficient in their use of IPs.
+
+The impact of this change is that v1-based clusters cannot be migrated easily to v2 clusters.

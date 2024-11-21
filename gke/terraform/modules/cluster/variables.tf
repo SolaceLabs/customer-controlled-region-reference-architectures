@@ -34,19 +34,25 @@ variable "subnetwork_name" {
   description = "The name of the subnetwork where the cluster will reside."
 }
 
-variable "secondary_cidr_range_pods" {
-  type        = string
-  description = "The secondary CIDR for the cluster's pods."
-}
-
-variable "secondary_cidr_range_services" {
-  type        = string
-  description = "The secondary CIDR for the cluster's services."
-}
-
 variable "kubernetes_version" {
   type        = string
   description = "The kubernetes version to use. Only used a creation time, ignored once the cluster exists."
+}
+
+variable "secondary_range_name_services" {
+  type        = string
+  description = "The name of the secondary CIDR range for the cluster's services."
+}
+
+variable "secondary_range_name_pods" {
+  type        = string
+  description = "The name of the secondary CIDR range for the cluster's node pools. If a separate CIDR range is provided for messaging pods, this range will be used for just the system (default) node pool."
+}
+
+variable "secondary_range_name_messaging_pods" {
+  type        = string
+  default     = null
+  description = "The name of the secondary CIDR range for the cluster's messaging node pools, if provided."
 }
 
 variable "master_ipv4_cidr_block" {
@@ -75,7 +81,7 @@ variable "node_pool_max_size" {
 variable "kubernetes_api_public_access" {
   type        = bool
   default     = false
-  description = "When set to true, the Kubernetes API is accessible publically from the provided authorized networks."
+  description = "When set to true, the Kubernetes API is accessible publicly from the provided authorized networks."
 }
 
 variable "kubernetes_api_authorized_networks" {

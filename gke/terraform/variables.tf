@@ -35,6 +35,24 @@ variable "network_cidr_range" {
   description = "The CIDR for the cluster's network. Worker nodes, load balancers, and other infrastructure is assigned an IP address from this range."
 }
 
+variable "secondary_cidr_range_services" {
+  type        = string
+  default     = null
+  description = "The secondary CIDR range for the cluster's services."
+}
+
+variable "secondary_cidr_range_pods" {
+  type        = string
+  default     = null
+  description = "The secondary CIDR range for the cluster's pods. If a separate CIDR range is provided for messaging pods, this range will be used for just the system (default) node pool."
+}
+
+variable "secondary_cidr_range_messaging_pods" {
+  type        = string
+  default     = null
+  description = "The secondary CIDR range for the cluster's messaging node pools, if a separate range is desired."
+}
+
 variable "network_name" {
   type        = string
   default     = ""
@@ -45,6 +63,24 @@ variable "subnetwork_name" {
   type        = string
   default     = ""
   description = "When 'create_network' is set to false, the subnetwork name must be provided."
+}
+
+variable "secondary_range_name_services" {
+  type        = string
+  default     = ""
+  description = "When 'create_network' is set to false, the name of the secondary CIDR range for the cluster's services must be provided."
+}
+
+variable "secondary_range_name_pods" {
+  type        = string
+  default     = ""
+  description = "When 'create_network' is set to false, the name of the secondary CIDR range for the cluster's node pools must be provided. If a separate CIDR range is provided for messaging pods, this range will be used for just the system (default) node pool."
+}
+
+variable "secondary_range_name_messaging_pods" {
+  type        = string
+  default     = null
+  description = "When 'create_network' is set to false, the name of the secondary CIDR range for the cluster's messaging node pools if a separate range is desired."
 }
 
 ################################################################################
@@ -72,16 +108,6 @@ variable "bastion_ssh_public_key" {
 ################################################################################
 # Cluster
 ################################################################################
-
-variable "secondary_cidr_range_pods" {
-  type        = string
-  description = "The secondary CIDR for the cluster's pods. GKE assigns each worker node a /24 for pods from this address range."
-}
-
-variable "secondary_cidr_range_services" {
-  type        = string
-  description = "The secondary CIDR for the cluster's services. Cluster IP services are assigned an IP from this addres range."
-}
 
 variable "kubernetes_version" {
   type        = string
@@ -115,7 +141,7 @@ variable "node_pool_max_size" {
 variable "kubernetes_api_public_access" {
   type        = bool
   default     = false
-  description = "When set to true, the Kubernetes API is accessible publically from the provided authorized networks."
+  description = "When set to true, the Kubernetes API is accessible publicly from the provided authorized networks."
 }
 
 variable "kubernetes_api_authorized_networks" {

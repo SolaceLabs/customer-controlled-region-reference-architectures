@@ -1,3 +1,9 @@
+locals {
+  secondary_cidr_range_name_pods      = "pods"
+  secondary_range_name_messaging_pods = "messaging-pods"
+  secondary_range_name_services       = "services"
+}
+
 resource "google_compute_network" "this" {
   #checkov:skip=CKV2_GCP_18:Firewall rules are auto-created by the cluster
 
@@ -8,7 +14,7 @@ resource "google_compute_network" "this" {
 }
 
 resource "google_compute_subnetwork" "cluster" {
-  #checkov:skip=CKV_GCP_76:This is not requried, subnetwork is not cofigured to use ipv6
+  #checkov:skip=CKV_GCP_76:This is not required, subnetwork is not configured to use ipv6
   #checkov:skip=CKV_GCP_26:Solace is not opinionated on the use of VPC flow logs
 
   count = var.create_network ? 1 : 0
@@ -19,12 +25,43 @@ resource "google_compute_subnetwork" "cluster" {
 
   private_ip_google_access = true
 
-  lifecycle {
-    ignore_changes = [secondary_ip_range] # these are automatically added by gke
+  secondary_ip_range {
+    range_name    = local.secondary_range_name_services
+    ip_cidr_range = var.secondary_cidr_range_services
+  }
 
+  secondary_ip_range {
+    range_name    = local.secondary_cidr_range_name_pods
+    ip_cidr_range = var.secondary_cidr_range_pods
+  }
+
+  dynamic "secondary_ip_range" {
+    for_each = var.secondary_cidr_range_messaging_pods != null ? [var.secondary_cidr_range_messaging_pods] : []
+    content {
+      range_name    = local.secondary_range_name_messaging_pods
+      ip_cidr_range = var.secondary_cidr_range_messaging_pods
+    }
+  }
+
+  lifecycle {
     precondition {
       condition     = can(cidrhost(var.network_cidr_range, 0))
       error_message = "A valid IPv4 CIDR must be provided for 'network_cidr_range' variable."
+    }
+
+    precondition {
+      condition     = can(cidrhost(var.secondary_cidr_range_services, 0))
+      error_message = "A valid IPv4 CIDR must be provided for 'secondary_cidr_range_services' variable."
+    }
+
+    precondition {
+      condition     = can(cidrhost(var.secondary_cidr_range_pods, 0))
+      error_message = "A valid IPv4 CIDR must be provided for 'secondary_cidr_range_pods' variable."
+    }
+
+    precondition {
+      condition     = var.secondary_cidr_range_messaging_pods == null || can(cidrhost(var.secondary_cidr_range_messaging_pods, 0))
+      error_message = "A valid IPv4 CIDR must be provided for 'secondary_cidr_range_messaging_pods' variable."
     }
   }
 }

@@ -9,6 +9,10 @@ module "network" {
 
   create_network     = var.create_network
   network_cidr_range = var.network_cidr_range
+
+  secondary_cidr_range_services       = var.secondary_cidr_range_services
+  secondary_cidr_range_pods           = var.secondary_cidr_range_pods
+  secondary_cidr_range_messaging_pods = var.secondary_cidr_range_messaging_pods
 }
 
 ################################################################################
@@ -42,9 +46,7 @@ module "cluster" {
 
   kubernetes_version = var.kubernetes_version
 
-  secondary_cidr_range_pods     = var.secondary_cidr_range_pods
-  secondary_cidr_range_services = var.secondary_cidr_range_services
-  master_ipv4_cidr_block        = var.master_ipv4_cidr_block
+  master_ipv4_cidr_block = var.master_ipv4_cidr_block
 
   max_pods_per_node_system    = var.max_pods_per_node_system
   max_pods_per_node_messaging = var.max_pods_per_node_messaging
@@ -55,4 +57,8 @@ module "cluster" {
 
   network_name    = var.create_network ? module.network.network_name : var.network_name
   subnetwork_name = var.create_network ? module.network.subnetwork_name : var.subnetwork_name
+
+  secondary_range_name_services       = var.create_network ? module.network.secondary_range_name_services : var.secondary_range_name_services
+  secondary_range_name_pods           = var.create_network ? module.network.secondary_cidr_range_name_pods : var.secondary_range_name_pods
+  secondary_range_name_messaging_pods = var.create_network ? module.network.secondary_range_name_messaging_pods : var.secondary_range_name_messaging_pods
 }

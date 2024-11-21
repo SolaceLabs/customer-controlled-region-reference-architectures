@@ -101,6 +101,73 @@ func TestTerraformGkeClusterComplete(t *testing.T) {
 	testCluster(t, configOptions)
 }
 
+func TestTerraformGkeClusterMessagingCidr(t *testing.T) {
+	t.Parallel()
+
+	keepCluster := os.Getenv("KEEP_CLUSTER")
+
+	region := "europe-west3"
+	clusterName := "terratest-cidr"
+
+	prereqPath, _ := common.CopyTerraform(t, "../prerequisites")
+	prereqOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+		TerraformDir: prereqPath,
+		NoColor:      true,
+		Upgrade:      true,
+	})
+
+	if keepCluster != "yes" {
+		defer terraform.Destroy(t, prereqOptions)
+	}
+	terraform.InitAndApply(t, prereqOptions)
+
+	localCidr := []string{terraform.Output(t, prereqOptions, "local_cidr")}
+
+	underTestPath, _ := common.CopyTerraform(t, "../../gke/terraform")
+	underTestOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+		TerraformDir: underTestPath,
+		NoColor:      true,
+		Vars: map[string]interface{}{
+			"cluster_name":                        clusterName,
+			"region":                              region,
+			"kubernetes_version":                  KubernetesVersion,
+			"network_cidr_range":                  "10.10.1.0/24",
+			"secondary_cidr_range_pods":           "172.25.0.0/16",
+			"secondary_cidr_range_services":       "172.26.0.0/16",
+			"secondary_cidr_range_messaging_pods": "10.10.2.0/24",
+			"master_ipv4_cidr_block":              "10.100.0.0/28",
+			"max_pods_per_node_system":            110,
+			"create_bastion":                      false,
+			"kubernetes_api_public_access":        true,
+			"kubernetes_api_authorized_networks":  localCidr,
+		},
+		Upgrade: true,
+	})
+
+	if keepCluster != "yes" {
+		defer terraform.Destroy(t, underTestOptions)
+	}
+	terraform.InitAndApply(t, underTestOptions)
+
+	storageClassPath, _ := filepath.Abs("../../gke/kubernetes/storage-class.yaml")
+
+	configPath, _ := common.CopyTerraform(t, "./configuration")
+	configOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
+		TerraformDir: configPath,
+		NoColor:      true,
+		Vars: map[string]interface{}{
+			"cluster_name":       clusterName,
+			"region":             region,
+			"storage_class_path": storageClassPath,
+		},
+		Upgrade: true,
+	})
+
+	terraform.InitAndApply(t, configOptions)
+
+	testCluster(t, configOptions)
+}
+
 func TestTerraformGkeClusterExternalNetwork(t *testing.T) {
 	t.Parallel()
 
@@ -153,9 +220,8 @@ func TestTerraformGkeClusterExternalNetwork(t *testing.T) {
 			"create_network":                     false,
 			"network_name":                       networkName,
 			"subnetwork_name":                    subnetworkName,
-			"network_cidr_range":                 "10.10.0.0/24",
-			"secondary_cidr_range_pods":          "10.11.0.0/16",
-			"secondary_cidr_range_services":      "10.12.0.0/16",
+			"secondary_range_name_services":      "services",
+			"secondary_range_name_pods":          "pods",
 			"master_ipv4_cidr_block":             "10.100.0.0/28",
 			"create_bastion":                     false,
 			"kubernetes_api_public_access":       true,
