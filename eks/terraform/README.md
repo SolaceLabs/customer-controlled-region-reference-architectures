@@ -16,7 +16,12 @@ No providers.
 |------|--------|---------|
 | <a name="module_bastion"></a> [bastion](#module\_bastion) | ./modules/bastion | n/a |
 | <a name="module_cluster"></a> [cluster](#module\_cluster) | ./modules/cluster | n/a |
+| <a name="module_cluster_addons"></a> [cluster\_addons](#module\_cluster\_addons) | ./modules/cluster-addons | n/a |
 | <a name="module_network"></a> [network](#module\_network) | ./modules/network | n/a |
+| <a name="module_node_group_monitoring"></a> [node\_group\_monitoring](#module\_node\_group\_monitoring) | ./modules/broker-node-group | n/a |
+| <a name="module_node_group_prod100k"></a> [node\_group\_prod100k](#module\_node\_group\_prod100k) | ./modules/broker-node-group | n/a |
+| <a name="module_node_group_prod10k"></a> [node\_group\_prod10k](#module\_node\_group\_prod10k) | ./modules/broker-node-group | n/a |
+| <a name="module_node_group_prod1k"></a> [node\_group\_prod1k](#module\_node\_group\_prod1k) | ./modules/broker-node-group | n/a |
 
 ## Resources
 
@@ -47,6 +52,7 @@ No resources.
 | <a name="input_region"></a> [region](#input\_region) | The AWS region where this cluster will reside. | `string` | n/a | yes |
 | <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | The CIDR of the cluster's VPC. | `string` | `""` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | When 'create\_network' is set to false, the VPC ID must be provided. | `string` | `""` | no |
+| <a name="input_workload_identity_type"></a> [workload\_identity\_type](#input\_workload\_identity\_type) | The type of workload identity to use. Options are 'irsa' or 'pod-identity'. | `string` | `"pod-identity"` | no |
 
 ## Outputs
 

@@ -132,3 +132,13 @@ variable "kubernetes_cluster_admin_arns" {
   default     = []
   description = "When kubernetes_cluster_auth_mode is set to 'API', user or role ARNs can be provided that will be given assigned AmazonEKSClusterAdminPolicy for this cluster."
 }
+
+variable "workload_identity_type" {
+  type        = string
+  default     = "pod-identity"
+  description = "The type of workload identity to use. Options are 'irsa' or 'pod-identity'."
+  validation {
+    condition     = var.workload_identity_type == "irsa" || var.workload_identity_type == "pod-identity"
+    error_message = "The workload_identity_type must be either 'irsa' or 'pod-identity'."
+  }
+}

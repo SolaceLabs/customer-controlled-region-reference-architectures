@@ -150,7 +150,7 @@ For example:
 ```
 region             = "eu-west-3"
 cluster_name       = "solace-eu-west-3"
-kubernetes_version = "1.29"
+kubernetes_version = "1.27"
 
 vpc_cidr = "10.10.0.0/24"
 
