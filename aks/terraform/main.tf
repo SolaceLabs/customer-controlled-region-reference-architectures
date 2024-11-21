@@ -18,7 +18,7 @@ module "network" {
   common_tags         = var.common_tags
   cluster_name        = var.cluster_name
 
-  vnet_cidr = var.vnet_cidr
+  vnet_cidr           = var.vnet_cidr
   cluster_subnet_cidr = var.vnet_cidr
 }
 
