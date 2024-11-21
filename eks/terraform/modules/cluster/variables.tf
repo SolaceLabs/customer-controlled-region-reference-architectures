@@ -8,12 +8,6 @@ variable "cluster_name" {
   description = "The name of the cluster and name (or name prefix) for all other infrastructure."
 }
 
-variable "common_tags" {
-  type        = map(string)
-  default     = {}
-  description = "Tags that are added to all resources created by this module, in the cases where this cannot be accomplished with 'default_tags' on the AWS provider."
-}
-
 variable "vpc_id" {
   type        = string
   description = "The ID of the VPC where the cluster will reside."
@@ -47,20 +41,8 @@ variable "kubernetes_api_authorized_networks" {
   description = "The list of CIDRs that can access the Kubernetes API, in addition to the bastion host and worker nodes (which are added by default)."
 }
 
-variable "kubernetes_cluster_auth_mode" {
-  type        = string
-  default     = null
-  description = "This controls which authentication method to use for the cluster. See the readme for more details."
-}
-
 variable "kubernetes_cluster_admin_arns" {
   type        = list(string)
   default     = []
-  description = "When kubernetes_cluster_auth_mode is set to 'API', user or role ARNs can be provided that will be given assigned AmazonEKSClusterAdminPolicy for this cluster."
-}
-
-variable "use_random_suffix_in_node_group_name" {
-  description = "Whether to use auto generated random suffix in node group name"
-  type        = bool
-  default     = true
+  description = "User or role ARNs can be provided that will be given assigned AmazonEKSClusterAdminPolicy for this cluster."
 }

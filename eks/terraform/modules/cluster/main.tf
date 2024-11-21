@@ -1,10 +1,3 @@
-locals {
-  default_instance_type = "m5.large"
-
-  worker_node_volume_size = 20
-  worker_node_volume_type = "gp2"
-}
-
 data "aws_partition" "current" {}
 data "aws_caller_identity" "current" {}
 
@@ -104,8 +97,8 @@ resource "aws_eks_cluster" "cluster" {
   }
 
   access_config {
-    authentication_mode                         = var.kubernetes_cluster_auth_mode
-    bootstrap_cluster_creator_admin_permissions = var.kubernetes_cluster_auth_mode == "CONFIG_MAP" ? true : null
+    authentication_mode                         = "API"
+    bootstrap_cluster_creator_admin_permissions = false
   }
 
   tags = {
@@ -132,13 +125,6 @@ resource "aws_eks_access_entry" "admin" {
   cluster_name  = aws_eks_cluster.cluster.name
   principal_arn = var.kubernetes_cluster_admin_arns[count.index]
   type          = "STANDARD"
-
-  lifecycle {
-    precondition {
-      condition     = var.kubernetes_cluster_auth_mode == "API" || var.kubernetes_cluster_auth_mode == "API_AND_CONFIG_MAP"
-      error_message = "The kubernetes_cluster_auth_mode variable must be set to 'API' or 'API_AND_CONFIG_MAP' if kubernetes_cluster_admin_arns is provided."
-    }
-  }
 }
 
 resource "aws_eks_access_policy_association" "admin" {
@@ -262,6 +248,8 @@ resource "aws_iam_role_policy_attachment" "worker_node_AmazonSSMManagedInstanceC
 ################################################################################
 
 resource "aws_security_group" "worker_node" {
+  #checkov:skip=CKV2_AWS_5:Security group is used in another module
+
   name        = "${var.cluster_name}-worker-node"
   description = "Security group for all worker nodes in the cluster"
   vpc_id      = var.vpc_id
@@ -298,83 +286,4 @@ resource "aws_security_group_rule" "worker_node_to_worker_node" {
   type                     = "ingress"
   security_group_id        = aws_security_group.worker_node.id
   source_security_group_id = aws_security_group.worker_node.id
-}
-
-################################################################################
-# Node Group - Default
-################################################################################
-
-resource "aws_launch_template" "default" {
-  name = "${var.cluster_name}-default"
-
-  vpc_security_group_ids = [aws_security_group.worker_node.id]
-  instance_type          = local.default_instance_type
-
-  block_device_mappings {
-    device_name = "/dev/xvda"
-
-    ebs {
-      delete_on_termination = true
-      encrypted             = true
-      volume_size           = local.worker_node_volume_size
-      volume_type           = local.worker_node_volume_type
-    }
-  }
-
-  metadata_options {
-    http_endpoint = "enabled"
-    #checkov:skip=CKV_AWS_341:Two hops are required for various build-in services to work properly
-    http_put_response_hop_limit = 2
-    instance_metadata_tags      = "enabled"
-    http_tokens                 = "required"
-  }
-
-  dynamic "tag_specifications" {
-    for_each = length(var.common_tags) > 0 ? [0] : []
-    content {
-      resource_type = "instance"
-      tags          = var.common_tags
-    }
-  }
-}
-
-resource "aws_eks_node_group" "default" {
-  cluster_name           = aws_eks_cluster.cluster.name
-  node_group_name_prefix = var.use_random_suffix_in_node_group_name ? "${var.cluster_name}-default-" : null
-  node_group_name        = var.use_random_suffix_in_node_group_name ? null : "${var.cluster_name}-default"
-  node_role_arn          = aws_iam_role.worker_node.arn
-  subnet_ids             = var.private_subnet_ids
-
-  scaling_config {
-    desired_size = 2
-    min_size     = 2
-    max_size     = 3
-  }
-
-  launch_template {
-    id      = aws_launch_template.default.id
-    version = aws_launch_template.default.latest_version
-  }
-
-  depends_on = [
-    aws_iam_role_policy_attachment.worker_node_AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.worker_node_AmazonEC2ContainerRegistryReadOnly,
-    aws_iam_role_policy_attachment.worker_node_AmazonSSMManagedInstanceCore,
-  ]
-
-  lifecycle {
-    ignore_changes = [
-      scaling_config[0].desired_size
-    ]
-  }
-}
-
-resource "aws_autoscaling_group_tag" "default_name_tag" {
-  autoscaling_group_name = aws_eks_node_group.default.resources[0].autoscaling_groups[0].name
-
-  tag {
-    key                 = "Name"
-    value               = "${var.cluster_name}-default"
-    propagate_at_launch = true
-  }
 }

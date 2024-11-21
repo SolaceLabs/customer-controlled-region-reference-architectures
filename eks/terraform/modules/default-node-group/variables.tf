@@ -1,6 +1,6 @@
 variable "cluster_name" {
   type        = string
-  description = "The name of the EKS cluster."
+  description = "The name of the cluster and name (or name prefix) for all other infrastructure."
 }
 
 variable "kubernetes_version" {
@@ -21,44 +21,17 @@ variable "security_group_ids" {
 
 variable "subnet_ids" {
   type        = list(string)
-  description = "The subnets that the node groups will use - a node group is created in each subnet."
+  description = "The subnets that the node group will use."
 }
 
-variable "node_group_name_prefix" {
+variable "node_group_name" {
   type        = string
-  description = "The prefix for the node groups."
-}
-
-variable "node_group_min_size" {
-  type        = number
-  description = "The minimum size of the node groups."
-  default     = 0
+  description = "The name the node group."
 }
 
 variable "node_group_desired_size" {
   type        = number
-  description = "The desired size of the node groups."
-  default     = 0
-}
-
-variable "node_group_max_size" {
-  type        = number
-  description = "The maximum size of the node groups."
-}
-
-variable "node_group_labels" {
-  type        = map(string)
-  description = "Kubernetes labels added to worker nodes in the node groups."
-}
-
-variable "node_group_taints" {
-  type        = list(map(string))
-  description = "Kubernetes taints added to worker nodes in the node groups."
-}
-
-variable "node_group_resources_tags" {
-  type        = list(map(string))
-  description = "Resources tags added to the node groups as hints for the autoscaler."
+  description = "The desired size of the node group."
 }
 
 variable "worker_node_volume_size" {

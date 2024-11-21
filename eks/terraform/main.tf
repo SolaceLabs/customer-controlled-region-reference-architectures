@@ -20,7 +20,7 @@ module "network" {
 module "bastion" {
   source = "./modules/bastion"
 
-  cluster_name = var.cluster_name
+  cluster_name = module.cluster.cluster_name
 
   create_bastion = var.create_bastion
 
@@ -50,11 +50,7 @@ module "cluster" {
   kubernetes_service_cidr            = var.kubernetes_service_cidr
   kubernetes_api_public_access       = var.kubernetes_api_public_access
   kubernetes_api_authorized_networks = var.kubernetes_api_authorized_networks
-
-  kubernetes_cluster_auth_mode  = var.kubernetes_cluster_auth_mode
-  kubernetes_cluster_admin_arns = var.kubernetes_cluster_admin_arns
-
-  common_tags = var.common_tags
+  kubernetes_cluster_admin_arns      = var.kubernetes_cluster_admin_arns
 }
 
 module "cluster_addons" {
@@ -62,20 +58,20 @@ module "cluster_addons" {
 
   region       = var.region
   cluster_name = module.cluster.cluster_name
+  cluster_id   = module.cluster.cluster_id
 
-  default_node_group_arn = module.cluster.default_node_group_arn
-
-  use_irsa_v1 = var.workload_identity_type == "irsa"
-  use_irsa_v2 = var.workload_identity_type == "pod-identity"
+  default_node_group_arn = module.node_group_default.node_group_arn
 
   common_tags = var.common_tags
 }
 
 ################################################################################
-# Node Groups - Broker
+# Node Groups
 ################################################################################
 
 locals {
+  default_instance_type = "m5.large"
+
   prod1k_instance_type     = "r5.large"
   prod10k_instance_type    = "r5.xlarge"
   prod100k_instance_type   = "r5.2xlarge"
@@ -92,11 +88,35 @@ locals {
   ]
 }
 
+data "aws_ssm_parameter" "eks_ami_release_version" {
+  name = "/aws/service/eks/optimized-ami/${var.kubernetes_version}/amazon-linux-2023/x86_64/standard/recommended/release_version"
+}
+
+module "node_group_default" {
+  source = "./modules/default-node-group"
+
+  cluster_name       = module.cluster.cluster_name
+  node_group_name    = "default"
+  security_group_ids = [module.cluster.worker_node_security_group_id]
+  subnet_ids         = module.network.private_subnets
+
+  worker_node_role_arn      = module.cluster.worker_node_role_arn
+  worker_node_instance_type = local.default_instance_type
+  worker_node_volume_size   = local.worker_node_volume_size
+  worker_node_volume_type   = local.worker_node_volume_type
+  worker_node_tags          = var.common_tags
+
+  kubernetes_version      = var.kubernetes_version
+  worker_node_ami_version = nonsensitive(data.aws_ssm_parameter.eks_ami_release_version.value)
+
+  node_group_desired_size = 2
+}
+
 module "node_group_prod1k" {
   source = "./modules/broker-node-group"
 
   cluster_name           = module.cluster.cluster_name
-  node_group_name_prefix = "${var.cluster_name}-prod1k"
+  node_group_name_prefix = "prod1k"
   security_group_ids     = [module.cluster.worker_node_security_group_id]
   subnet_ids             = module.network.private_subnets
 
@@ -108,6 +128,9 @@ module "node_group_prod1k" {
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
+
+  kubernetes_version      = var.kubernetes_version
+  worker_node_ami_version = nonsensitive(data.aws_ssm_parameter.eks_ami_release_version.value)
 
   node_group_labels = {
     nodeType     = "messaging"
@@ -132,7 +155,7 @@ module "node_group_prod10k" {
   source = "./modules/broker-node-group"
 
   cluster_name           = module.cluster.cluster_name
-  node_group_name_prefix = "${var.cluster_name}-prod10k"
+  node_group_name_prefix = "prod10k"
   security_group_ids     = [module.cluster.worker_node_security_group_id]
   subnet_ids             = module.network.private_subnets
 
@@ -144,6 +167,9 @@ module "node_group_prod10k" {
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
+
+  kubernetes_version      = var.kubernetes_version
+  worker_node_ami_version = nonsensitive(data.aws_ssm_parameter.eks_ami_release_version.value)
 
   node_group_labels = {
     nodeType     = "messaging"
@@ -168,7 +194,7 @@ module "node_group_prod100k" {
   source = "./modules/broker-node-group"
 
   cluster_name           = module.cluster.cluster_name
-  node_group_name_prefix = "${var.cluster_name}-prod100k"
+  node_group_name_prefix = "prod100k"
   security_group_ids     = [module.cluster.worker_node_security_group_id]
   subnet_ids             = module.network.private_subnets
 
@@ -180,6 +206,9 @@ module "node_group_prod100k" {
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
+
+  kubernetes_version      = var.kubernetes_version
+  worker_node_ami_version = nonsensitive(data.aws_ssm_parameter.eks_ami_release_version.value)
 
   node_group_labels = {
     nodeType     = "messaging"
@@ -204,7 +233,7 @@ module "node_group_monitoring" {
   source = "./modules/broker-node-group"
 
   cluster_name           = module.cluster.cluster_name
-  node_group_name_prefix = "${var.cluster_name}-monitoring"
+  node_group_name_prefix = "monitoring"
   security_group_ids     = [module.cluster.worker_node_security_group_id]
   subnet_ids             = module.network.private_subnets
 
@@ -216,6 +245,9 @@ module "node_group_monitoring" {
 
   node_group_max_size       = var.node_group_max_size
   node_group_resources_tags = local.resources_tags
+
+  kubernetes_version      = var.kubernetes_version
+  worker_node_ami_version = nonsensitive(data.aws_ssm_parameter.eks_ami_release_version.value)
 
   node_group_labels = {
     nodeType = "monitoring"
