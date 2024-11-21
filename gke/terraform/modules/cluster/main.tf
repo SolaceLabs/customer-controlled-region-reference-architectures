@@ -98,6 +98,10 @@ resource "google_container_cluster" "cluster" {
   release_channel {
     channel = "UNSPECIFIED"
   }
+
+  lifecycle {
+    ignore_changes = [min_master_version]
+  }
 }
 
 ################################################################################
@@ -153,6 +157,7 @@ module "node_group_prod1k" {
   common_labels      = var.common_labels
   node_pool_name     = "prod1k"
   availability_zones = data.google_compute_zones.available.names
+  kubernetes_version = google_container_cluster.cluster.master_version
 
   secondary_range_name = var.secondary_range_name_messaging_pods
 
@@ -190,6 +195,7 @@ module "node_group_prod10k" {
   common_labels      = var.common_labels
   node_pool_name     = "prod10k"
   availability_zones = data.google_compute_zones.available.names
+  kubernetes_version = google_container_cluster.cluster.master_version
 
   secondary_range_name = var.secondary_range_name_messaging_pods
 
@@ -227,6 +233,7 @@ module "node_group_prod100k" {
   common_labels      = var.common_labels
   node_pool_name     = "prod100k"
   availability_zones = data.google_compute_zones.available.names
+  kubernetes_version = google_container_cluster.cluster.master_version
 
   secondary_range_name = var.secondary_range_name_messaging_pods
 
@@ -264,6 +271,7 @@ module "node_group_monitoring" {
   common_labels      = var.common_labels
   node_pool_name     = "monitoring"
   availability_zones = data.google_compute_zones.available.names
+  kubernetes_version = google_container_cluster.cluster.master_version
 
   secondary_range_name = var.secondary_range_name_messaging_pods
 

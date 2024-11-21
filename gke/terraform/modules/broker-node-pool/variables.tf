@@ -62,3 +62,8 @@ variable "secondary_range_name" {
   type        = string
   description = "The name of the secondary CIDR range for the node pool."
 }
+
+variable "kubernetes_version" {
+  type        = string
+  description = "The Kubernetes version for the node pool."
+}

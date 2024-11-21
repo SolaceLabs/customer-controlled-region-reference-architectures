@@ -5,6 +5,8 @@ resource "google_container_node_pool" "this" {
   max_pods_per_node = var.max_pods_per_node
   node_locations    = var.availability_zones
 
+  version = var.kubernetes_version
+
   network_config {
     enable_private_nodes = true
     pod_range            = var.secondary_range_name

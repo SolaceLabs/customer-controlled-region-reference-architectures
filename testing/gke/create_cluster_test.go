@@ -49,7 +49,7 @@ func TestTerraformGkeClusterComplete(t *testing.T) {
 	}
 	terraform.InitAndApply(t, prereqOptions)
 
-	//localCidr := []string{terraform.Output(t, prereqOptions, "local_cidr")}
+	localCidr := []string{terraform.Output(t, prereqOptions, "local_cidr")}
 	bastionPublicKey := terraform.Output(t, prereqOptions, "bastion_ssh_public_key")
 
 	underTestPath, _ := common.CopyTerraform(t, "../../gke/terraform")
@@ -64,10 +64,10 @@ func TestTerraformGkeClusterComplete(t *testing.T) {
 			"secondary_cidr_range_pods":          "10.11.0.0/16",
 			"secondary_cidr_range_services":      "10.12.0.0/16",
 			"master_ipv4_cidr_block":             "10.100.0.0/28",
-			"bastion_ssh_authorized_networks":    []string{"0.0.0.0/0"},
+			"bastion_ssh_authorized_networks":    localCidr,
 			"bastion_ssh_public_key":             bastionPublicKey,
 			"kubernetes_api_public_access":       true,
-			"kubernetes_api_authorized_networks": []string{"0.0.0.0/0"},
+			"kubernetes_api_authorized_networks": localCidr,
 		},
 		Upgrade: true,
 	})
@@ -106,8 +106,8 @@ func TestTerraformGkeClusterMessagingCidr(t *testing.T) {
 
 	keepCluster := os.Getenv("KEEP_CLUSTER")
 
-	region := "europe-west1"
-	clusterName := "terratest-extra-cidr"
+	region := "europe-west3"
+	clusterName := "terratest-cidr"
 
 	prereqPath, _ := common.CopyTerraform(t, "../prerequisites")
 	prereqOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
@@ -128,17 +128,18 @@ func TestTerraformGkeClusterMessagingCidr(t *testing.T) {
 		TerraformDir: underTestPath,
 		NoColor:      true,
 		Vars: map[string]interface{}{
-			"cluster_name":                            clusterName,
-			"region":                                  region,
-			"kubernetes_version":                      KubernetesVersion,
-			"network_cidr_range":                      "10.10.1.0/24",
-			"secondary_cidr_range_pods":               "172.25.0.0/16",
-			"secondary_cidr_range_services":           "172.25.0.0/16",
-			"secondary_cidr_range_messaging_services": "10.10.2.0/24",
-			"master_ipv4_cidr_block":                  "10.100.0.0/28",
-			"create_bastion":                          false,
-			"kubernetes_api_public_access":            true,
-			"kubernetes_api_authorized_networks":      localCidr,
+			"cluster_name":                        clusterName,
+			"region":                              region,
+			"kubernetes_version":                  KubernetesVersion,
+			"network_cidr_range":                  "10.10.1.0/24",
+			"secondary_cidr_range_pods":           "172.25.0.0/16",
+			"secondary_cidr_range_services":       "172.26.0.0/16",
+			"secondary_cidr_range_messaging_pods": "10.10.2.0/24",
+			"master_ipv4_cidr_block":              "10.100.0.0/28",
+			"max_pods_per_node_system":            110,
+			"create_bastion":                      false,
+			"kubernetes_api_public_access":        true,
+			"kubernetes_api_authorized_networks":  localCidr,
 		},
 		Upgrade: true,
 	})
