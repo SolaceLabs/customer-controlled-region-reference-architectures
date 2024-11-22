@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/SolaceDev/sc-private-regions-terraform/testing/common"
+	"github.com/gruntwork-io/terratest/modules/aws"
 	"github.com/gruntwork-io/terratest/modules/k8s"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 
@@ -78,6 +79,7 @@ func TestTerraformEksClusterComplete(t *testing.T) {
 			"bastion_ssh_public_key":             bastionPublicKey,
 			"kubernetes_api_public_access":       true,
 			"kubernetes_api_authorized_networks": localCidr,
+			"kubernetes_cluster_admin_arns":      []string{aws.GetIamCurrentUserArn(t)},
 		},
 		Upgrade: true,
 	})
@@ -183,6 +185,7 @@ func TestTerraformEksClusterExternalNetwork(t *testing.T) {
 			"bastion_subnet_id":                  publicSubnets[0],
 			"kubernetes_api_public_access":       true,
 			"kubernetes_api_authorized_networks": localCidr,
+			"kubernetes_cluster_admin_arns":      []string{aws.GetIamCurrentUserArn(t)},
 		},
 		Upgrade: true,
 	})
