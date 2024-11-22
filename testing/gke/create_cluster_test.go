@@ -1,6 +1,7 @@
 package gke
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -35,7 +36,12 @@ func TestTerraformGkeClusterComplete(t *testing.T) {
 	keepCluster := os.Getenv("KEEP_CLUSTER")
 
 	region := "europe-west1"
-	clusterName := "terratest-complete"
+
+	clusterName := os.Getenv("CLUSTER_NAME")
+	if clusterName == "" {
+		// 27 characters, which is the max length when bastion is created
+		clusterName = fmt.Sprintf("terratest-complete-%s", common.UniqueId(8))
+	}
 
 	prereqPath, _ := common.CopyTerraform(t, "../prerequisites")
 	prereqOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
@@ -107,7 +113,12 @@ func TestTerraformGkeClusterMessagingCidr(t *testing.T) {
 	keepCluster := os.Getenv("KEEP_CLUSTER")
 
 	region := "europe-west3"
-	clusterName := "terratest-cidr"
+
+	clusterName := os.Getenv("CLUSTER_NAME")
+	if clusterName == "" {
+		// 30 characters, which is the max length when bastion is not created
+		clusterName = fmt.Sprintf("terratest-cidr-%s", common.UniqueId(15))
+	}
 
 	prereqPath, _ := common.CopyTerraform(t, "../prerequisites")
 	prereqOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
@@ -174,7 +185,12 @@ func TestTerraformGkeClusterExternalNetwork(t *testing.T) {
 	keepCluster := os.Getenv("KEEP_CLUSTER")
 
 	region := "us-east1"
-	clusterName := "terratest-network"
+
+	clusterName := os.Getenv("CLUSTER_NAME")
+	if clusterName == "" {
+		// 30 characters, which is the max length when bastion is not created
+		clusterName = fmt.Sprintf("terratest-network-%s", common.UniqueId(12))
+	}
 
 	prereqPath, _ := common.CopyTerraform(t, "../prerequisites")
 	prereqOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{

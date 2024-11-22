@@ -1,8 +1,15 @@
 resource "google_service_account" "bastion" {
   count = var.create_bastion ? 1 : 0
 
-  account_id   = "${var.cluster_name}-bastion"
+  account_id   = "${var.cluster_name}-vm"
   display_name = "Service account for ${var.cluster_name} bastion"
+
+  lifecycle {
+    precondition {
+      condition     = length(var.cluster_name) <= 27
+      error_message = "Cluster name must be 27 characters or less to satisfy google_service_account length restriction."
+    }
+  }
 }
 
 data "google_compute_zones" "available" {

@@ -3,6 +3,7 @@ package common
 import (
 	"bufio"
 	"fmt"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -176,4 +177,20 @@ func TestSshToBastionHost(t *testing.T, bastionPublicIp string, bastionUsername 
 	}
 
 	ssh.CheckSshConnectionWithRetry(t, publicHost, 30, 5*time.Second)
+}
+
+const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
+
+var seededRand *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
+
+func stringWithCharset(length int, charset string) string {
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[seededRand.Intn(len(charset))]
+	}
+	return string(b)
+}
+
+func UniqueId(length int) string {
+	return stringWithCharset(length, charset)
 }
