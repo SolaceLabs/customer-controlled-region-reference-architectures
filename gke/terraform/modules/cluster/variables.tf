@@ -13,8 +13,8 @@ variable "cluster_name" {
   description = "The name of the cluster and name (or name prefix) for all other infrastructure."
 
   validation {
-    condition     = length(var.cluster_name) < 25
-    error_message = "Cluster name must be less than 25 characters to satisfy google_service_account length restriction."
+    condition     = length(var.cluster_name) <= 30
+    error_message = "Cluster name must be30 characters or less to satisfy google_service_account length restriction."
   }
 }
 
