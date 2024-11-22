@@ -20,8 +20,7 @@ module "network" {
 module "bastion" {
   source = "./modules/bastion"
 
-  cluster_name = module.cluster.cluster_name
-
+  cluster_name   = var.cluster_name
   create_bastion = var.create_bastion
 
   vpc_id    = var.create_network ? module.network.vpc_id : var.vpc_id
