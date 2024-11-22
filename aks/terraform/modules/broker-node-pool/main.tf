@@ -6,6 +6,8 @@ resource "azurerm_kubernetes_cluster_node_pool" "this" {
 
   kubernetes_cluster_id = var.cluster_id
 
+  orchestrator_version = var.kubernetes_version
+
   min_count = 0
   max_count = var.node_pool_max_size
 

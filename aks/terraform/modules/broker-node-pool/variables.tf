@@ -53,3 +53,8 @@ variable "worker_node_max_pods" {
   type        = number
   description = "The maximum number of pods for the worker nodes in the node pools."
 }
+
+variable "kubernetes_version" {
+  type        = string
+  description = "The Kubernetes version for the node pools."
+}

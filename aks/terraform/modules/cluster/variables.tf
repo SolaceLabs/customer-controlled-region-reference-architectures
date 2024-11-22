@@ -21,7 +21,7 @@ variable "cluster_name" {
 
 variable "kubernetes_version" {
   type        = string
-  description = "The kubernetes version to use. Only used a creation time, ignored once the cluster exists."
+  description = "The kubernetes version for the cluster."
 }
 
 variable "kubernetes_service_cidr" {
@@ -40,12 +40,6 @@ variable "kubernetes_pod_cidr" {
   type        = string
   default     = "10.101.0.0/16"
   description = "The CIDR used to assign IPs to kubernetes services, internal to the cluster."
-}
-
-variable "node_pool_max_size" {
-  type        = number
-  default     = 10
-  description = "The maximum size for the broker node pools in the cluster."
 }
 
 variable "outbound_ip_count" {

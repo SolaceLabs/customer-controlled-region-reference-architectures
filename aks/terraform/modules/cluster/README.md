@@ -16,12 +16,7 @@
 
 ## Modules
 
-| Name | Source | Version |
-|------|--------|---------|
-| <a name="module_node_pool_monitoring"></a> [node\_pool\_monitoring](#module\_node\_pool\_monitoring) | ../broker-node-pool | n/a |
-| <a name="module_node_pool_prod100k"></a> [node\_pool\_prod100k](#module\_node\_pool\_prod100k) | ../broker-node-pool | n/a |
-| <a name="module_node_pool_prod10k"></a> [node\_pool\_prod10k](#module\_node\_pool\_prod10k) | ../broker-node-pool | n/a |
-| <a name="module_node_pool_prod1k"></a> [node\_pool\_prod1k](#module\_node\_pool\_prod1k) | ../broker-node-pool | n/a |
+No modules.
 
 ## Resources
 
@@ -49,9 +44,8 @@
 | <a name="input_kubernetes_dns_service_ip"></a> [kubernetes\_dns\_service\_ip](#input\_kubernetes\_dns\_service\_ip) | The IP address within the service CIDR that will be used for kube-dns. | `string` | `"10.100.0.10"` | no |
 | <a name="input_kubernetes_pod_cidr"></a> [kubernetes\_pod\_cidr](#input\_kubernetes\_pod\_cidr) | The CIDR used to assign IPs to kubernetes services, internal to the cluster. | `string` | `"10.101.0.0/16"` | no |
 | <a name="input_kubernetes_service_cidr"></a> [kubernetes\_service\_cidr](#input\_kubernetes\_service\_cidr) | The CIDR used to assign IPs to kubernetes services, internal to the cluster. | `string` | `"10.100.0.0/16"` | no |
-| <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The kubernetes version to use. Only used a creation time, ignored once the cluster exists. | `string` | n/a | yes |
+| <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The kubernetes version for the cluster. | `string` | n/a | yes |
 | <a name="input_local_account_disabled"></a> [local\_account\_disabled](#input\_local\_account\_disabled) | By default, AKS has an admin account that can be used to access the cluster with static credentials. It's better to leave this disabled and use Azure RBAC, but it can be enabled if required. | `bool` | `true` | no |
-| <a name="input_node_pool_max_size"></a> [node\_pool\_max\_size](#input\_node\_pool\_max\_size) | The maximum size for the broker node pools in the cluster. | `number` | `10` | no |
 | <a name="input_outbound_ip_count"></a> [outbound\_ip\_count](#input\_outbound\_ip\_count) | The number of public IPs assigned to the load balancer that performs NAT for the VNET. | `number` | `2` | no |
 | <a name="input_outbound_ports_allocated"></a> [outbound\_ports\_allocated](#input\_outbound\_ports\_allocated) | The number of outbound ports allocated for NAT for each VM within the VNET. | `number` | `896` | no |
 | <a name="input_region"></a> [region](#input\_region) | The Azure region where this cluster will reside. | `string` | n/a | yes |
@@ -66,4 +60,5 @@
 |------|-------------|
 | <a name="output_cluster_id"></a> [cluster\_id](#output\_cluster\_id) | n/a |
 | <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | n/a |
+| <a name="output_current_kubernetes_version"></a> [current\_kubernetes\_version](#output\_current\_kubernetes\_version) | n/a |
 <!-- END_TF_DOCS -->

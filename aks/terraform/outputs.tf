@@ -17,3 +17,7 @@ output "bastion_username" {
 output "kubernetes_api_public_access" {
   value = var.kubernetes_api_public_access
 }
+
+output "current_kubernetes_version" {
+  value = module.cluster.current_kubernetes_version
+}
