@@ -150,7 +150,7 @@ For example:
 ```
 region             = "eu-west-3"
 cluster_name       = "solace-eu-west-3"
-kubernetes_version = "1.27"
+kubernetes_version = "1.29"
 
 vpc_cidr = "10.10.0.0/24"
 
@@ -237,3 +237,9 @@ helm repo update eks
 terraform output -raw -state=terraform/terraform.tfstate load_balancer_controller_helm_values | \
     helm install aws-load-balancer-controller eks/aws-load-balancer-controller --version 1.7.1 -n kube-system --values -
 ```
+
+## Breaking Changes
+
+### v1 to v2
+
+The v2 version of this terraform projects has removed the previously optional IRSA method of workload identity as well as the ability to choose which type of cluster authentication mode (the default is now API).
