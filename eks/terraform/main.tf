@@ -98,7 +98,7 @@ module "node_group_default" {
   cluster_name       = module.cluster.cluster_name
   node_group_name    = "default"
   security_group_ids = [module.cluster.worker_node_security_group_id]
-  subnet_ids         = module.network.private_subnets
+  subnet_ids         = var.create_network ? module.network.private_subnets : var.private_subnet_ids
 
   worker_node_role_arn      = module.cluster.worker_node_role_arn
   worker_node_instance_type = local.default_instance_type
@@ -118,7 +118,7 @@ module "node_group_prod1k" {
   cluster_name           = module.cluster.cluster_name
   node_group_name_prefix = "prod1k"
   security_group_ids     = [module.cluster.worker_node_security_group_id]
-  subnet_ids             = module.network.private_subnets
+  subnet_ids             = var.create_network ? module.network.private_subnets : var.private_subnet_ids
 
   worker_node_role_arn      = module.cluster.worker_node_role_arn
   worker_node_instance_type = local.prod1k_instance_type
@@ -157,7 +157,7 @@ module "node_group_prod10k" {
   cluster_name           = module.cluster.cluster_name
   node_group_name_prefix = "prod10k"
   security_group_ids     = [module.cluster.worker_node_security_group_id]
-  subnet_ids             = module.network.private_subnets
+  subnet_ids             = var.create_network ? module.network.private_subnets : var.private_subnet_ids
 
   worker_node_role_arn      = module.cluster.worker_node_role_arn
   worker_node_instance_type = local.prod10k_instance_type
@@ -196,7 +196,7 @@ module "node_group_prod100k" {
   cluster_name           = module.cluster.cluster_name
   node_group_name_prefix = "prod100k"
   security_group_ids     = [module.cluster.worker_node_security_group_id]
-  subnet_ids             = module.network.private_subnets
+  subnet_ids             = var.create_network ? module.network.private_subnets : var.private_subnet_ids
 
   worker_node_role_arn      = module.cluster.worker_node_role_arn
   worker_node_instance_type = local.prod100k_instance_type
@@ -235,7 +235,7 @@ module "node_group_monitoring" {
   cluster_name           = module.cluster.cluster_name
   node_group_name_prefix = "monitoring"
   security_group_ids     = [module.cluster.worker_node_security_group_id]
-  subnet_ids             = module.network.private_subnets
+  subnet_ids             = var.create_network ? module.network.private_subnets : var.private_subnet_ids
 
   worker_node_role_arn      = module.cluster.worker_node_role_arn
   worker_node_instance_type = local.monitoring_instance_type
