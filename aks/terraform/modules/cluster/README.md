@@ -4,15 +4,15 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
-| <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) | 2.47.0 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | 3.94.0 |
+| <a name="requirement_azuread"></a> [azuread](#requirement\_azuread) | 3.0.2 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | 4.11.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | 2.47.0 |
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.94.0 |
+| <a name="provider_azuread"></a> [azuread](#provider\_azuread) | 3.0.2 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 4.11.0 |
 
 ## Modules
 
@@ -27,14 +27,14 @@
 
 | Name | Type |
 |------|------|
-| [azurerm_kubernetes_cluster.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/3.94.0/docs/resources/kubernetes_cluster) | resource |
-| [azurerm_log_analytics_workspace.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/3.94.0/docs/resources/log_analytics_workspace) | resource |
-| [azurerm_monitor_diagnostic_setting.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/3.94.0/docs/resources/monitor_diagnostic_setting) | resource |
-| [azurerm_role_assignment.cluster_admin](https://registry.terraform.io/providers/hashicorp/azurerm/3.94.0/docs/resources/role_assignment) | resource |
-| [azurerm_role_assignment.cluster_route_table](https://registry.terraform.io/providers/hashicorp/azurerm/3.94.0/docs/resources/role_assignment) | resource |
-| [azurerm_role_assignment.cluster_subnet](https://registry.terraform.io/providers/hashicorp/azurerm/3.94.0/docs/resources/role_assignment) | resource |
-| [azurerm_user_assigned_identity.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/3.94.0/docs/resources/user_assigned_identity) | resource |
-| [azuread_user.cluster_admin](https://registry.terraform.io/providers/hashicorp/azuread/2.47.0/docs/data-sources/user) | data source |
+| [azurerm_kubernetes_cluster.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/kubernetes_cluster) | resource |
+| [azurerm_log_analytics_workspace.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/log_analytics_workspace) | resource |
+| [azurerm_monitor_diagnostic_setting.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/monitor_diagnostic_setting) | resource |
+| [azurerm_role_assignment.cluster_admin](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/role_assignment) | resource |
+| [azurerm_role_assignment.cluster_route_table](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/role_assignment) | resource |
+| [azurerm_role_assignment.cluster_subnet](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/role_assignment) | resource |
+| [azurerm_user_assigned_identity.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/user_assigned_identity) | resource |
+| [azuread_user.cluster_admin](https://registry.terraform.io/providers/hashicorp/azuread/3.0.2/docs/data-sources/user) | data source |
 
 ## Inputs
 

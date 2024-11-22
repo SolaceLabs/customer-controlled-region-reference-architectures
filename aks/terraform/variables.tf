@@ -1,3 +1,8 @@
+variable "subscription_id" {
+  type        = string
+  description = "The Azure subscription that the cluster will reside in."
+}
+
 variable "region" {
   type        = string
   description = "The Azure region where this cluster will reside."

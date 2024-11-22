@@ -6,9 +6,10 @@ resource "azurerm_kubernetes_cluster_node_pool" "this" {
 
   kubernetes_cluster_id = var.cluster_id
 
-  min_count           = 0
-  max_count           = var.node_pool_max_size
-  enable_auto_scaling = true
+  min_count = 0
+  max_count = var.node_pool_max_size
+
+  auto_scaling_enabled = true
 
   max_pods = var.worker_node_max_pods
 
