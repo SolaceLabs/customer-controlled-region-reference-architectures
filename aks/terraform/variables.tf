@@ -1,4 +1,4 @@
-variable "subscription_id" {
+variable "subscription" {
   type        = string
   description = "The Azure subscription that the cluster will reside in."
 }

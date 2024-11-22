@@ -177,3 +177,14 @@ func TestSshToBastionHost(t *testing.T, bastionPublicIp string, bastionUsername 
 
 	ssh.CheckSshConnectionWithRetry(t, publicHost, 30, 5*time.Second)
 }
+
+func GenerateTags(clusterName string) map[string]string {
+	return map[string]string{
+		"deployment-type": "datacenter",
+		"deployment-env":  "development",
+		"home-cloud-id":   "testing",
+		"datacenter-type": "solace-dedicated",
+		"datacenter-id":   clusterName,
+		"organization-id": "testing",
+	}
+}

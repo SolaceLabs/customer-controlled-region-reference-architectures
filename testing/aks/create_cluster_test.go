@@ -10,6 +10,8 @@ import (
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
+// Prerequisite, set the Azure subscription with: export TF_VAR_subscription=<project>
+
 const KubernetesVersion = "1.29"
 
 func testCluster(t *testing.T, configOptions *terraform.Options) {
@@ -66,6 +68,7 @@ func TestTerraformAksClusterComplete(t *testing.T) {
 			"kubernetes_api_public_access":       true,
 			"kubernetes_api_authorized_networks": localCidr,
 			"local_account_disabled":             false,
+			"common_tags":                        common.GenerateTags(clusterName),
 		},
 		Upgrade: true,
 	})

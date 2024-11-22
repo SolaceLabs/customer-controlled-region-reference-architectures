@@ -68,6 +68,7 @@ func TestTerraformGkeClusterComplete(t *testing.T) {
 			"bastion_ssh_public_key":             bastionPublicKey,
 			"kubernetes_api_public_access":       true,
 			"kubernetes_api_authorized_networks": localCidr,
+			"common_labels":                      common.GenerateTags(clusterName),
 		},
 		Upgrade: true,
 	})

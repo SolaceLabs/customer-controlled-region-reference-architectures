@@ -8,6 +8,9 @@ resource "azurerm_kubernetes_cluster_node_pool" "this" {
 
   orchestrator_version = var.kubernetes_version
 
+  os_type = "Linux"
+  os_sku  = "Ubuntu"
+
   min_count = 0
   max_count = var.node_pool_max_size
 
