@@ -1,10 +1,8 @@
 locals {
-  os_disk_size_gb      = 48
-  availability_zones   = ["1", "2", "3"]
-  default_vm_size      = "Standard_D2s_v3"
-  worker_node_max_pods = 50
-
   worker_node_username = "worker"
+
+  os_disk_size_gb = 48
+  default_vm_size = "Standard_D2s_v3"
 }
 
 ################################################################################
@@ -68,8 +66,8 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     os_disk_size_gb = local.os_disk_size_gb
     os_disk_type    = "Ephemeral"
     vnet_subnet_id  = var.subnet_id
-    max_pods        = local.worker_node_max_pods
-    zones           = local.availability_zones
+    zones           = var.availability_zones
+    max_pods        = var.max_pods_per_node
 
     upgrade_settings {
       max_surge = "10%"

@@ -83,14 +83,10 @@ module "cluster" {
 locals {
   os_disk_size_gb = 48
 
-  availability_zones = ["1", "2", "3"]
-
   prod1k_vm_size     = "Standard_E2s_v3"
   prod10k_vm_size    = "Standard_E4s_v3"
   prod100k_vm_size   = "Standard_E8s_v3"
   monitoring_vm_size = "Standard_D2s_v3"
-
-  worker_node_max_pods = 50
 }
 
 module "node_pool_prod1k" {
@@ -101,12 +97,9 @@ module "node_pool_prod1k" {
 
   kubernetes_version = module.cluster.current_kubernetes_version
 
-  availability_zones = local.availability_zones
-  subnet_id          = var.create_network ? module.network.subnet_id : var.subnet_id
+  subnet_id = var.create_network ? module.network.subnet_id : var.subnet_id
 
-  node_pool_max_size = var.node_pool_max_size
-
-  worker_node_max_pods  = local.worker_node_max_pods
+  node_pool_max_size    = var.node_pool_max_size
   worker_node_vm_size   = local.prod1k_vm_size
   worker_node_disk_size = local.os_disk_size_gb
 
@@ -129,12 +122,9 @@ module "node_pool_prod10k" {
 
   kubernetes_version = module.cluster.current_kubernetes_version
 
-  availability_zones = local.availability_zones
-  subnet_id          = var.create_network ? module.network.subnet_id : var.subnet_id
+  subnet_id = var.create_network ? module.network.subnet_id : var.subnet_id
 
-  node_pool_max_size = var.node_pool_max_size
-
-  worker_node_max_pods  = local.worker_node_max_pods
+  node_pool_max_size    = var.node_pool_max_size
   worker_node_vm_size   = local.prod10k_vm_size
   worker_node_disk_size = local.os_disk_size_gb
 
@@ -157,12 +147,9 @@ module "node_pool_prod100k" {
 
   kubernetes_version = module.cluster.current_kubernetes_version
 
-  availability_zones = local.availability_zones
-  subnet_id          = var.create_network ? module.network.subnet_id : var.subnet_id
+  subnet_id = var.create_network ? module.network.subnet_id : var.subnet_id
 
-  node_pool_max_size = var.node_pool_max_size
-
-  worker_node_max_pods  = local.worker_node_max_pods
+  node_pool_max_size    = var.node_pool_max_size
   worker_node_vm_size   = local.prod100k_vm_size
   worker_node_disk_size = local.os_disk_size_gb
 
@@ -185,12 +172,9 @@ module "node_pool_monitoring" {
 
   kubernetes_version = module.cluster.current_kubernetes_version
 
-  availability_zones = local.availability_zones
-  subnet_id          = var.create_network ? module.network.subnet_id : var.subnet_id
+  subnet_id = var.create_network ? module.network.subnet_id : var.subnet_id
 
-  node_pool_max_size = var.node_pool_max_size
-
-  worker_node_max_pods  = local.worker_node_max_pods
+  node_pool_max_size    = var.node_pool_max_size
   worker_node_vm_size   = local.monitoring_vm_size
   worker_node_disk_size = local.os_disk_size_gb
 

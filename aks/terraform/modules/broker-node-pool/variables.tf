@@ -16,6 +16,7 @@ variable "node_pool_name" {
 
 variable "availability_zones" {
   type        = list(string)
+  default     = ["1", "2", "3"]
   description = "The availability zones for the node pools - one pool is created in each zone."
 }
 
@@ -49,8 +50,9 @@ variable "node_pool_taints" {
   description = "Kubernetes taints added to worker nodes in the node pools."
 }
 
-variable "worker_node_max_pods" {
+variable "max_pods_per_node" {
   type        = number
+  default     = 110
   description = "The maximum number of pods for the worker nodes in the node pools."
 }
 

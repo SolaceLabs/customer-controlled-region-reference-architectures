@@ -16,7 +16,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "this" {
 
   auto_scaling_enabled = true
 
-  max_pods = var.worker_node_max_pods
+  max_pods = var.max_pods_per_node
 
   zones          = [var.availability_zones[count.index]]
   vnet_subnet_id = var.subnet_id

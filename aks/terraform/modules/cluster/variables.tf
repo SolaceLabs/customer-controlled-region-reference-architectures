@@ -98,3 +98,15 @@ variable "route_table_id" {
   type        = string
   description = "The ID of the route table of the subnet where the cluster will reside."
 }
+
+variable "availability_zones" {
+  type        = list(string)
+  default     = ["1", "2", "3"]
+  description = "The availability zones for the default (system) node pool."
+}
+
+variable "max_pods_per_node" {
+  type        = number
+  default     = 110
+  description = "The maximum number of pods for the worker nodes in the node pools."
+}
