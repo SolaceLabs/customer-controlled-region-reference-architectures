@@ -241,8 +241,14 @@ terraform output -raw -state=terraform/terraform.tfstate load_balancer_controlle
     helm install aws-load-balancer-controller eks/aws-load-balancer-controller --version 1.7.1 -n kube-system --values -
 ```
 
-## Breaking Changes
+## Changelog
 
-### v1 to v2
+### v2
 
-The v2 version of this terraform projects has removed the previously optional IRSA method of workload identity as well as the ability to choose which type of cluster authentication mode (the default is now API).
+#### Breaking Changes
+
+The v2 version of this Terraform project has removed the previously optional IRSA method of workload identity as well as the ability to choose which type of cluster authentication mode (the default is now API).
+
+#### Other Changes
+
+The v2 version of this Terraform project has moved the use of the node group modules from the cluster module to the main project.
