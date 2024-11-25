@@ -173,4 +173,4 @@ The impact of this change is that v1-based clusters cannot be migrated easily to
 
 #### Other Changes
 
-The v2 version of this Terraform project moves the node pool modules from the cluster module to the main project.
+The v2 version of this Terraform project has moved the use of the node pool modules from the cluster module to the main project.
