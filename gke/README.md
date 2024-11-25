@@ -161,10 +161,16 @@ Create a Storage Class with these recommended settings:
 kubectl apply -f kubernetes/storage-class.yaml
 ```
 
-## v1 to v2
+## Changelog
 
-### Breaking Changes
+### v2
 
-The v2 version of this terraform project introduces a breaking change in the way that the secondary CIDRs are configured for services and pods in the clusters. In the v1 project, this was done via the cluster itself but there are limitations in the size of the CIDRs that make it impossible to run very small GKE clusters. The v2 project updates this to create secondary ranges directly in the cluster's subnetwork, which provides the flexibility to tailor the ranges to support smaller clusters that are more efficient in their use of IPs.
+#### Breaking Changes
+
+The v2 version of this Terraform project introduces a breaking change in the way that the secondary CIDRs are configured for services and pods in the clusters. In the v1 project, this was done via the cluster itself but there are limitations in the size of the CIDRs that make it impossible to run very small GKE clusters. The v2 project updates this to create secondary ranges directly in the cluster's subnetwork, which provides the flexibility to tailor the ranges to support smaller clusters that are more efficient in their use of IPs.
 
 The impact of this change is that v1-based clusters cannot be migrated easily to v2 clusters.
+
+#### Other Changes
+
+The v2 version of this Terraform project moves the node pool modules from the cluster module to the main project.
