@@ -3,6 +3,7 @@ package common
 import (
 	"bufio"
 	"fmt"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -187,4 +188,20 @@ func GenerateTags(clusterName string) map[string]string {
 		"datacenter-id":   clusterName,
 		"organization-id": "testing",
 	}
+}
+
+const charset = "abcdefghijklmnopqrstuvwxyz0123456789"
+
+var seededRand *rand.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
+
+func stringWithCharset(length int, charset string) string {
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[seededRand.Intn(len(charset))]
+	}
+	return string(b)
+}
+
+func UniqueId(length int) string {
+	return stringWithCharset(length, charset)
 }

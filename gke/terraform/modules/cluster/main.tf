@@ -11,7 +11,7 @@ locals {
 }
 
 resource "google_service_account" "cluster" {
-  account_id   = "${var.cluster_name}-nodes"
+  account_id   = var.cluster_name
   display_name = "Service account for ${var.cluster_name} worker nodes"
 }
 
