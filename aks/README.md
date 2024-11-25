@@ -148,3 +148,9 @@ Create a Storage Class with these recommended settings:
 ```bash
 kubectl apply -f kubernetes/storage-class.yaml
 ```
+
+## v1 to v2
+
+### Changes
+
+The v2 version of this Terraform project moves the messaging node pool modules from the cluster module to the main project so that they're more obvious and can be managed more directly (if desired).
