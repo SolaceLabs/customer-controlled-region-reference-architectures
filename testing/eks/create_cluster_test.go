@@ -1,6 +1,7 @@
 package eks
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -16,7 +17,7 @@ import (
 
 // cluster autoscaler version must match kubernetes version
 const KubernetesVersion = "1.31"
-const ClusterAutoscalerVersion = "v1.31.0"
+const ClusterAutoscalerVersion = "v1.31.1"
 
 func testCluster(t *testing.T, configOptions *terraform.Options) {
 	kubeconfig := terraform.Output(t, configOptions, "kubeconfig")
@@ -46,10 +47,15 @@ func TestTerraformEksClusterComplete(t *testing.T) {
 
 	keepCluster := os.Getenv("KEEP_CLUSTER")
 
-	awsRegion := "eu-west-2"
-	clusterName := "terratest-complete"
+	clusterSuffix := os.Getenv("CLUSTER_SUFFIX")
+	if clusterSuffix == "" {
+		clusterSuffix = common.UniqueId(6)
+	}
 
-	prereqPath, _ := common.CopyTerraform(t, "../prerequisites")
+	awsRegion := "eu-west-2"
+	clusterName := fmt.Sprintf("terratest-complete-%s", clusterSuffix)
+
+	prereqPath, _ := common.CopyTerraform(t, "../prerequisites", clusterSuffix)
 	prereqOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: prereqPath,
 		NoColor:      true,
@@ -64,7 +70,7 @@ func TestTerraformEksClusterComplete(t *testing.T) {
 	localCidr := []string{terraform.Output(t, prereqOptions, "local_cidr")}
 	bastionPublicKey := terraform.Output(t, prereqOptions, "bastion_ssh_public_key")
 
-	underTestPath, _ := common.CopyTerraform(t, "../../eks/terraform")
+	underTestPath, _ := common.CopyTerraform(t, "../../eks/terraform", clusterSuffix)
 	underTestOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: underTestPath,
 		NoColor:      true,
@@ -96,7 +102,7 @@ func TestTerraformEksClusterComplete(t *testing.T) {
 	storageClassPathGp2, _ := filepath.Abs("../../eks/kubernetes/storage-class-gp2.yaml")
 	storageClassPathGp3, _ := filepath.Abs("../../eks/kubernetes/storage-class-gp3.yaml")
 
-	configPath, _ := common.CopyTerraform(t, "./configuration")
+	configPath, _ := common.CopyTerraform(t, "./configuration", clusterSuffix)
 	configOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: configPath,
 		NoColor:      true,
@@ -130,10 +136,15 @@ func TestTerraformEksClusterExternalNetwork(t *testing.T) {
 
 	keepCluster := os.Getenv("KEEP_CLUSTER")
 
-	awsRegion := "eu-west-3"
-	clusterName := "terratest-network"
+	clusterSuffix := os.Getenv("CLUSTER_SUFFIX")
+	if clusterSuffix == "" {
+		clusterSuffix = common.UniqueId(6)
+	}
 
-	prereqPath, _ := common.CopyTerraform(t, "../prerequisites")
+	awsRegion := "eu-west-3"
+	clusterName := fmt.Sprintf("terratest-network-%s", clusterSuffix)
+
+	prereqPath, _ := common.CopyTerraform(t, "../prerequisites", clusterSuffix)
 	prereqOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: prereqPath,
 		NoColor:      true,
@@ -148,7 +159,7 @@ func TestTerraformEksClusterExternalNetwork(t *testing.T) {
 	localCidr := []string{terraform.Output(t, prereqOptions, "local_cidr")}
 	bastionPublicKey := terraform.Output(t, prereqOptions, "bastion_ssh_public_key")
 
-	networkPath, _ := common.CopyTerraform(t, "./network")
+	networkPath, _ := common.CopyTerraform(t, "./network", clusterSuffix)
 	networkOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: networkPath,
 		NoColor:      true,
@@ -168,7 +179,7 @@ func TestTerraformEksClusterExternalNetwork(t *testing.T) {
 	publicSubnets := terraform.OutputList(t, networkOptions, "public_subnets")
 	privateSubnets := terraform.OutputList(t, networkOptions, "private_subnets")
 
-	underTestPath, _ := common.CopyTerraform(t, "../../eks/terraform")
+	underTestPath, _ := common.CopyTerraform(t, "../../eks/terraform", clusterSuffix)
 	underTestOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: underTestPath,
 		NoColor:      true,

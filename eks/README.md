@@ -226,7 +226,7 @@ helm repo add autoscaler https://kubernetes.github.io/autoscaler
 helm repo update autoscaler
 
 terraform output -raw -state=terraform/terraform.tfstate cluster_autoscaler_helm_values | \
-    helm upgrade --install cluster-autoscaler autoscaler/cluster-autoscaler --version 9.35.0 -n kube-system --values - --set image.tag=<version>
+    helm upgrade --install cluster-autoscaler autoscaler/cluster-autoscaler --version 9.43.2 -n kube-system --values - --set image.tag=<version>
 ```
 
 ###  Deploying AWS Load Balancer Controller <a name="eks-deploy-lb"></a>
@@ -238,7 +238,7 @@ helm repo add eks https://aws.github.io/eks-charts
 helm repo update eks
 
 terraform output -raw -state=terraform/terraform.tfstate load_balancer_controller_helm_values | \
-    helm install aws-load-balancer-controller eks/aws-load-balancer-controller --version 1.7.1 -n kube-system --values -
+    helm install aws-load-balancer-controller eks/aws-load-balancer-controller --version 1.10.1 -n kube-system --values -
 ```
 
 ## Changelog
@@ -247,7 +247,9 @@ terraform output -raw -state=terraform/terraform.tfstate load_balancer_controlle
 
 #### Breaking Changes
 
-The v2 version of this Terraform project has removed the previously optional IRSA method of workload identity as well as the ability to choose which type of cluster authentication mode (the default is now API).
+The v2 version of this Terraform project has removed the previously optional IRSA method of workload identity as well as the ability to choose which type of cluster authentication mode (the only option is now API).
+
+Clusters created using the v1 project can be migrated to v2 if they are using pod identity and API authentication.
 
 #### Other Changes
 
