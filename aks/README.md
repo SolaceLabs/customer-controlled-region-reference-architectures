@@ -149,8 +149,14 @@ Create a Storage Class with these recommended settings:
 kubectl apply -f kubernetes/storage-class.yaml
 ```
 
-## v1 to v2
+## Changelog
 
-### Changes
+### v2
 
-The v2 version of this Terraform project moves the messaging node pool modules from the cluster module to the main project so that they're more obvious and can be managed more directly (if desired).
+#### Breaking Changes
+
+There are no breaking changes when migrating to this version.
+
+#### Other Changes
+
+The v2 version of this Terraform project has moved the use of the messaging node pool modules from the cluster module to the main project. Due to technical reasons, the default 'system' node pool cannot be moved into the main project as it's tied to the cluster resource.
