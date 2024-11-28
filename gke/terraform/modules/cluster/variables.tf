@@ -49,33 +49,9 @@ variable "secondary_range_name_pods" {
   description = "The name of the secondary CIDR range for the cluster's node pools. If a separate CIDR range is provided for messaging pods, this range will be used for just the system (default) node pool."
 }
 
-variable "secondary_range_name_messaging_pods" {
-  type        = string
-  default     = null
-  description = "The name of the secondary CIDR range for the cluster's messaging node pools, if provided."
-}
-
 variable "master_ipv4_cidr_block" {
   type        = string
   description = "The CIDR used to assign IPs to the Kubernetes API endpoints."
-}
-
-variable "max_pods_per_node_system" {
-  type        = number
-  default     = 16
-  description = "The maximum number of pods per worker node for the system node pool."
-}
-
-variable "max_pods_per_node_messaging" {
-  type        = number
-  default     = 8
-  description = "The maximum number of pods per worker node for the messaging node pools."
-}
-
-variable "node_pool_max_size" {
-  type        = string
-  default     = 20
-  description = "The maximum number of worker nodes for the messaging node pools."
 }
 
 variable "kubernetes_api_public_access" {
