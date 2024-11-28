@@ -8,4 +8,6 @@ output "public_subnets" {
 
 output "private_subnets" {
   value = var.create_network ? aws_subnet.private[*].id : null
+
+  depends_on = [aws_nat_gateway.nat]
 }

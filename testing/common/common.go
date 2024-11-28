@@ -32,7 +32,7 @@ const (
 	Reset = "\033[0m"
 )
 
-func CopyTerraform(t *testing.T, sourcePath string) (string, error) {
+func CopyTerraform(t *testing.T, sourcePath string, suffix string) (string, error) {
 	filter := func(path string) bool {
 		if files.PathIsTerraformVersionFile(path) || files.PathIsTerraformLockFile(path) {
 			return true
@@ -44,7 +44,7 @@ func CopyTerraform(t *testing.T, sourcePath string) (string, error) {
 	}
 
 	base := filepath.Base(sourcePath)
-	targetPath := fmt.Sprintf("./terraform/%s/%s", t.Name(), base)
+	targetPath := fmt.Sprintf("./terraform/%s-%s/%s", t.Name(), suffix, base)
 
 	os.MkdirAll(targetPath, os.ModePerm)
 
