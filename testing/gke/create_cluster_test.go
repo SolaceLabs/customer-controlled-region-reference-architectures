@@ -35,15 +35,15 @@ func TestTerraformGkeClusterComplete(t *testing.T) {
 
 	keepCluster := os.Getenv("KEEP_CLUSTER")
 
-	region := "europe-west1"
-
-	clusterName := os.Getenv("CLUSTER_NAME")
-	if clusterName == "" {
-		// 27 characters, which is the max length when bastion is created
-		clusterName = fmt.Sprintf("terratest-complete-%s", common.UniqueId(8))
+	clusterSuffix := os.Getenv("CLUSTER_SUFFIX")
+	if clusterSuffix == "" {
+		clusterSuffix = common.UniqueId(8) // 8 so the cluster name is 27 characters
 	}
 
-	prereqPath, _ := common.CopyTerraform(t, "../prerequisites")
+	region := "europe-west1"
+	clusterName := fmt.Sprintf("terratest-complete-%s", clusterSuffix)
+
+	prereqPath, _ := common.CopyTerraform(t, "../prerequisites", clusterSuffix)
 	prereqOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: prereqPath,
 		NoColor:      true,
@@ -58,7 +58,7 @@ func TestTerraformGkeClusterComplete(t *testing.T) {
 	localCidr := []string{terraform.Output(t, prereqOptions, "local_cidr")}
 	bastionPublicKey := terraform.Output(t, prereqOptions, "bastion_ssh_public_key")
 
-	underTestPath, _ := common.CopyTerraform(t, "../../gke/terraform")
+	underTestPath, _ := common.CopyTerraform(t, "../../gke/terraform", clusterSuffix)
 	underTestOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: underTestPath,
 		NoColor:      true,
@@ -86,7 +86,7 @@ func TestTerraformGkeClusterComplete(t *testing.T) {
 
 	storageClassPath, _ := filepath.Abs("../../gke/kubernetes/storage-class.yaml")
 
-	configPath, _ := common.CopyTerraform(t, "./configuration")
+	configPath, _ := common.CopyTerraform(t, "./configuration", clusterSuffix)
 	configOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: configPath,
 		NoColor:      true,
@@ -113,15 +113,15 @@ func TestTerraformGkeClusterMessagingCidr(t *testing.T) {
 
 	keepCluster := os.Getenv("KEEP_CLUSTER")
 
-	region := "europe-west3"
-
-	clusterName := os.Getenv("CLUSTER_NAME")
-	if clusterName == "" {
-		// 30 characters, which is the max length when bastion is not created
-		clusterName = fmt.Sprintf("terratest-cidr-%s", common.UniqueId(15))
+	clusterSuffix := os.Getenv("CLUSTER_SUFFIX")
+	if clusterSuffix == "" {
+		clusterSuffix = common.UniqueId(15) // 15 so the cluster name is 30 characters
 	}
 
-	prereqPath, _ := common.CopyTerraform(t, "../prerequisites")
+	region := "europe-west3"
+	clusterName := fmt.Sprintf("terratest-cidr-%s", clusterSuffix)
+
+	prereqPath, _ := common.CopyTerraform(t, "../prerequisites", clusterSuffix)
 	prereqOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: prereqPath,
 		NoColor:      true,
@@ -135,7 +135,7 @@ func TestTerraformGkeClusterMessagingCidr(t *testing.T) {
 
 	localCidr := []string{terraform.Output(t, prereqOptions, "local_cidr")}
 
-	underTestPath, _ := common.CopyTerraform(t, "../../gke/terraform")
+	underTestPath, _ := common.CopyTerraform(t, "../../gke/terraform", clusterSuffix)
 	underTestOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: underTestPath,
 		NoColor:      true,
@@ -163,7 +163,7 @@ func TestTerraformGkeClusterMessagingCidr(t *testing.T) {
 
 	storageClassPath, _ := filepath.Abs("../../gke/kubernetes/storage-class.yaml")
 
-	configPath, _ := common.CopyTerraform(t, "./configuration")
+	configPath, _ := common.CopyTerraform(t, "./configuration", clusterSuffix)
 	configOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: configPath,
 		NoColor:      true,
@@ -185,15 +185,15 @@ func TestTerraformGkeClusterExternalNetwork(t *testing.T) {
 
 	keepCluster := os.Getenv("KEEP_CLUSTER")
 
-	region := "us-east1"
-
-	clusterName := os.Getenv("CLUSTER_NAME")
-	if clusterName == "" {
-		// 30 characters, which is the max length when bastion is not created
-		clusterName = fmt.Sprintf("terratest-network-%s", common.UniqueId(12))
+	clusterSuffix := os.Getenv("CLUSTER_SUFFIX")
+	if clusterSuffix == "" {
+		clusterSuffix = common.UniqueId(12) // 12 so the cluster name is 30 characters
 	}
 
-	prereqPath, _ := common.CopyTerraform(t, "../prerequisites")
+	region := "us-east1"
+	clusterName := fmt.Sprintf("terratest-network-%s", clusterSuffix)
+
+	prereqPath, _ := common.CopyTerraform(t, "../prerequisites", clusterSuffix)
 	prereqOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: prereqPath,
 		NoColor:      true,
@@ -207,7 +207,7 @@ func TestTerraformGkeClusterExternalNetwork(t *testing.T) {
 
 	localCidr := []string{terraform.Output(t, prereqOptions, "local_cidr")}
 
-	networkPath, _ := common.CopyTerraform(t, "./network")
+	networkPath, _ := common.CopyTerraform(t, "./network", clusterSuffix)
 	networkOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: networkPath,
 		NoColor:      true,
@@ -226,7 +226,7 @@ func TestTerraformGkeClusterExternalNetwork(t *testing.T) {
 	networkName := terraform.Output(t, networkOptions, "network_name")
 	subnetworkName := terraform.Output(t, networkOptions, "subnetwork_name")
 
-	underTestPath, _ := common.CopyTerraform(t, "../../gke/terraform")
+	underTestPath, _ := common.CopyTerraform(t, "../../gke/terraform", clusterSuffix)
 	underTestOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: underTestPath,
 		NoColor:      true,
@@ -254,7 +254,7 @@ func TestTerraformGkeClusterExternalNetwork(t *testing.T) {
 
 	storageClassPath, _ := filepath.Abs("../../gke/kubernetes/storage-class.yaml")
 
-	configPath, _ := common.CopyTerraform(t, "./configuration")
+	configPath, _ := common.CopyTerraform(t, "./configuration", clusterSuffix)
 	configOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: configPath,
 		NoColor:      true,

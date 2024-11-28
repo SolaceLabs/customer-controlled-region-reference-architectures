@@ -69,29 +69,28 @@ These node groups are engineered to support a 1:1 ratio of the broker pod to wor
 
 The instance types, labels, and taints for each node group for event broker services are shown in the following table:
 
-| Name       | Instance type | Labels                                      | Taints                                                          |
-|------------|---------------|---------------------------------------------|-----------------------------------------------------------------|
+| Name       | Instance type | Labels                                           | Taints                                                               |
+|------------|---------------|--------------------------------------------------|----------------------------------------------------------------------|
 | prod1k     | r5.large      | `nodeType:messaging`<br/>`serviceClass:prod1k`   | `nodeType:messaging:NoExecute`<br/>`serviceClass:prod1k:NoExecute`   |
 | prod10k    | r5.xlarge     | `nodeType:messaging`<br/>`serviceClass:prod10k`  | `nodeType:messaging:NoExecute`<br/>`serviceClass:prod10k:NoExecute`  |
 | prod100k   | r5.2xlarge    | `nodeType:messaging`<br/>`serviceClass:prod100k` | `nodeType:messaging:NoExecute`<br/>`serviceClass:prod100k:NoExecute` |
-| monitoring | t3.medium     | `nodeType:monitoring`                         | nodeType:monitoring:NoExecute                                   |
+| monitoring | t3.medium     | `nodeType:monitoring`                            | nodeType:monitoring:NoExecute                                        |
 
 #### Add-ons + Supporting Services <a name="eks-addon"></a>
 
 Amazon EKS uses an add-on model for built-in supporting services: https://docs.aws.amazon.com/eks/latest/userguide/eks-add-ons.html
 
-The Terrafrom project deploys the following add-ons:
+The Terraform project deploys the following add-ons:
 
  * aws-ebs-csi-driver
  * vpc-cni
  * coredns
  * kube-proxy
+ * eks-pod-identity-agent
 
-PubSub+ Cloud also requires the use of `cluster-autoscaler` and `aws-load-balancer-controller` to operate. Instructions can be found below on how to deploy them into the cluster using the Helm values provided by the Terrafrom project.
+PubSub+ Cloud also requires the use of `cluster-autoscaler` and `aws-load-balancer-controller` to operate. Instructions can be found below on how to deploy them into the cluster using the Helm values provided by the Terraform project.
 
-By default, [IAM Roles for Service Accounts](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html) (IRSA) is used to provide add-ons as well as the `cluster-autoscaler` and `aws-load-balancer-controller` with the appropriate AWS IAM permissions to operate.
-
-Optionally, [EKS Pod Identities](https://docs.aws.amazon.com/eks/latest/userguide/pod-identities.html) can be used instead by setting the [appropriate variables](terraform/README.md)). We recommend the use of Pod Identities for any new clusters and will make it the default in a feature major release of this project. The `eks-pod-identity-agent` add-on will be deployed (in addition to the ones above) to enable Pod Identities.
+This project uses [EKS Pod Identities](https://docs.aws.amazon.com/eks/latest/userguide/pod-identities.html) to provide add-ons as well as the `cluster-autoscaler` and `aws-load-balancer-controller` with the appropriate AWS IAM permissions to operate.
 
 Amazon EKS is configured to efficiently scale up the number of pods on a worker node by having a large warm pool of IP addresses and Elastic Network Interfaces (ENIs). We recommend a 1:1 broker pod to worker node architecture to reduce the number of wasted IP addresses. To accomplish this, the `vpc-cni` add-on is configured with `WARM_IP_TARGET=1` and `WARM_ENI_TARGET=0`. For more details, see https://github.com/aws/amazon-vpc-cni-k8s/blob/master/docs/eni-and-ip-target.md.
 
@@ -108,21 +107,19 @@ The worker node hosts are accessible via the AWS Systems Manager.
 
 ### Authentication <a name="eks-authentication"></a>
 
-By default, the EKS cluster created by this terraform project is configured to use `ConfigMap` authentication mode as described [here](https://docs.aws.amazon.com/eks/latest/userguide/access-entries.html). With this method, access to the cluster is configured by adding user or role ARNs to the `aws-auth` ConfigMap in the cluster. This option has been kept as the default in this terraform project for backwards compatibility.
-
-We recommend, though, that you use the `access entries` mode instead, which allows for management of the users and roles that can access the cluster API, as well as their access levels, from outside the cluster. Further details of this option can be found in the link above. 
-
-To use the `access entries` mode with this terraform project, set the `kubernetes_cluster_auth_mode` to `API` and include at least one user or role ARN in the `kubernetes_cluster_admin_arns` variable. This mode may be made the default in a future major version of this project.
+The EKS cluster created by this Terraform project is configured to use `API` authentication mode as described [here](https://docs.aws.amazon.com/eks/latest/userguide/access-entries.html). This method allows for management of the users and roles that can access the cluster API, as well as their access levels, from outside the cluster. Further details of this option can be found in the link above. 
 
 ## Usage of Terraform for Amazon EKS <a name="eks-usage"></a>
-The following section is an overview of the steps to use this Terraform. Before you
-you begin, review the necessary [prerequistites](#eks-prerequisites).
+
+The following section is an overview of the steps to use this Terraform. Before you you begin, review the necessary [prerequistites](#eks-prerequisites).
+
 Here's an overview of the steps:
+
 1. [Create the Kubernetes cluster](#eks-create-cluster).
-1. [Deploy the required storage class](#eks-deploy-storage).
-1. [Deploy the autoscaler](#eks-deploy-autoscaler).
-1. [Deploy the the AWS load balancer](#eks-deploy-lb).
-1. [Configure the IP address uage for the cluster](#"eks-ip-addresses).
+2. [Deploy the required storage class](#eks-deploy-storage).
+3. [Deploy the autoscaler](#eks-deploy-autoscaler).
+4. [Deploy the the AWS load balancer](#eks-deploy-lb).
+5. [Configure the IP address uage for the cluster](#"eks-ip-addresses).
 
 
 ### Prerequisites <a name="eks-prerequisites"></a>
@@ -168,6 +165,8 @@ private_subnet_cidrs = [
 
 bastion_ssh_authorized_networks = ["192.168.1.1/32"]
 bastion_ssh_public_key          = "ssh-rsa abc123..."
+
+kubernetes_cluster_admin_arns = ["arn:aws:iam::1234567890:user/person"]
 ```
 
 2. Apply the Terraform using the following command:
@@ -194,15 +193,9 @@ terraform apply
 
 ### Deploying Storage Class <a name="eks-deploy-storage"></a>
 
-We recommend you use a GP3-based Storage Class. For disks less than 1 TB, GP3 is cheaper and more performant.
+There are two options for persistent storage that work well with Solace PubSub+ Cloud.
 
-Create a GP3 storage class with these recommended settings:
-
-```bash
-kubectl apply -f kubernetes/storage-class-gp3.yaml
-```
-
-For large (greater than 1TB) disks, we recommend using GP2 which has more performance for the price than GP3.
+We recommend using GP2 as its performance can be configured by simply increasing the size of the disk, which can be done from within Solace PubSub+ Cloud.
 
 Create a GP2 storage class with these recommended settings:
 
@@ -210,9 +203,18 @@ Create a GP2 storage class with these recommended settings:
 kubectl apply -f kubernetes/storage-class-gp2.yaml
 ```
 
-This steps require that you delete any existing GP2 storage class first if it isn't used, or renaming ours so it does not conflict.
+Creating the GP2 storage class requires that you delete any existing GP2 storage class first if it isn't used, or renaming ours so it does not conflict.
+
+Optionally, GP3 can be used if more performance than even the largest GP2 disk is required. Performance of GP3 is not coupled to disk size.
+
+Create a GP3 storage class with these recommended settings:
+
+```bash
+kubectl apply -f kubernetes/storage-class-gp2.yaml
+```
 
 ### Deploying Cluster Autoscaler <a name="eks-deploy-autoscaler"></a>
+
 For more infomration about deploying the cluster autoscaler, see https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/cloudprovider/aws/README.md
 
 You're supposed to run a cluster-autoscaler version that matches your kubernetes version, so for example use the latest v1.23 cluster autoscaler with kubernetes v1.23.
@@ -224,10 +226,11 @@ helm repo add autoscaler https://kubernetes.github.io/autoscaler
 helm repo update autoscaler
 
 terraform output -raw -state=terraform/terraform.tfstate cluster_autoscaler_helm_values | \
-    helm upgrade --install cluster-autoscaler autoscaler/cluster-autoscaler --version 9.35.0 -n kube-system --values - --set image.tag=<version>
+    helm upgrade --install cluster-autoscaler autoscaler/cluster-autoscaler --version 9.43.2 -n kube-system --values - --set image.tag=<version>
 ```
 
 ###  Deploying AWS Load Balancer Controller <a name="eks-deploy-lb"></a>
+
 We recommend that you deploy the AWS Load Balancer.
 
 ```bash
@@ -235,5 +238,19 @@ helm repo add eks https://aws.github.io/eks-charts
 helm repo update eks
 
 terraform output -raw -state=terraform/terraform.tfstate load_balancer_controller_helm_values | \
-    helm install aws-load-balancer-controller eks/aws-load-balancer-controller --version 1.7.1 -n kube-system --values -
+    helm install aws-load-balancer-controller eks/aws-load-balancer-controller --version 1.10.1 -n kube-system --values -
 ```
+
+## Changelog
+
+### v2
+
+#### Breaking Changes
+
+The v2 version of this Terraform project has removed the previously optional IRSA method of workload identity as well as the ability to choose which type of cluster authentication mode (the only option is now API).
+
+Clusters created using the v1 project can be migrated to v2 if they are using pod identity and API authentication.
+
+#### Other Changes
+
+The v2 version of this Terraform project has moved the use of the node group modules from the cluster module to the main project.

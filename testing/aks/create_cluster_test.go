@@ -35,10 +35,15 @@ func TestTerraformAksClusterComplete(t *testing.T) {
 
 	keepCluster := os.Getenv("KEEP_CLUSTER")
 
-	azureRegion := "eastus2"
-	clusterName := "terratest-complete"
+	clusterSuffix := os.Getenv("CLUSTER_SUFFIX")
+	if clusterSuffix == "" {
+		clusterSuffix = common.UniqueId(6)
+	}
 
-	prereqPath, _ := common.CopyTerraform(t, "../prerequisites")
+	azureRegion := "eastus2"
+	clusterName := fmt.Sprintf("terratest-complete-%s", clusterSuffix)
+
+	prereqPath, _ := common.CopyTerraform(t, "../prerequisites", clusterSuffix)
 	prereqOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: prereqPath,
 		NoColor:      true,
@@ -53,7 +58,7 @@ func TestTerraformAksClusterComplete(t *testing.T) {
 	localCidr := []string{terraform.Output(t, prereqOptions, "local_cidr")}
 	bastionPublicKey := terraform.Output(t, prereqOptions, "bastion_ssh_public_key")
 
-	underTestPath, _ := common.CopyTerraform(t, "../../aks/terraform")
+	underTestPath, _ := common.CopyTerraform(t, "../../aks/terraform", clusterSuffix)
 	underTestOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: underTestPath,
 		NoColor:      true,
@@ -81,7 +86,7 @@ func TestTerraformAksClusterComplete(t *testing.T) {
 
 	storageClassPath, _ := filepath.Abs("../../aks/kubernetes/storage-class.yaml")
 
-	configPath, _ := common.CopyTerraform(t, "./configuration")
+	configPath, _ := common.CopyTerraform(t, "./configuration", clusterSuffix)
 	configOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: configPath,
 		NoColor:      true,
@@ -115,10 +120,15 @@ func TestTerraformAksClusterExternalNetwork(t *testing.T) {
 
 	keepCluster := os.Getenv("KEEP_CLUSTER")
 
-	azureRegion := "eastus2"
-	clusterName := "terratest-network"
+	clusterSuffix := os.Getenv("CLUSTER_SUFFIX")
+	if clusterSuffix == "" {
+		clusterSuffix = common.UniqueId(6)
+	}
 
-	prereqPath, _ := common.CopyTerraform(t, "../prerequisites")
+	azureRegion := "eastus2"
+	clusterName := fmt.Sprintf("terratest-network-%s", clusterSuffix)
+
+	prereqPath, _ := common.CopyTerraform(t, "../prerequisites", clusterSuffix)
 	prereqOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: prereqPath,
 		NoColor:      true,
@@ -133,7 +143,7 @@ func TestTerraformAksClusterExternalNetwork(t *testing.T) {
 	localCidr := []string{terraform.Output(t, prereqOptions, "local_cidr")}
 	bastionPublicKey := terraform.Output(t, prereqOptions, "bastion_ssh_public_key")
 
-	networkPath, _ := common.CopyTerraform(t, "./network")
+	networkPath, _ := common.CopyTerraform(t, "./network", clusterSuffix)
 	networkOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: networkPath,
 		NoColor:      true,
@@ -180,7 +190,7 @@ func TestTerraformAksClusterExternalNetwork(t *testing.T) {
 
 	storageClassPath, _ := filepath.Abs("../../aks/kubernetes/storage-class.yaml")
 
-	configPath, _ := common.CopyTerraform(t, "./configuration")
+	configPath, _ := common.CopyTerraform(t, "./configuration", clusterSuffix)
 	configOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: configPath,
 		NoColor:      true,

@@ -2,11 +2,7 @@ data "aws_partition" "current" {}
 
 data "aws_ami" "amazon-linux" {
   most_recent = true
-
-  filter {
-    name   = "owner-alias"
-    values = ["amazon"]
-  }
+  owners      = ["amazon"]
 
   filter {
     name   = "name"

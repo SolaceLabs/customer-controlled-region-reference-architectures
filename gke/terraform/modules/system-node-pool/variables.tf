@@ -33,29 +33,14 @@ variable "worker_node_service_account" {
   description = "The service account that will be assigned to the worker nodes in this node pool."
 }
 
-variable "node_pool_labels" {
-  type        = map(string)
-  description = "Kubernetes labels added to worker nodes in the node pool."
-}
-
-variable "node_pool_taints" {
-  type        = list(map(string))
-  description = "Kubernetes taints added to worker nodes in the node pool."
-}
-
 variable "max_pods_per_node" {
   type        = number
   description = "The maximum number of pods per worker node for the node pool."
 }
 
-variable "node_pool_max_size" {
+variable "node_pool_size" {
   type        = string
-  description = "The maximum number of worker nodes for the node pool."
-}
-
-variable "secondary_range_name" {
-  type        = string
-  description = "The name of the secondary CIDR range for the node pool."
+  description = "The number of worker nodes for the node pool (per zone)."
 }
 
 variable "kubernetes_version" {

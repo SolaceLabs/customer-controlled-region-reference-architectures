@@ -10,31 +10,18 @@ resource "google_container_node_pool" "this" {
   cluster           = var.cluster_name
   max_pods_per_node = var.max_pods_per_node
   node_locations    = var.availability_zones
-
-  version = var.kubernetes_version
+  version           = var.kubernetes_version
 
   network_config {
     enable_private_nodes = true
-    pod_range            = var.secondary_range_name
   }
 
   node_config {
     machine_type    = var.worker_node_machine_type
-    image_type      = "UBUNTU_CONTAINERD" #checkov:skip=CKV_GCP_22:Ubuntu is required for XFS support
+    image_type      = "COS_CONTAINERD"
     oauth_scopes    = local.worker_node_oauth_scopes
     service_account = var.worker_node_service_account
     resource_labels = var.common_labels
-
-    labels = var.node_pool_labels
-
-    dynamic "taint" {
-      for_each = var.node_pool_taints
-      content {
-        key    = taint.value["key"]
-        value  = taint.value["value"]
-        effect = taint.value["effect"]
-      }
-    }
 
     shielded_instance_config {
       enable_secure_boot          = true
@@ -52,9 +39,5 @@ resource "google_container_node_pool" "this" {
     auto_repair  = true
   }
 
-  autoscaling {
-    location_policy = "BALANCED"
-    min_node_count  = 0
-    max_node_count  = var.node_pool_max_size
-  }
+  node_count = var.node_pool_size
 }

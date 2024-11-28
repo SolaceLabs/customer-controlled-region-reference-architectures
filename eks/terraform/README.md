@@ -8,7 +8,9 @@
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | ~> 5.0 |
 
 ## Modules
 
@@ -16,11 +18,19 @@ No providers.
 |------|--------|---------|
 | <a name="module_bastion"></a> [bastion](#module\_bastion) | ./modules/bastion | n/a |
 | <a name="module_cluster"></a> [cluster](#module\_cluster) | ./modules/cluster | n/a |
+| <a name="module_cluster_addons"></a> [cluster\_addons](#module\_cluster\_addons) | ./modules/cluster-addons | n/a |
 | <a name="module_network"></a> [network](#module\_network) | ./modules/network | n/a |
+| <a name="module_node_group_default"></a> [node\_group\_default](#module\_node\_group\_default) | ./modules/default-node-group | n/a |
+| <a name="module_node_group_monitoring"></a> [node\_group\_monitoring](#module\_node\_group\_monitoring) | ./modules/broker-node-group | n/a |
+| <a name="module_node_group_prod100k"></a> [node\_group\_prod100k](#module\_node\_group\_prod100k) | ./modules/broker-node-group | n/a |
+| <a name="module_node_group_prod10k"></a> [node\_group\_prod10k](#module\_node\_group\_prod10k) | ./modules/broker-node-group | n/a |
+| <a name="module_node_group_prod1k"></a> [node\_group\_prod1k](#module\_node\_group\_prod1k) | ./modules/broker-node-group | n/a |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_ssm_parameter.eks_ami_release_version](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ssm_parameter) | data source |
 
 ## Inputs
 
@@ -35,9 +45,8 @@ No resources.
 | <a name="input_create_bastion"></a> [create\_bastion](#input\_create\_bastion) | Whether to create a bastion host. If Kubernetes API is private-only then a way to access it must be configured separately. | `bool` | `true` | no |
 | <a name="input_create_network"></a> [create\_network](#input\_create\_network) | When set to false, networking (VPC, Subnets, etc) must be created externally. | `bool` | `true` | no |
 | <a name="input_kubernetes_api_authorized_networks"></a> [kubernetes\_api\_authorized\_networks](#input\_kubernetes\_api\_authorized\_networks) | The list of CIDRs that can access the Kubernetes API, in addition to the bastion host and worker nodes (which are added by default). | `list(string)` | `[]` | no |
-| <a name="input_kubernetes_api_public_access"></a> [kubernetes\_api\_public\_access](#input\_kubernetes\_api\_public\_access) | When set to true, the Kubernetes API is accessible publically from the provided authorized networks. | `bool` | `false` | no |
-| <a name="input_kubernetes_cluster_admin_arns"></a> [kubernetes\_cluster\_admin\_arns](#input\_kubernetes\_cluster\_admin\_arns) | When kubernetes\_cluster\_auth\_mode is set to 'API', user or role ARNs can be provided that will be given assigned AmazonEKSClusterAdminPolicy for this cluster. | `list(string)` | `[]` | no |
-| <a name="input_kubernetes_cluster_auth_mode"></a> [kubernetes\_cluster\_auth\_mode](#input\_kubernetes\_cluster\_auth\_mode) | This controls which authentication method to use for the cluster. See the readme for more details. | `string` | `null` | no |
+| <a name="input_kubernetes_api_public_access"></a> [kubernetes\_api\_public\_access](#input\_kubernetes\_api\_public\_access) | When set to true, the Kubernetes API is accessible publicly from the provided authorized networks. | `bool` | `false` | no |
+| <a name="input_kubernetes_cluster_admin_arns"></a> [kubernetes\_cluster\_admin\_arns](#input\_kubernetes\_cluster\_admin\_arns) | User or role ARNs can be provided that will be given assigned AmazonEKSClusterAdminPolicy for this cluster. | `list(string)` | `[]` | no |
 | <a name="input_kubernetes_service_cidr"></a> [kubernetes\_service\_cidr](#input\_kubernetes\_service\_cidr) | The CIDR used to assign IPs to kubernetes services, internal to the cluster. | `string` | `"10.100.0.0/16"` | no |
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The kubernetes version to use. Only used a creation time, ignored once the cluster exists. | `string` | n/a | yes |
 | <a name="input_node_group_max_size"></a> [node\_group\_max\_size](#input\_node\_group\_max\_size) | The maximum size for the broker node groups in the cluster. | `number` | `10` | no |
@@ -52,10 +61,12 @@ No resources.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_addon_versions"></a> [addon\_versions](#output\_addon\_versions) | n/a |
 | <a name="output_bastion_public_ip"></a> [bastion\_public\_ip](#output\_bastion\_public\_ip) | n/a |
 | <a name="output_cluster_autoscaler_helm_values"></a> [cluster\_autoscaler\_helm\_values](#output\_cluster\_autoscaler\_helm\_values) | n/a |
 | <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | n/a |
 | <a name="output_kubernetes_api_public_access"></a> [kubernetes\_api\_public\_access](#output\_kubernetes\_api\_public\_access) | n/a |
 | <a name="output_load_balancer_controller_helm_values"></a> [load\_balancer\_controller\_helm\_values](#output\_load\_balancer\_controller\_helm\_values) | n/a |
 | <a name="output_region"></a> [region](#output\_region) | n/a |
+| <a name="output_worker_node_ami"></a> [worker\_node\_ami](#output\_worker\_node\_ami) | n/a |
 <!-- END_TF_DOCS -->

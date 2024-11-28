@@ -8,7 +8,9 @@
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_google"></a> [google](#provider\_google) | ~> 6.0 |
 
 ## Modules
 
@@ -17,10 +19,17 @@ No providers.
 | <a name="module_bastion"></a> [bastion](#module\_bastion) | ./modules/bastion | n/a |
 | <a name="module_cluster"></a> [cluster](#module\_cluster) | ./modules/cluster | n/a |
 | <a name="module_network"></a> [network](#module\_network) | ./modules/network | n/a |
+| <a name="module_node_pool_monitoring"></a> [node\_pool\_monitoring](#module\_node\_pool\_monitoring) | ./modules/broker-node-pool | n/a |
+| <a name="module_node_pool_prod100k"></a> [node\_pool\_prod100k](#module\_node\_pool\_prod100k) | ./modules/broker-node-pool | n/a |
+| <a name="module_node_pool_prod10k"></a> [node\_pool\_prod10k](#module\_node\_pool\_prod10k) | ./modules/broker-node-pool | n/a |
+| <a name="module_node_pool_prod1k"></a> [node\_pool\_prod1k](#module\_node\_pool\_prod1k) | ./modules/broker-node-pool | n/a |
+| <a name="module_node_pool_system"></a> [node\_pool\_system](#module\_node\_pool\_system) | ./modules/system-node-pool | n/a |
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [google_compute_zones.available](https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/compute_zones) | data source |
 
 ## Inputs
 
