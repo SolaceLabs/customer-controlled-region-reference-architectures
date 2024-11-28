@@ -4,13 +4,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | 3.94.0 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | 4.11.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.94.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 4.11.0 |
 
 ## Modules
 
@@ -20,11 +20,11 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azurerm_network_interface.bastion](https://registry.terraform.io/providers/hashicorp/azurerm/3.94.0/docs/resources/network_interface) | resource |
-| [azurerm_network_interface_security_group_association.bastion](https://registry.terraform.io/providers/hashicorp/azurerm/3.94.0/docs/resources/network_interface_security_group_association) | resource |
-| [azurerm_network_security_group.bastion](https://registry.terraform.io/providers/hashicorp/azurerm/3.94.0/docs/resources/network_security_group) | resource |
-| [azurerm_public_ip.bastion](https://registry.terraform.io/providers/hashicorp/azurerm/3.94.0/docs/resources/public_ip) | resource |
-| [azurerm_virtual_machine.bastion](https://registry.terraform.io/providers/hashicorp/azurerm/3.94.0/docs/resources/virtual_machine) | resource |
+| [azurerm_network_interface.bastion](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/network_interface) | resource |
+| [azurerm_network_interface_security_group_association.bastion](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/network_interface_security_group_association) | resource |
+| [azurerm_network_security_group.bastion](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/network_security_group) | resource |
+| [azurerm_public_ip.bastion](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/public_ip) | resource |
+| [azurerm_virtual_machine.bastion](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/virtual_machine) | resource |
 
 ## Inputs
 

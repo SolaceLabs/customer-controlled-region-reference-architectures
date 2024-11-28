@@ -6,11 +6,17 @@ resource "azurerm_kubernetes_cluster_node_pool" "this" {
 
   kubernetes_cluster_id = var.cluster_id
 
-  min_count           = 0
-  max_count           = var.node_pool_max_size
-  enable_auto_scaling = true
+  orchestrator_version = var.kubernetes_version
 
-  max_pods = var.worker_node_max_pods
+  os_type = "Linux"
+  os_sku  = "Ubuntu"
+
+  min_count = 0
+  max_count = var.node_pool_max_size
+
+  auto_scaling_enabled = true
+
+  max_pods = var.max_pods_per_node
 
   zones          = [var.availability_zones[count.index]]
   vnet_subnet_id = var.subnet_id

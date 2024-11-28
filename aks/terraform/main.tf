@@ -63,8 +63,6 @@ module "cluster" {
   kubernetes_dns_service_ip = var.kubernetes_dns_service_ip
   kubernetes_pod_cidr       = var.kubernetes_pod_cidr
 
-  node_pool_max_size = var.node_pool_max_size
-
   outbound_ip_count        = var.outbound_ip_count
   outbound_ports_allocated = var.outbound_ports_allocated
 
@@ -76,4 +74,116 @@ module "cluster" {
   local_account_disabled          = var.local_account_disabled
   kubernetes_cluster_admin_groups = var.kubernetes_cluster_admin_groups
   kubernetes_cluster_admin_users  = var.kubernetes_cluster_admin_users
+}
+
+################################################################################
+# Node Pools
+################################################################################
+
+locals {
+  os_disk_size_gb = 48
+
+  prod1k_vm_size     = "Standard_E2s_v3"
+  prod10k_vm_size    = "Standard_E4s_v3"
+  prod100k_vm_size   = "Standard_E8s_v3"
+  monitoring_vm_size = "Standard_D2s_v3"
+}
+
+module "node_pool_prod1k" {
+  source = "./modules/broker-node-pool"
+
+  cluster_id     = module.cluster.cluster_id
+  node_pool_name = "prod1k"
+
+  kubernetes_version = module.cluster.current_kubernetes_version
+
+  subnet_id = var.create_network ? module.network.subnet_id : var.subnet_id
+
+  node_pool_max_size    = var.node_pool_max_size
+  worker_node_vm_size   = local.prod1k_vm_size
+  worker_node_disk_size = local.os_disk_size_gb
+
+  node_pool_labels = {
+    serviceClass = "prod1k"
+    nodeType     = "messaging"
+  }
+
+  node_pool_taints = [
+    "serviceClass=prod1k:NoExecute",
+    "nodeType=messaging:NoExecute"
+  ]
+}
+
+module "node_pool_prod10k" {
+  source = "./modules/broker-node-pool"
+
+  cluster_id     = module.cluster.cluster_id
+  node_pool_name = "prod10k"
+
+  kubernetes_version = module.cluster.current_kubernetes_version
+
+  subnet_id = var.create_network ? module.network.subnet_id : var.subnet_id
+
+  node_pool_max_size    = var.node_pool_max_size
+  worker_node_vm_size   = local.prod10k_vm_size
+  worker_node_disk_size = local.os_disk_size_gb
+
+  node_pool_labels = {
+    serviceClass = "prod10k"
+    nodeType     = "messaging"
+  }
+
+  node_pool_taints = [
+    "serviceClass=prod10k:NoExecute",
+    "nodeType=messaging:NoExecute"
+  ]
+}
+
+module "node_pool_prod100k" {
+  source = "./modules/broker-node-pool"
+
+  cluster_id     = module.cluster.cluster_id
+  node_pool_name = "prod100k"
+
+  kubernetes_version = module.cluster.current_kubernetes_version
+
+  subnet_id = var.create_network ? module.network.subnet_id : var.subnet_id
+
+  node_pool_max_size    = var.node_pool_max_size
+  worker_node_vm_size   = local.prod100k_vm_size
+  worker_node_disk_size = local.os_disk_size_gb
+
+  node_pool_labels = {
+    serviceClass = "prod100k"
+    nodeType     = "messaging"
+  }
+
+  node_pool_taints = [
+    "serviceClass=prod100k:NoExecute",
+    "nodeType=messaging:NoExecute"
+  ]
+}
+
+module "node_pool_monitoring" {
+  source = "./modules/broker-node-pool"
+
+  cluster_id     = module.cluster.cluster_id
+  node_pool_name = "monitoring"
+
+  kubernetes_version = module.cluster.current_kubernetes_version
+
+  subnet_id = var.create_network ? module.network.subnet_id : var.subnet_id
+
+  node_pool_max_size    = var.node_pool_max_size
+  worker_node_vm_size   = local.monitoring_vm_size
+  worker_node_disk_size = local.os_disk_size_gb
+
+  node_pool_labels = {
+    nodeType                                                  = "monitoring",
+    "node.kubernetes.io/exclude-from-external-load-balancers" = "true"
+  }
+
+  node_pool_taints = [
+    "nodeType=monitoring:NoExecute"
+  ]
 }

@@ -1,17 +1,8 @@
 locals {
-  os_disk_size_gb = 48
-
-  availability_zones = ["1", "2", "3"]
-
-  default_vm_size    = "Standard_D2s_v3"
-  prod1k_vm_size     = "Standard_E2s_v3"
-  prod10k_vm_size    = "Standard_E4s_v3"
-  prod100k_vm_size   = "Standard_E8s_v3"
-  monitoring_vm_size = "Standard_D2s_v3"
-
-  worker_node_max_pods = 50
-
   worker_node_username = "worker"
+
+  os_disk_size_gb = 48
+  default_vm_size = "Standard_D2s_v3"
 }
 
 ################################################################################
@@ -75,8 +66,8 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     os_disk_size_gb = local.os_disk_size_gb
     os_disk_type    = "Ephemeral"
     vnet_subnet_id  = var.subnet_id
-    max_pods        = local.worker_node_max_pods
-    zones           = local.availability_zones
+    zones           = var.availability_zones
+    max_pods        = var.max_pods_per_node
 
     upgrade_settings {
       max_surge = "10%"
@@ -110,7 +101,6 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   }
 
   azure_active_directory_role_based_access_control {
-    managed                = true
     azure_rbac_enabled     = true
     admin_group_object_ids = var.kubernetes_cluster_admin_groups
   }
@@ -139,7 +129,7 @@ resource "azurerm_role_assignment" "cluster_admin" {
 
   scope                = azurerm_kubernetes_cluster.cluster.id
   role_definition_name = "Azure Kubernetes Service RBAC Cluster Admin"
-  principal_id         = data.azuread_user.cluster_admin[count.index].id
+  principal_id         = data.azuread_user.cluster_admin[count.index].object_id
 }
 
 ################################################################################
@@ -182,111 +172,4 @@ resource "azurerm_monitor_diagnostic_setting" "cluster" {
     category = "AllMetrics"
     enabled  = true
   }
-}
-
-################################################################################
-# Node Pools
-################################################################################
-
-module "node_pool_prod1k" {
-  source = "../broker-node-pool"
-
-  cluster_id     = azurerm_kubernetes_cluster.cluster.id
-  node_pool_name = "prod1k"
-
-  availability_zones = local.availability_zones
-  subnet_id          = var.subnet_id
-
-  node_pool_max_size = var.node_pool_max_size
-
-  worker_node_max_pods  = local.worker_node_max_pods
-  worker_node_vm_size   = local.prod1k_vm_size
-  worker_node_disk_size = local.os_disk_size_gb
-
-  node_pool_labels = {
-    serviceClass = "prod1k"
-    nodeType     = "messaging"
-  }
-
-  node_pool_taints = [
-    "serviceClass=prod1k:NoExecute",
-    "nodeType=messaging:NoExecute"
-  ]
-}
-
-module "node_pool_prod10k" {
-  source = "../broker-node-pool"
-
-  cluster_id     = azurerm_kubernetes_cluster.cluster.id
-  node_pool_name = "prod10k"
-
-  availability_zones = local.availability_zones
-  subnet_id          = var.subnet_id
-
-  node_pool_max_size = var.node_pool_max_size
-
-  worker_node_max_pods  = local.worker_node_max_pods
-  worker_node_vm_size   = local.prod10k_vm_size
-  worker_node_disk_size = local.os_disk_size_gb
-
-  node_pool_labels = {
-    serviceClass = "prod10k"
-    nodeType     = "messaging"
-  }
-
-  node_pool_taints = [
-    "serviceClass=prod10k:NoExecute",
-    "nodeType=messaging:NoExecute"
-  ]
-}
-
-module "node_pool_prod100k" {
-  source = "../broker-node-pool"
-
-  cluster_id     = azurerm_kubernetes_cluster.cluster.id
-  node_pool_name = "prod100k"
-
-  availability_zones = local.availability_zones
-  subnet_id          = var.subnet_id
-
-  node_pool_max_size = var.node_pool_max_size
-
-  worker_node_max_pods  = local.worker_node_max_pods
-  worker_node_vm_size   = local.prod100k_vm_size
-  worker_node_disk_size = local.os_disk_size_gb
-
-  node_pool_labels = {
-    serviceClass = "prod100k"
-    nodeType     = "messaging"
-  }
-
-  node_pool_taints = [
-    "serviceClass=prod100k:NoExecute",
-    "nodeType=messaging:NoExecute"
-  ]
-}
-
-module "node_pool_monitoring" {
-  source = "../broker-node-pool"
-
-  cluster_id     = azurerm_kubernetes_cluster.cluster.id
-  node_pool_name = "monitoring"
-
-  availability_zones = local.availability_zones
-  subnet_id          = var.subnet_id
-
-  node_pool_max_size = var.node_pool_max_size
-
-  worker_node_max_pods  = local.worker_node_max_pods
-  worker_node_vm_size   = local.monitoring_vm_size
-  worker_node_disk_size = local.os_disk_size_gb
-
-  node_pool_labels = {
-    nodeType                                                  = "monitoring",
-    "node.kubernetes.io/exclude-from-external-load-balancers" = "true"
-  }
-
-  node_pool_taints = [
-    "nodeType=monitoring:NoExecute"
-  ]
 }
