@@ -109,6 +109,8 @@ resource "aws_eks_addon" "csi-driver" {
   cluster_name = var.cluster_name
   addon_name   = "aws-ebs-csi-driver"
 
+  addon_version = var.addon_version_ebs_csi
+
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
 
@@ -127,6 +129,8 @@ resource "aws_eks_addon" "vpc-cni" {
   cluster_name = var.cluster_name
   addon_name   = "vpc-cni"
 
+  addon_version = var.addon_version_vpc_cni
+
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
 
@@ -142,6 +146,8 @@ resource "aws_eks_addon" "coredns" {
   cluster_name = var.cluster_name
   addon_name   = "coredns"
 
+  addon_version = var.addon_version_core_dns
+
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
 
@@ -154,6 +160,8 @@ resource "aws_eks_addon" "kube-proxy" {
   cluster_name = var.cluster_name
   addon_name   = "kube-proxy"
 
+  addon_version = var.addon_version_kube_proxy
+
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"
 
@@ -165,6 +173,8 @@ resource "aws_eks_addon" "kube-proxy" {
 resource "aws_eks_addon" "pod-identity" {
   cluster_name = var.cluster_name
   addon_name   = "eks-pod-identity-agent"
+
+  addon_version = var.addon_version_pod_identity
 
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "PRESERVE"

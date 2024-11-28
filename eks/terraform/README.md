@@ -61,10 +61,12 @@
 
 | Name | Description |
 |------|-------------|
+| <a name="output_addon_versions"></a> [addon\_versions](#output\_addon\_versions) | n/a |
 | <a name="output_bastion_public_ip"></a> [bastion\_public\_ip](#output\_bastion\_public\_ip) | n/a |
 | <a name="output_cluster_autoscaler_helm_values"></a> [cluster\_autoscaler\_helm\_values](#output\_cluster\_autoscaler\_helm\_values) | n/a |
 | <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | n/a |
 | <a name="output_kubernetes_api_public_access"></a> [kubernetes\_api\_public\_access](#output\_kubernetes\_api\_public\_access) | n/a |
 | <a name="output_load_balancer_controller_helm_values"></a> [load\_balancer\_controller\_helm\_values](#output\_load\_balancer\_controller\_helm\_values) | n/a |
 | <a name="output_region"></a> [region](#output\_region) | n/a |
+| <a name="output_worker_node_ami"></a> [worker\_node\_ami](#output\_worker\_node\_ami) | n/a |
 <!-- END_TF_DOCS -->

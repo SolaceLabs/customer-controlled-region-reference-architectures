@@ -36,6 +36,11 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_addon_version_core_dns"></a> [addon\_version\_core\_dns](#input\_addon\_version\_core\_dns) | The version of core-dns add-on to install. | `string` | `null` | no |
+| <a name="input_addon_version_ebs_csi"></a> [addon\_version\_ebs\_csi](#input\_addon\_version\_ebs\_csi) | The version of the ebs csi add-on to to install. | `string` | `null` | no |
+| <a name="input_addon_version_kube_proxy"></a> [addon\_version\_kube\_proxy](#input\_addon\_version\_kube\_proxy) | The version of the kube-proxy add-on to install. | `string` | `null` | no |
+| <a name="input_addon_version_pod_identity"></a> [addon\_version\_pod\_identity](#input\_addon\_version\_pod\_identity) | The version of the pod identity add-on to install. | `string` | `null` | no |
+| <a name="input_addon_version_vpc_cni"></a> [addon\_version\_vpc\_cni](#input\_addon\_version\_vpc\_cni) | The version of the vpc cni add-on to install. | `string` | `null` | no |
 | <a name="input_cluster_id"></a> [cluster\_id](#input\_cluster\_id) | The ID of the cluster. | `string` | n/a | yes |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name of the cluster. | `string` | n/a | yes |
 | <a name="input_common_tags"></a> [common\_tags](#input\_common\_tags) | Tags that are added to all resources created by this module, in the cases where this cannot be accomplished with 'default\_tags' on the AWS provider. | `map(string)` | `{}` | no |
@@ -46,6 +51,7 @@
 
 | Name | Description |
 |------|-------------|
+| <a name="output_addon_versions"></a> [addon\_versions](#output\_addon\_versions) | n/a |
 | <a name="output_cluster_autoscaler_helm_values"></a> [cluster\_autoscaler\_helm\_values](#output\_cluster\_autoscaler\_helm\_values) | n/a |
 | <a name="output_load_balancer_controller_helm_values"></a> [load\_balancer\_controller\_helm\_values](#output\_load\_balancer\_controller\_helm\_values) | n/a |
 <!-- END_TF_DOCS -->

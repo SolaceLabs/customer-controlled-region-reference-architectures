@@ -23,3 +23,33 @@ variable "default_node_group_arn" {
   type        = string
   description = "The ARN of the default node group. Some add-ons require this to be created before they can be created."
 }
+
+variable "addon_version_ebs_csi" {
+  type        = string
+  default     = null
+  description = "The version of the ebs csi add-on to to install."
+}
+
+variable "addon_version_vpc_cni" {
+  type        = string
+  default     = null
+  description = "The version of the vpc cni add-on to install."
+}
+
+variable "addon_version_core_dns" {
+  type        = string
+  default     = null
+  description = "The version of core-dns add-on to install."
+}
+
+variable "addon_version_kube_proxy" {
+  type        = string
+  default     = null
+  description = "The version of the kube-proxy add-on to install."
+}
+
+variable "addon_version_pod_identity" {
+  type        = string
+  default     = null
+  description = "The version of the pod identity add-on to install."
+}
