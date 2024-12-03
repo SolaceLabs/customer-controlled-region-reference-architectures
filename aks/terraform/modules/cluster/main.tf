@@ -167,9 +167,4 @@ resource "azurerm_monitor_diagnostic_setting" "cluster" {
   enabled_log {
     category = "kube-controller-manager"
   }
-
-  metric {
-    category = "AllMetrics"
-    enabled  = true
-  }
 }
