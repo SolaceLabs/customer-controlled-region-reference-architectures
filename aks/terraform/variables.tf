@@ -148,3 +148,41 @@ variable "kubernetes_cluster_admin_users" {
   default     = []
   description = "A list of Azure AD users that will be assigned the 'Azure Kubernetes Service Cluster User Role' role for this cluster."
 }
+
+variable "messaging_node_pools" {
+  type = map(object({
+    vm_size = string
+  }))
+
+  default = {
+    "prod1k" = {
+      vm_size = "Standard_E2ds_v5"
+    },
+    "prod5k" = {
+      vm_size = "Standard_E4ds_v5"
+    }
+    "prod10k" = {
+      vm_size = "Standard_E4bds_v5"
+    },
+    "prod50k" = {
+      vm_size = "Standard_E8bds_v5"
+    },
+    "prod100k" = {
+      vm_size = "Standard_E8bds_v5"
+    },
+  }
+
+  description = "The configuration for the messaging node pools."
+}
+
+variable "system_vm_size" {
+  type        = string
+  default     = "Standard_D2s_v5"
+  description = "The default VM size for the worker nodes in the default (system) node pool."
+}
+
+variable "monitoring_vm_size" {
+  type        = string
+  default     = "Standard_D2s_v5"
+  description = "The default VM size for the worker nodes in the monitoring node pool."
+}
