@@ -59,9 +59,9 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   default_node_pool {
     name            = "default"
     node_count      = 2
-    vm_size         = var.default_vm_size
-    os_disk_size_gb = var.default_os_disk_size_gb
-    os_disk_type    = var.default_os_disk_type
+    vm_size         = var.worker_node_vm_size
+    os_disk_size_gb = var.worker_node_os_disk_size_gb
+    os_disk_type    = var.worker_node_os_disk_type
     vnet_subnet_id  = var.subnet_id
     zones           = var.availability_zones
     max_pods        = var.max_pods_per_node

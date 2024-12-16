@@ -66,6 +66,7 @@ module "cluster" {
   outbound_ip_count        = var.outbound_ip_count
   outbound_ports_allocated = var.outbound_ports_allocated
 
+  worker_node_vm_size        = local.system_vm_size
   worker_node_ssh_public_key = var.worker_node_ssh_public_key
 
   kubernetes_api_public_access       = var.kubernetes_api_public_access
@@ -82,6 +83,8 @@ module "cluster" {
 
 locals {
   os_disk_size_gb = 48
+
+  system_vm_size = "Standard_D2s_v3"
 
   prod1k_vm_size     = "Standard_E2s_v3"
   prod10k_vm_size    = "Standard_E4s_v3"
