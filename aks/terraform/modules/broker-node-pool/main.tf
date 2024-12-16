@@ -22,7 +22,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "this" {
   vnet_subnet_id = var.subnet_id
 
   vm_size         = var.worker_node_vm_size
-  os_disk_type    = "Ephemeral"
+  os_disk_type    = var.worker_node_disk_type
   os_disk_size_gb = var.worker_node_disk_size
 
   node_labels = var.node_pool_labels

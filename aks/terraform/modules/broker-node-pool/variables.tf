@@ -40,6 +40,12 @@ variable "worker_node_disk_size" {
   description = "The OS disk size (in GB) used for the worker nodes in each node pool."
 }
 
+variable "worker_node_disk_type" {
+  type        = string
+  default     = "Ephemeral"
+  description = "The type of the OS disk for the worker nodes in each node pool."
+}
+
 variable "node_pool_labels" {
   type        = map(string)
   description = "Kubernetes labels added to worker nodes in the node pools."

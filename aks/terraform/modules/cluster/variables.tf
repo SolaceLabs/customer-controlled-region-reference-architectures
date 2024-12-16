@@ -110,3 +110,21 @@ variable "max_pods_per_node" {
   default     = 110
   description = "The maximum number of pods for the worker nodes in the node pools."
 }
+
+variable "default_vm_size" {
+  type        = string
+  default     = "Standard_D2s_v3"
+  description = "The default VM size for the worker nodes in the default (system) node pool."
+}
+
+variable "default_os_disk_size_gb" {
+  type        = number
+  default     = 48
+  description = "The size of the OS disk for the worker nodes in the default (system) node pool."
+}
+
+variable "default_os_disk_type" {
+  type        = string
+  default     = "Ephemeral"
+  description = "The type of the OS disk for the worker nodes in the default (system) node pool."
+}
