@@ -37,6 +37,7 @@ No modules.
 | <a name="input_node_pool_taints"></a> [node\_pool\_taints](#input\_node\_pool\_taints) | Kubernetes taints added to worker nodes in the node pools. | `list(string)` | n/a | yes |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The subnet that will contain the worker nodes in each node pool. | `string` | n/a | yes |
 | <a name="input_worker_node_disk_size"></a> [worker\_node\_disk\_size](#input\_worker\_node\_disk\_size) | The OS disk size (in GB) used for the worker nodes in each node pool. | `string` | n/a | yes |
+| <a name="input_worker_node_disk_type"></a> [worker\_node\_disk\_type](#input\_worker\_node\_disk\_type) | The type of the OS disk for the worker nodes in each node pool. | `string` | `"Ephemeral"` | no |
 | <a name="input_worker_node_vm_size"></a> [worker\_node\_vm\_size](#input\_worker\_node\_vm\_size) | The VM size used for the worker nodes in each node pool. | `string` | n/a | yes |
 
 ## Outputs

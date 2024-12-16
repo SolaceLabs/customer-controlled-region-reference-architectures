@@ -1,8 +1,5 @@
 locals {
   worker_node_username = "worker"
-
-  os_disk_size_gb = 48
-  default_vm_size = "Standard_D2s_v3"
 }
 
 ################################################################################
@@ -62,9 +59,9 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   default_node_pool {
     name            = "default"
     node_count      = 2
-    vm_size         = local.default_vm_size
-    os_disk_size_gb = local.os_disk_size_gb
-    os_disk_type    = "Ephemeral"
+    vm_size         = var.worker_node_vm_size
+    os_disk_size_gb = var.worker_node_os_disk_size_gb
+    os_disk_type    = var.worker_node_os_disk_type
     vnet_subnet_id  = var.subnet_id
     zones           = var.availability_zones
     max_pods        = var.max_pods_per_node
@@ -157,14 +154,11 @@ resource "azurerm_monitor_diagnostic_setting" "cluster" {
   }
 
   enabled_log {
-    category = "kube-apiserver"
-  }
-
-  enabled_log {
     category = "kube-audit-admin"
   }
 
-  enabled_log {
-    category = "kube-controller-manager"
+  metric {
+    category = "AllMetrics"
+    enabled  = false
   }
 }

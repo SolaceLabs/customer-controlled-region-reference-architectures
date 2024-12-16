@@ -54,7 +54,10 @@ No modules.
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The name of the resource group that will contain the cluster. | `string` | n/a | yes |
 | <a name="input_route_table_id"></a> [route\_table\_id](#input\_route\_table\_id) | The ID of the route table of the subnet where the cluster will reside. | `string` | n/a | yes |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The ID of the subnet where the cluster will reside. | `string` | n/a | yes |
+| <a name="input_worker_node_os_disk_size_gb"></a> [worker\_node\_os\_disk\_size\_gb](#input\_worker\_node\_os\_disk\_size\_gb) | The size of the OS disk for the worker nodes in the default (system) node pool. | `number` | `48` | no |
+| <a name="input_worker_node_os_disk_type"></a> [worker\_node\_os\_disk\_type](#input\_worker\_node\_os\_disk\_type) | The type of the OS disk for the worker nodes in the default (system) node pool. | `string` | `"Ephemeral"` | no |
 | <a name="input_worker_node_ssh_public_key"></a> [worker\_node\_ssh\_public\_key](#input\_worker\_node\_ssh\_public\_key) | The public key that will be added to the authorized keys file on the worker nodes for SSH access. | `string` | n/a | yes |
+| <a name="input_worker_node_vm_size"></a> [worker\_node\_vm\_size](#input\_worker\_node\_vm\_size) | The default VM size for the worker nodes in the default (system) node pool. | `string` | n/a | yes |
 
 ## Outputs
 
