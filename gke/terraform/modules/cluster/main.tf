@@ -81,6 +81,7 @@ resource "google_container_cluster" "cluster" {
     #checkov:skip=CKV_GCP_68:Secure boot onfiguration not required, default node pool wil be deleted
 
     service_account = google_service_account.cluster.email
+    resource_labels = var.common_labels
   }
 
   release_channel {
