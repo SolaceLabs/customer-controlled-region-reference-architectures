@@ -72,8 +72,8 @@ locals {
   default_instance_type = "m5.large"
 
   prod1k_instance_type     = "r5.large"
-  prod10k_instance_type    = "r5.xlarge"
-  prod100k_instance_type   = "r5.2xlarge"
+  prod10k_instance_type    = "r6in.xlarge"
+  prod100k_instance_type   = "r6in.4xlarge"
   monitoring_instance_type = "t3.medium"
 
   worker_node_volume_size = 20
