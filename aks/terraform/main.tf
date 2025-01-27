@@ -84,12 +84,12 @@ module "cluster" {
 locals {
   os_disk_size_gb = 48
 
-  system_vm_size = "Standard_D2s_v3"
+  system_vm_size = "Standard_D2ds_v5"
 
-  prod1k_vm_size     = "Standard_E2s_v3"
-  prod10k_vm_size    = "Standard_E4s_v3"
-  prod100k_vm_size   = "Standard_E8s_v3"
-  monitoring_vm_size = "Standard_D2s_v3"
+  prod1k_vm_size     = "Standard_E2ds_v5"
+  prod10k_vm_size    = "Standard_E4ds_v5"
+  prod100k_vm_size   = "Standard_E8bds_v5"
+  monitoring_vm_size = "Standard_D2ds_v5"
 }
 
 module "node_pool_prod1k" {

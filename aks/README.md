@@ -41,7 +41,7 @@ The cluster has the following node pools:
 
 ##### Default (System)
 
-The default (system) node pool spans all three availability zones. By default there are two worker nodes in this pool. It uses the `Standard_D2s_v3` VM size. All the standard Kubernetes services as well as PubSub+ Mission Control Agent run on these worker nodes.
+The default (system) node pool spans all three availability zones. By default there are two worker nodes in this pool. It uses the `Standard_D2ds_v5` VM size. All the standard Kubernetes services as well as PubSub+ Mission Control Agent run on these worker nodes.
 
 ##### Event Broker Services
 
@@ -51,12 +51,12 @@ These node pools are engineered to support a 1:1 ratio of event broker service p
 
 The VM sizes, labels, and taints for each event broker service node pool are as follows:
 
-| Name       | VM size         | Labels                                      | Taints                                                          |
-|------------|-----------------|---------------------------------------------|-----------------------------------------------------------------|
-| prod1k     | Standard_E2s_v3 | nodeType:messaging<br>serviceClass:prod1k   | nodeType:messaging:NoExecute<br>serviceClass:prod1k:NoExecute   |
-| prod10k    | Standard_E4s_v3 | nodeType:messaging<br>serviceClass:prod10k  | nodeType:messaging:NoExecute<br>serviceClass:prod10k:NoExecute  |
-| prod100k   | Standard_E8s_v3 | nodeType:messaging<br>serviceClass:prod100k | nodeType:messaging:NoExecute<br>serviceClass:prod100k:NoExecute |
-| monitoring | Standard_D2s_v3 | nodeType:monitoring                         | nodeType:monitoring:NoExecute                                   |
+| Name       | VM size          | Labels                                      | Taints                                                          |
+|------------|------------------|---------------------------------------------|-----------------------------------------------------------------|
+| prod1k     | Standard_E2ds_v5 | nodeType:messaging<br>serviceClass:prod1k   | nodeType:messaging:NoExecute<br>serviceClass:prod1k:NoExecute   |
+| prod10k    | Standard_E4ds_v5 | nodeType:messaging<br>serviceClass:prod10k  | nodeType:messaging:NoExecute<br>serviceClass:prod10k:NoExecute  |
+| prod100k   | Standard_E8ds_v5 | nodeType:messaging<br>serviceClass:prod100k | nodeType:messaging:NoExecute<br>serviceClass:prod100k:NoExecute |
+| monitoring | Standard_D2ds_v5 | nodeType:monitoring                         | nodeType:monitoring:NoExecute                                   |
 
 ### Access<a name="aks-access"></a>
 
