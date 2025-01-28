@@ -51,12 +51,14 @@ These node pools are engineered to support a 1:1 ratio of event broker service p
 
 The VM sizes, labels, and taints for each event broker service node pool are as follows:
 
-| Name       | VM size          | Labels                                      | Taints                                                          |
-|------------|------------------|---------------------------------------------|-----------------------------------------------------------------|
-| prod1k     | Standard_E2ds_v5 | nodeType:messaging<br>serviceClass:prod1k   | nodeType:messaging:NoExecute<br>serviceClass:prod1k:NoExecute   |
-| prod10k    | Standard_E4ds_v5 | nodeType:messaging<br>serviceClass:prod10k  | nodeType:messaging:NoExecute<br>serviceClass:prod10k:NoExecute  |
-| prod100k   | Standard_E8ds_v5 | nodeType:messaging<br>serviceClass:prod100k | nodeType:messaging:NoExecute<br>serviceClass:prod100k:NoExecute |
-| monitoring | Standard_D2ds_v5 | nodeType:monitoring                         | nodeType:monitoring:NoExecute                                   |
+| Name       | VM size           | Labels                                      | Taints                                                          |
+|------------|-------------------|---------------------------------------------|-----------------------------------------------------------------|
+| prod1k     | Standard_E2ds_v5  | nodeType:messaging<br>serviceClass:prod1k   | nodeType:messaging:NoExecute<br>serviceClass:prod1k:NoExecute   |
+| prod5k     | Standard_E4ds_v5  | nodeType:messaging<br>serviceClass:prod5k   | nodeType:messaging:NoExecute<br>serviceClass:prod5k:NoExecute   |
+| prod10k    | Standard_E4bds_v5  | nodeType:messaging<br>serviceClass:prod10k  | nodeType:messaging:NoExecute<br>serviceClass:prod10k:NoExecute  |
+| prod50k    | Standard_E8bds_v5 | nodeType:messaging<br>serviceClass:prod50k  | nodeType:messaging:NoExecute<br>serviceClass:prod50k:NoExecute  |
+| prod100k   | Standard_E8bds_v5 | nodeType:messaging<br>serviceClass:prod100k | nodeType:messaging:NoExecute<br>serviceClass:prod100k:NoExecute |
+| monitoring | Standard_D2ds_v5  | nodeType:monitoring                         | nodeType:monitoring:NoExecute                                   |
 
 ### Access<a name="aks-access"></a>
 
