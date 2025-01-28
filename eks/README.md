@@ -76,6 +76,8 @@ The instance types, labels, and taints for each node group for event broker serv
 | prod100k   | r6in.4xlarge    | `nodeType:messaging`<br/>`serviceClass:prod100k` | `nodeType:messaging:NoExecute`<br/>`serviceClass:prod100k:NoExecute` |
 | monitoring | t3.medium       | `nodeType:monitoring`                            | nodeType:monitoring:NoExecute                                        |
 
+Note: the instance type family `r6in` is not available in certain regions. Consult the AWS documentation to ensure the region you specify is available for use.
+
 #### Add-ons + Supporting Services <a name="eks-addon"></a>
 
 Amazon EKS uses an add-on model for built-in supporting services: https://docs.aws.amazon.com/eks/latest/userguide/eks-add-ons.html

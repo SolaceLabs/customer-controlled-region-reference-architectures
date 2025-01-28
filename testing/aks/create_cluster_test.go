@@ -162,7 +162,7 @@ func TestTerraformAksClusterExternalNetwork(t *testing.T) {
 	subnetId := terraform.Output(t, networkOptions, "subnet_id")
 	routeTableId := terraform.Output(t, networkOptions, "route_table_id")
 
-	underTestPath, _ := common.CopyTerraform(t, "../../aks/terraform")
+	underTestPath, _ := common.CopyTerraform(t, "../../aks/terraform", clusterSuffix)
 	underTestOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: underTestPath,
 		NoColor:      true,
