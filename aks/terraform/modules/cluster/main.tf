@@ -42,6 +42,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   kubernetes_version      = var.kubernetes_version
   sku_tier                = "Standard"
   local_account_disabled  = var.local_account_disabled
+  node_os_upgrade_channel = "None"
 
   api_server_access_profile {
     authorized_ip_ranges = var.kubernetes_api_public_access ? var.kubernetes_api_authorized_networks : null
@@ -149,12 +150,10 @@ resource "azurerm_monitor_diagnostic_setting" "cluster" {
   target_resource_id         = azurerm_kubernetes_cluster.cluster.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.cluster.id
 
-  enabled_log {
-    category = "cluster-autoscaler"
-  }
+  log_analytics_destination_type = "Dedicated"
 
   enabled_log {
-    category = "kube-audit-admin"
+    category = "cluster-autoscaler"
   }
 
   metric {
