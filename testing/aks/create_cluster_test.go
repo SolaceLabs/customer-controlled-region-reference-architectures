@@ -22,8 +22,12 @@ func testCluster(t *testing.T, configOptions *terraform.Options) {
 	common.TestHighAvailableServiceClass(t, kubeconfigPath, "prod1k", "managed-premium-zoned", 1)
 	common.TestStandaloneServiceClass(t, kubeconfigPath, "prod1k", "managed-premium-zoned", 2)
 
+	common.TestStandaloneServiceClass(t, kubeconfigPath, "prod5k", "managed-premium-zoned", 2)
+
 	common.TestHighAvailableServiceClass(t, kubeconfigPath, "prod10k", "managed-premium-zoned", 1)
 	common.TestStandaloneServiceClass(t, kubeconfigPath, "prod10k", "managed-premium-zoned", 2)
+
+	common.TestStandaloneServiceClass(t, kubeconfigPath, "prod50k", "managed-premium-zoned", 1)
 
 	common.TestStandaloneServiceClass(t, kubeconfigPath, "prod100k", "managed-premium-zoned", 1)
 
