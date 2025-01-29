@@ -69,12 +69,16 @@ These node groups are engineered to support a 1:1 ratio of the broker pod to wor
 
 The instance types, labels, and taints for each node group for event broker services are shown in the following table:
 
-| Name       | Instance type | Labels                                           | Taints                                                               |
-|------------|---------------|--------------------------------------------------|----------------------------------------------------------------------|
-| prod1k     | r5.large      | `nodeType:messaging`<br/>`serviceClass:prod1k`   | `nodeType:messaging:NoExecute`<br/>`serviceClass:prod1k:NoExecute`   |
-| prod10k    | r5.xlarge     | `nodeType:messaging`<br/>`serviceClass:prod10k`  | `nodeType:messaging:NoExecute`<br/>`serviceClass:prod10k:NoExecute`  |
-| prod100k   | r5.2xlarge    | `nodeType:messaging`<br/>`serviceClass:prod100k` | `nodeType:messaging:NoExecute`<br/>`serviceClass:prod100k:NoExecute` |
-| monitoring | t3.medium     | `nodeType:monitoring`                            | nodeType:monitoring:NoExecute                                        |
+| Name       | Instance type   | Labels                                           | Taints                                                               |
+|------------|-----------------|--------------------------------------------------|----------------------------------------------------------------------|
+| prod1k     | r5.large        | `nodeType:messaging`<br/>`serviceClass:prod1k`   | `nodeType:messaging:NoExecute`<br/>`serviceClass:prod1k:NoExecute`   |
+| prod5k     | r5.xlarge       | `nodeType:messaging`<br/>`serviceClass:prod5k`   | `nodeType:messaging:NoExecute`<br/>`serviceClass:prod5k:NoExecute`   |
+| prod10k    | r6in.xlarge     | `nodeType:messaging`<br/>`serviceClass:prod10k`  | `nodeType:messaging:NoExecute`<br/>`serviceClass:prod10k:NoExecute`  |
+| prod50k    | r6in.2xlarge    | `nodeType:messaging`<br/>`serviceClass:prod50k`  | `nodeType:messaging:NoExecute`<br/>`serviceClass:prod50k:NoExecute`  |
+| prod100k   | r6in.4xlarge    | `nodeType:messaging`<br/>`serviceClass:prod100k` | `nodeType:messaging:NoExecute`<br/>`serviceClass:prod100k:NoExecute` |
+| monitoring | t3.medium       | `nodeType:monitoring`                            | nodeType:monitoring:NoExecute                                        |
+
+Note: the instance type family `r6in` is not available in certain regions. Consult the AWS documentation to ensure the region you specify is available for use.
 
 #### Add-ons + Supporting Services <a name="eks-addon"></a>
 
