@@ -24,6 +24,8 @@
 | <a name="module_node_pool_prod100k"></a> [node\_pool\_prod100k](#module\_node\_pool\_prod100k) | ./modules/broker-node-pool | n/a |
 | <a name="module_node_pool_prod10k"></a> [node\_pool\_prod10k](#module\_node\_pool\_prod10k) | ./modules/broker-node-pool | n/a |
 | <a name="module_node_pool_prod1k"></a> [node\_pool\_prod1k](#module\_node\_pool\_prod1k) | ./modules/broker-node-pool | n/a |
+| <a name="module_node_pool_prod50k"></a> [node\_pool\_prod50k](#module\_node\_pool\_prod50k) | ./modules/broker-node-pool | n/a |
+| <a name="module_node_pool_prod5k"></a> [node\_pool\_prod5k](#module\_node\_pool\_prod5k) | ./modules/broker-node-pool | n/a |
 
 ## Resources
 
