@@ -42,6 +42,12 @@ variable "private_subnet_cidrs" {
   description = "The CIDRs of the three private subnets. These will contain the EKS cluster's master ENIs, worker nodes, and internal load-balancer ENIs (if desired)."
 }
 
+variable "preferred_availability_zone_ids" {
+  type        = list(string)
+  default     = []
+  description = "The preferred availability zones to use for the created subnets, specified by ZoneId (eg. 'use1-az1') -- not ZoneName (eg. 'us-east-1a'). If no specific zones are required, leave empty."
+}
+
 variable "vpc_id" {
   type        = string
   default     = ""

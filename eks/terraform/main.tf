@@ -8,9 +8,10 @@ module "network" {
   cluster_name   = var.cluster_name
   create_network = var.create_network
 
-  vpc_cidr             = var.vpc_cidr
-  public_subnet_cidrs  = var.public_subnet_cidrs
-  private_subnet_cidrs = var.private_subnet_cidrs
+  vpc_cidr                        = var.vpc_cidr
+  public_subnet_cidrs             = var.public_subnet_cidrs
+  private_subnet_cidrs            = var.private_subnet_cidrs
+  preferred_availability_zone_ids = var.preferred_availability_zone_ids
 }
 
 ################################################################################
