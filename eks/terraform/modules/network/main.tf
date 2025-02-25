@@ -2,6 +2,23 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+data "aws_availability_zones" "preferred" {
+  state = "available"
+
+  filter {
+    name   = "zone-id"
+    values = var.preferred_availability_zone_ids
+  }
+}
+
+locals {
+  selected_availability_zones = (
+    length(data.aws_availability_zones.preferred.names) >= 3 ?
+    data.aws_availability_zones.preferred :
+    data.aws_availability_zones.available
+  )
+}
+
 resource "aws_vpc" "this" {
   #checkov:skip=CKV2_AWS_12:Solace is not opinionated on the format of the VPC's default security group
   #checkov:skip=CKV2_AWS_11:Solace is not opinionated on the use of VPC flow logging
@@ -39,7 +56,7 @@ resource "aws_subnet" "public" {
   count             = var.create_network ? 3 : 0
   vpc_id            = aws_vpc.this[0].id
   cidr_block        = var.public_subnet_cidrs[count.index]
-  availability_zone = data.aws_availability_zones.available.names[count.index]
+  availability_zone = local.selected_availability_zones.names[count.index]
 
   tags = {
     Name                     = "${var.cluster_name}-public-${count.index}"
@@ -58,7 +75,7 @@ resource "aws_subnet" "private" {
   count             = var.create_network ? 3 : 0
   vpc_id            = aws_vpc.this[0].id
   cidr_block        = var.private_subnet_cidrs[count.index]
-  availability_zone = data.aws_availability_zones.available.names[count.index]
+  availability_zone = local.selected_availability_zones.names[count.index]
 
   tags = {
     Name                              = "${var.cluster_name}-private-${count.index}"
