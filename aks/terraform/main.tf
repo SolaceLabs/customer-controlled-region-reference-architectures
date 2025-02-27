@@ -113,6 +113,8 @@ module "node_pool_prod1k" {
     nodeType     = "messaging"
   }
 
+  common_tags = var.common_tags
+
   node_pool_taints = [
     "serviceClass=prod1k:NoExecute",
     "nodeType=messaging:NoExecute"
@@ -137,6 +139,8 @@ module "node_pool_prod5k" {
     serviceClass = "prod5k"
     nodeType     = "messaging"
   }
+
+  common_tags = var.common_tags
 
   node_pool_taints = [
     "serviceClass=prod5k:NoExecute",
@@ -163,6 +167,8 @@ module "node_pool_prod10k" {
     nodeType     = "messaging"
   }
 
+  common_tags = var.common_tags
+
   node_pool_taints = [
     "serviceClass=prod10k:NoExecute",
     "nodeType=messaging:NoExecute"
@@ -182,6 +188,8 @@ module "node_pool_prod50k" {
   node_pool_max_size    = var.node_pool_max_size
   worker_node_vm_size   = local.prod50k_vm_size
   worker_node_disk_size = local.os_disk_size_gb
+
+  common_tags = var.common_tags
 
   node_pool_labels = {
     serviceClass = "prod50k"
@@ -208,6 +216,8 @@ module "node_pool_prod100k" {
   worker_node_vm_size   = local.prod100k_vm_size
   worker_node_disk_size = local.os_disk_size_gb
 
+  common_tags = var.common_tags
+
   node_pool_labels = {
     serviceClass = "prod100k"
     nodeType     = "messaging"
@@ -232,6 +242,8 @@ module "node_pool_monitoring" {
   node_pool_max_size    = var.node_pool_max_size
   worker_node_vm_size   = local.monitoring_vm_size
   worker_node_disk_size = local.os_disk_size_gb
+
+  common_tags = var.common_tags
 
   node_pool_labels = {
     nodeType                                                  = "monitoring",
