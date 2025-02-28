@@ -66,6 +66,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     vnet_subnet_id  = var.subnet_id
     zones           = var.availability_zones
     max_pods        = var.max_pods_per_node
+    tags            = var.common_tags
 
     upgrade_settings {
       max_surge = "10%"
