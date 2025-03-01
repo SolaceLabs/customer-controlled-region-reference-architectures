@@ -31,6 +31,7 @@ No modules.
 | [aws_subnet.public](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/subnet) | resource |
 | [aws_vpc.this](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/vpc) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/data-sources/availability_zones) | data source |
+| [aws_availability_zones.preferred](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/data-sources/availability_zones) | data source |
 
 ## Inputs
 
