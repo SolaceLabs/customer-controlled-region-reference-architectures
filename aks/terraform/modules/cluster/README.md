@@ -35,7 +35,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | The availability zones for the default (system) node pool. | `list(string)` | <pre>[<br/>  "1",<br/>  "2",<br/>  "3"<br/>]</pre> | no |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | The availability zones for the default (system) node pool. | `list(string)` | <pre>[<br>  "1",<br>  "2",<br>  "3"<br>]</pre> | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name of the cluster and name (or name prefix) for all other infrastructure. | `string` | n/a | yes |
 | <a name="input_common_tags"></a> [common\_tags](#input\_common\_tags) | Tags that are added to all resources created by this module. | `map(string)` | `{}` | no |
 | <a name="input_kubernetes_api_authorized_networks"></a> [kubernetes\_api\_authorized\_networks](#input\_kubernetes\_api\_authorized\_networks) | A list of CIDRs that can access the Kubernetes API, in addition to the VPC's CIDR (which is added by default). | `list(string)` | `[]` | no |
