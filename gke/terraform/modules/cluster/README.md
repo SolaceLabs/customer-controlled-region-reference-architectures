@@ -21,6 +21,7 @@ No modules.
 | Name | Type |
 |------|------|
 | [google_container_cluster.cluster](https://registry.terraform.io/providers/hashicorp/google/6.10.0/docs/resources/container_cluster) | resource |
+| [google_project_iam_member.cluster_service_account_node_service_account](https://registry.terraform.io/providers/hashicorp/google/6.10.0/docs/resources/project_iam_member) | resource |
 | [google_service_account.cluster](https://registry.terraform.io/providers/hashicorp/google/6.10.0/docs/resources/service_account) | resource |
 | [google_container_engine_versions.this](https://registry.terraform.io/providers/hashicorp/google/6.10.0/docs/data-sources/container_engine_versions) | data source |
 
