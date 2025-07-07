@@ -3,6 +3,12 @@ resource "google_service_account" "cluster" {
   display_name = "Service account for ${var.cluster_name} worker nodes"
 }
 
+resource "google_project_iam_member" "default_worker_node" {
+  project = google_service_account.cluster.project
+  role    = "roles/container.defaultNodeServiceAccount"
+  member  = google_service_account.cluster.member
+}
+
 ################################################################################
 # Cluster
 ################################################################################
