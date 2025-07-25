@@ -12,7 +12,7 @@ locals {
 
 module "cluster_autoscaler_pod_identity" {
   source  = "terraform-aws-modules/eks-pod-identity/aws"
-  version = "1.10.0"
+  version = "1.12.1"
 
   name               = "${var.cluster_name}-ca"
   policy_name_prefix = "${var.cluster_name}-"
@@ -35,7 +35,7 @@ module "cluster_autoscaler_pod_identity" {
 
 module "aws_lb_controller_pod_identity" {
   source  = "terraform-aws-modules/eks-pod-identity/aws"
-  version = "1.10.0"
+  version = "1.12.1"
 
   name               = "${var.cluster_name}-lbc"
   policy_name_prefix = "${var.cluster_name}-"
@@ -58,7 +58,7 @@ module "aws_lb_controller_pod_identity" {
 
 module "aws_ebs_csi_pod_identity" {
   source  = "terraform-aws-modules/eks-pod-identity/aws"
-  version = "1.10.0"
+  version = "1.12.1"
 
   name               = "${var.cluster_name}-ebs-csi"
   policy_name_prefix = "${var.cluster_name}-"
@@ -80,7 +80,7 @@ module "aws_ebs_csi_pod_identity" {
 
 module "aws_vpc_cni_pod_identity" {
   source  = "terraform-aws-modules/eks-pod-identity/aws"
-  version = "1.10.0"
+  version = "1.12.1"
 
   name               = "${var.cluster_name}-vpc-cni"
   policy_name_prefix = "${var.cluster_name}-"
