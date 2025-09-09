@@ -61,6 +61,12 @@ variable "node_group_resources_tags" {
   description = "Resources tags added to the node groups as hints for the autoscaler."
 }
 
+variable "split_node_group" {
+  type        = bool
+  description = "Whether to split the nodegroup into a nodegroup per subnet."
+  default     = true
+}
+
 variable "worker_node_volume_size" {
   type        = number
   description = "The size of the worker node root disk."
