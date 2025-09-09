@@ -14,7 +14,7 @@ for the GKE cluster, see the [documentation website](https://docs.solace.com/Clo
 
 This section describes the architecture reference Terraform project for deploying a GKE cluster. This information includes Kubernetes components and configuration that:
 
- * are required (or highly recommended) to operate successfully with Solace Solace Cloud
+ * are required (or highly recommended) to operate successfully with Solace Cloud
  * are recommended but not required to successfully deploy Solace Cloud
  * are available to produce a working cluster but where Solace is not opinionated on what to use (an option or the configuration had to be selected as part of the Terraform and doesn't impact the installation of Solace Cloud)
 
@@ -60,7 +60,7 @@ The cluster has the following node pools:
 
 ##### Default (System)
 
-By default the pool has three worker nodes (one in each availability zone), and it uses the `n2-standard-2` machine type. All of the standard Kubernetes services, as well as the Solace Mission Control Agent, run on these worker nodes.
+By default the pool has three worker nodes (one in each availability zone), and it uses the `n2-standard-2` machine type. All of the standard Kubernetes services, as well as the Mission Control Agent, run on these worker nodes.
 
 ##### Event Broker Services
 

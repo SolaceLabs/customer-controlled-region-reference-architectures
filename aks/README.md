@@ -41,7 +41,7 @@ The cluster has the following node pools:
 
 ##### Default (System)
 
-The default (system) node pool spans all three availability zones. By default there are two worker nodes in this pool. It uses the `Standard_D2ds_v5` VM size. All the standard Kubernetes services, as well as the Solace Mission Control Agent, run on these worker nodes.
+The default (system) node pool spans all three availability zones. By default there are two worker nodes in this pool. It uses the `Standard_D2ds_v5` VM size. All the standard Kubernetes services, as well as the Mission Control Agent, run on these worker nodes.
 
 ##### Event Broker Services
 

@@ -5,7 +5,7 @@ contact_links:
     about: Contact Support if you have issues with your Solace Cloud deployment.
   - name: Documentation
     url: https://docs.solace.com/
-    about: For more documentation about Solace Cloud and the Solace Event Broker.
+    about: For more documentation about Solace Cloud and Solace Event Broker Services.
   - name: Community 
     url: https://solace.community/
     about: Ask the Solace community about anything Solace!

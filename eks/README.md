@@ -17,7 +17,7 @@ for the Amazon EKS cluster, see the [documentation website](https://docs.solace.
 The section describes the architecture reference Terraform project for deploying an
 Amazon EKS cluster. This information includes Kubernetes components and configuration that:
 
- * are required (or highly recommended) to operate successfully with Solace Solace Cloud
+ * are required (or highly recommended) to operate successfully with Solace Cloud
  * are recommended but not required to successfully deploy Solace Cloud
  * are available to produce a working cluster but where Solace is not opinionated on what to use (an option or the configuration had to be selected as part of the Terraform and doesn't impact the installation of Solace Cloud)
 
@@ -59,7 +59,7 @@ The cluster has the following node groups:
 
 ##### Default (System)
 
-The default (system) node group spans all three availability zones. By default there are two worker nodes in this pool, and it uses the `m5.large` instance type. All the standard Kubernetes services, as well as the Solace Mission Control Agent, run on these worker nodes.
+The default (system) node group spans all three availability zones. By default there are two worker nodes in this pool, and it uses the `m5.large` instance type. All the standard Kubernetes services, as well as the Mission Control Agent, run on these worker nodes.
 
 ##### Event Broker Services <a name="eks-broker-services"></a>
 
@@ -197,9 +197,9 @@ terraform apply
 
 ### Deploying Storage Class <a name="eks-deploy-storage"></a>
 
-There are two options for persistent storage that work well with Solace Solace Cloud.
+There are two options for persistent storage that work well with Solace Cloud.
 
-We recommend using GP2 as its performance can be configured by simply increasing the size of the disk, which can be done from within Solace Solace Cloud.
+We recommend using GP2 as its performance can be configured by simply increasing the size of the disk, which can be done from within Solace Cloud.
 
 Create a GP2 storage class with these recommended settings:
 
