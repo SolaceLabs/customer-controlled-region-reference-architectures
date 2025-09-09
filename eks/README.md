@@ -2,7 +2,7 @@
 
 We provide a sample Terraform that you can use as a reference to set up your Kubernetes cluster using Amazon Elastic Kubernetes Service (EKS) cluster.
 This Terraform gives you a recommended practices for the cluster to help ensure
-your deployment of PubSub+ Cloud is successful.
+your deployment of Solace Cloud is successful.
 
 You can review the architecture and understand how to deploy using the Terraform.
 For information about the architecture, see:
@@ -17,9 +17,9 @@ for the Amazon EKS cluster, see the [documentation website](https://docs.solace.
 The section describes the architecture reference Terraform project for deploying an
 Amazon EKS cluster. This information includes Kubernetes components and configuration that:
 
- * are required (or highly recommended) to operate successfully with Solace PubSub+ Cloud
- * are recommended but not required to successfully deploy PubSub+ Cloud
- * are available to produce a working cluster but where Solace is not opinionated on what to use (an option or the configuration had to be selected as part of the Terraform and doesn't impact the installation of PubSub+ Cloud)
+ * are required (or highly recommended) to operate successfully with Solace Cloud
+ * are recommended but not required to successfully deploy Solace Cloud
+ * are available to produce a working cluster but where Solace is not opinionated on what to use (an option or the configuration had to be selected as part of the Terraform and doesn't impact the installation of Solace Cloud)
 
 Review these sections below: [networking](#eks-network), [cluster configuration](#eks-cluster-configure), and [access to and from the cluster](#eks-access).
 
@@ -44,7 +44,7 @@ The private subnets contain:
 
 The public internet is accessed in the private subnets via the NAT Gateways. There are no restrictions on egress traffic to the public internet.
 
-The [CIDR Calculator for PubSub+ Cloud](https://docs.solace.com/Cloud/Deployment-Considerations/CIDR_calculator/cloud-CIDR-calculator.xlsx) can be used to properly size the VPC to support the number of event broker services that you require. A correctly sized VPC CIDR is important as this cannot be changed after the cluster has been created.
+The [CIDR Calculator for Solace Cloud](https://docs.solace.com/Cloud/Deployment-Considerations/CIDR_calculator/cloud-CIDR-calculator.xlsx) can be used to properly size the VPC to support the number of event broker services that you require. A correctly sized VPC CIDR is important as this cannot be changed after the cluster has been created.
 
 The VPC is an optional component. If the VPC that hosts the cluster exists or is created created with other automation, its details can be provided in variables.
 
@@ -59,7 +59,7 @@ The cluster has the following node groups:
 
 ##### Default (System)
 
-The default (system) node group spans all three availability zones. By default there are two worker nodes in this pool, and it uses the `m5.large` instance type. All the standard Kubernetes services, as well as the PubSub+ Mission Control Agent run on these worker nodes.
+The default (system) node group spans all three availability zones. By default there are two worker nodes in this pool, and it uses the `m5.large` instance type. All the standard Kubernetes services, as well as the Mission Control Agent, run on these worker nodes.
 
 ##### Event Broker Services <a name="eks-broker-services"></a>
 
@@ -92,7 +92,7 @@ The Terraform project deploys the following add-ons:
  * kube-proxy
  * eks-pod-identity-agent
 
-PubSub+ Cloud also requires the use of `cluster-autoscaler` and `aws-load-balancer-controller` to operate. Instructions can be found below on how to deploy them into the cluster using the Helm values provided by the Terraform project.
+Solace Cloud also requires the use of `cluster-autoscaler` and `aws-load-balancer-controller` to operate. Instructions can be found below on how to deploy them into the cluster using the Helm values provided by the Terraform project.
 
 This project uses [EKS Pod Identities](https://docs.aws.amazon.com/eks/latest/userguide/pod-identities.html) to provide add-ons as well as the `cluster-autoscaler` and `aws-load-balancer-controller` with the appropriate AWS IAM permissions to operate.
 
@@ -138,9 +138,9 @@ To use this Terraform module, you require:
 
 ### Creating the Kubernetes Cluster <a name="eks-create-cluster"></a>
 
-1. Navigate to the `terraform/` directory and create a `terraform.tfvars` file with the required variables. The VPC and subnet CIDRs must be sized appropriately for the number of event broker services that you require to be created, this can be done using the (PubSub+ Cloud CIDR Calculator)[https://docs.solace.com/Cloud/Deployment-Considerations/CIDR_calculator/Solace-cloud-CIDR-calculator.xlsx].
+1. Navigate to the `terraform/` directory and create a `terraform.tfvars` file with the required variables. The VPC and subnet CIDRs must be sized appropriately for the number of event broker services that you require to be created, this can be done using the (Solace Cloud CIDR Calculator)[https://docs.solace.com/Cloud/Deployment-Considerations/CIDR_calculator/Solace-cloud-CIDR-calculator.xlsx].
 In the file, make the following changes:
-* The `kubernetes_version` variable should be set to the latest Kubernetes version that is [supported by PubSub+ Cloud](https://docs.solace.com/Cloud/Deployment-Considerations/cloud-broker-k8s-versions-support.htm).
+* The `kubernetes_version` variable should be set to the latest Kubernetes version that is [supported by Solace Cloud](https://docs.solace.com/Cloud/Deployment-Considerations/cloud-broker-k8s-versions-support.htm).
 * The `bastion_ssh_authorized_networks` variable must be set with the CIDRs of the networks where the bastion host will be accessed from.
 * The `bastion_ssh_public_key` variable must be set with the public key of the key pair that will be used to access the bastion host.
 
@@ -197,9 +197,9 @@ terraform apply
 
 ### Deploying Storage Class <a name="eks-deploy-storage"></a>
 
-There are two options for persistent storage that work well with Solace PubSub+ Cloud.
+There are two options for persistent storage that work well with Solace Cloud.
 
-We recommend using GP2 as its performance can be configured by simply increasing the size of the disk, which can be done from within Solace PubSub+ Cloud.
+We recommend using GP2 as its performance can be configured by simply increasing the size of the disk, which can be done from within Solace Cloud.
 
 Create a GP2 storage class with these recommended settings:
 

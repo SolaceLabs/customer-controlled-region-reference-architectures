@@ -1,6 +1,6 @@
 # Reference Terraform for Azure Kubernetes Service
 
-We provide a sample Terraform that you can use as a reference to set up your Kubernetes cluster using Azure Kubernetes Service (AKS). This Terraform gives you recommended practices for the cluster to help ensure your deployment of PubSub+ Cloud is successful.
+We provide a sample Terraform that you can use as a reference to set up your Kubernetes cluster using Azure Kubernetes Service (AKS). This Terraform gives you recommended practices for the cluster to help ensure your deployment of Solace Cloud is successful.
 
 You can review the architecture and understand how to deploy using the Terraform. For information about the architecture, see:
 * [Architecture of AKS Reference Terraform](#aks-architecture)
@@ -12,8 +12,8 @@ The information on this page pertains to the Terraform. For information about th
 
 The sections describes the architecture reference Terraform project for deploying and Azure Kubernetes Service (AKS) cluster. It includes Kubernetes components and configuration that: 
 * are required (or highly recommended) to operate successfully with Solace Cloud
-* are recommended but not required to successfully deploy PubSub+ Cloud
-* are available to produce a working cluster but we are not opinionated on what to use (an option or configuraton had to be selected as part of the Terraform, but does not impact the installation of PubSub+ Cloud)
+* are recommended but not required to successfully deploy Solace Cloud
+* are available to produce a working cluster but we are not opinionated on what to use (an option or configuraton had to be selected as part of the Terraform, but does not impact the installation of Solace Cloud)
 
 The areas to review are the [networking](#aks-network), [cluster configuration](#aks-cluster-config), and [access to and from the cluster](#aks-access). Below is an architectural diagram of the components of the AKS cluster that are created with this Terraform project:
 
@@ -31,9 +31,9 @@ The VNET is an optional component. If the VNET that will host the cluster alread
 
 #### Networking
 
-There are currently two options for networking in AKS: Azure CNI and Kubenet. This Terraform project uses Kubenet, which is our recommended option as it provides the most efficient use of IP addresses within the VNET's CIDR. PubSub+ Cloud also supports Azure CNI and you can modify this Terraform project to use it. The result of doing so is a larger CIDR for the VNET, as we recommend a 1:1 event broker service pod to worker node ratio.
+There are currently two options for networking in AKS: Azure CNI and Kubenet. This Terraform project uses Kubenet, which is our recommended option as it provides the most efficient use of IP addresses within the VNET's CIDR. Solace Cloud also supports Azure CNI and you can modify this Terraform project to use it. The result of doing so is a larger CIDR for the VNET, as we recommend a 1:1 event broker service pod to worker node ratio.
 
-The [CIDR Calculator for PubSub+ Cloud](https://docs.solace.com/Cloud/Deployment-Considerations/CIDR_calculator/Solace-cloud-CIDR-calculator.xlsx) can be used to properly size the VNET to support the number of event broker services you require. A correctly sized VNET CIDR is critical as this cannot be changed once the cluster is created.
+The [CIDR Calculator for Solace Cloud](https://docs.solace.com/Cloud/Deployment-Considerations/CIDR_calculator/Solace-cloud-CIDR-calculator.xlsx) can be used to properly size the VNET to support the number of event broker services you require. A correctly sized VNET CIDR is critical as this cannot be changed once the cluster is created.
 
 #### Node Pools
 
@@ -41,7 +41,7 @@ The cluster has the following node pools:
 
 ##### Default (System)
 
-The default (system) node pool spans all three availability zones. By default there are two worker nodes in this pool. It uses the `Standard_D2ds_v5` VM size. All the standard Kubernetes services as well as PubSub+ Mission Control Agent run on these worker nodes.
+The default (system) node pool spans all three availability zones. By default there are two worker nodes in this pool. It uses the `Standard_D2ds_v5` VM size. All the standard Kubernetes services, as well as the Mission Control Agent, run on these worker nodes.
 
 ##### Event Broker Services
 
@@ -94,8 +94,8 @@ To use this Terraform module, the following is required:
 
 1. Navigate to the `terraform/` directory and create a `terraform.tfvars` file with the required variables.
 
-* The VNET's CIDR must be sized appropriately for the number of event broker services that will be created, this can be done using the [CIDR Calculator for PubSub+ Cloud](https://docs.solace.com/Cloud/Deployment-Considerations/CIDR_calculator/Solace-cloud-CIDR-calculator.xlsx) using the 'AKS Kubenet' sheet.
-* The `kubernetes_version` variable should be set to the latest Kubernetes version that is [supported by PubSub+ Cloud](https://docs.solace.com/Cloud/Deployment-Considerations/cloud-broker-k8s-versions-support.htm).
+* The VNET's CIDR must be sized appropriately for the number of event broker services that will be created, this can be done using the [CIDR Calculator for Solace Cloud](https://docs.solace.com/Cloud/Deployment-Considerations/CIDR_calculator/Solace-cloud-CIDR-calculator.xlsx) using the 'AKS Kubenet' sheet.
+* The `kubernetes_version` variable should be set to the latest Kubernetes version that is [supported by Solace Cloud](https://docs.solace.com/Cloud/Deployment-Considerations/cloud-broker-k8s-versions-support.htm).
 * The `bastion_ssh_authorized_networks` variable must be set with the CIDR(s) of the networks where the bastion host will be accessed from.
 * The `bastion_ssh_public_key` variable must be set with the public key of the key pair that will be used to access the bastion host.
 * The `worker_node_ssh_public_key` variable must be set with the public key of the key pair that will be used to access the worker node hosts.
