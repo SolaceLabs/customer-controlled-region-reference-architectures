@@ -35,6 +35,7 @@ No modules.
 | <a name="input_node_pool_max_size"></a> [node\_pool\_max\_size](#input\_node\_pool\_max\_size) | The maximum worker node count for each node pool. | `string` | n/a | yes |
 | <a name="input_node_pool_name"></a> [node\_pool\_name](#input\_node\_pool\_name) | The name prefix of the node pools. | `string` | n/a | yes |
 | <a name="input_node_pool_taints"></a> [node\_pool\_taints](#input\_node\_pool\_taints) | Kubernetes taints added to worker nodes in the node pools. | `list(string)` | n/a | yes |
+| <a name="input_split_node_group"></a> [split\_node\_group](#input\_split\_node\_group) | Whether to split the nodegroup into a nodegroup per availability zone. | `bool` | `true` | no |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | The subnet that will contain the worker nodes in each node pool. | `string` | n/a | yes |
 | <a name="input_worker_node_disk_size"></a> [worker\_node\_disk\_size](#input\_worker\_node\_disk\_size) | The OS disk size (in GB) used for the worker nodes in each node pool. | `string` | n/a | yes |
 | <a name="input_worker_node_disk_type"></a> [worker\_node\_disk\_type](#input\_worker\_node\_disk\_type) | The type of the OS disk for the worker nodes in each node pool. | `string` | `"Ephemeral"` | no |
