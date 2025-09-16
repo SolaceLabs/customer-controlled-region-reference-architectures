@@ -89,5 +89,11 @@ variable "worker_node_instance_type" {
 
 variable "worker_node_ami_version" {
   type        = string
-  description = "Value of the the AMI to use for the worker nodes."
+  description = "Value of the the AMI version to use for the worker nodes."
+}
+
+variable "worker_node_ami_type" {
+  type        = string
+  description = "Value of the AMI type to use for the worker nodes."
+  default     = "AL2023_x86_64_STANDARD"
 }

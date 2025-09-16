@@ -42,6 +42,7 @@ resource "aws_eks_node_group" "this" {
 
   version         = var.kubernetes_version
   release_version = var.worker_node_ami_version
+  ami_type        = var.worker_node_ami_type
 
   scaling_config {
     desired_size = var.node_group_desired_size
