@@ -33,15 +33,16 @@ resource "aws_launch_template" "this" {
 }
 
 resource "aws_eks_node_group" "this" {
-  count = length(var.subnet_ids)
+  count = var.split_node_group ? length(var.subnet_ids) : 1
 
   cluster_name    = var.cluster_name
   node_group_name = "${var.node_group_name_prefix}-${count.index}"
   node_role_arn   = var.worker_node_role_arn
-  subnet_ids      = [var.subnet_ids[count.index]]
+  subnet_ids      = var.split_node_group ? [var.subnet_ids[count.index]] : var.subnet_ids
 
   version         = var.kubernetes_version
   release_version = var.worker_node_ami_version
+  ami_type        = var.worker_node_ami_type
 
   scaling_config {
     desired_size = var.node_group_desired_size
