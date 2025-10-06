@@ -4,14 +4,14 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.77.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | 5.100.0 |
 | <a name="requirement_tls"></a> [tls](#requirement\_tls) | ~> 4.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.77.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.100.0 |
 
 ## Modules
 
@@ -21,29 +21,29 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [aws_cloudwatch_log_group.cluster_logs](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/cloudwatch_log_group) | resource |
-| [aws_eks_access_entry.admin](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/eks_access_entry) | resource |
-| [aws_eks_access_policy_association.admin](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/eks_access_policy_association) | resource |
-| [aws_eks_cluster.cluster](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/eks_cluster) | resource |
-| [aws_iam_role.cluster](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/iam_role) | resource |
-| [aws_iam_role.worker_node](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/iam_role) | resource |
-| [aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/iam_role_policy_attachment) | resource |
-| [aws_iam_role_policy_attachment.cluster_AmazonEKSServicePolicy](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/iam_role_policy_attachment) | resource |
-| [aws_iam_role_policy_attachment.worker_node_AmazonEC2ContainerRegistryReadOnly](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/iam_role_policy_attachment) | resource |
-| [aws_iam_role_policy_attachment.worker_node_AmazonEKSWorkerNodePolicy](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/iam_role_policy_attachment) | resource |
-| [aws_iam_role_policy_attachment.worker_node_AmazonSSMManagedInstanceCore](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/iam_role_policy_attachment) | resource |
-| [aws_kms_alias.logs](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/kms_alias) | resource |
-| [aws_kms_alias.secrets](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/kms_alias) | resource |
-| [aws_kms_key.logs](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/kms_key) | resource |
-| [aws_kms_key.secrets](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/kms_key) | resource |
-| [aws_kms_key_policy.logs](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/kms_key_policy) | resource |
-| [aws_security_group.cluster](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/security_group) | resource |
-| [aws_security_group.worker_node](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/security_group) | resource |
-| [aws_security_group_rule.cluster_from_worker_node](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/security_group_rule) | resource |
-| [aws_security_group_rule.worker_node_from_cluster](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/security_group_rule) | resource |
-| [aws_security_group_rule.worker_node_to_worker_node](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/resources/security_group_rule) | resource |
-| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/data-sources/caller_identity) | data source |
-| [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/5.77.0/docs/data-sources/partition) | data source |
+| [aws_cloudwatch_log_group.cluster_logs](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/cloudwatch_log_group) | resource |
+| [aws_eks_access_entry.admin](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/eks_access_entry) | resource |
+| [aws_eks_access_policy_association.admin](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/eks_access_policy_association) | resource |
+| [aws_eks_cluster.cluster](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/eks_cluster) | resource |
+| [aws_iam_role.cluster](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/iam_role) | resource |
+| [aws_iam_role.worker_node](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/iam_role) | resource |
+| [aws_iam_role_policy_attachment.cluster_AmazonEKSClusterPolicy](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_iam_role_policy_attachment.cluster_AmazonEKSServicePolicy](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_iam_role_policy_attachment.worker_node_AmazonEC2ContainerRegistryReadOnly](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_iam_role_policy_attachment.worker_node_AmazonEKSWorkerNodePolicy](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_iam_role_policy_attachment.worker_node_AmazonSSMManagedInstanceCore](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_kms_alias.logs](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/kms_alias) | resource |
+| [aws_kms_alias.secrets](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/kms_alias) | resource |
+| [aws_kms_key.logs](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/kms_key) | resource |
+| [aws_kms_key.secrets](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/kms_key) | resource |
+| [aws_kms_key_policy.logs](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/kms_key_policy) | resource |
+| [aws_security_group.cluster](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/security_group) | resource |
+| [aws_security_group.worker_node](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/security_group) | resource |
+| [aws_security_group_rule.cluster_from_worker_node](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.worker_node_from_cluster](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/security_group_rule) | resource |
+| [aws_security_group_rule.worker_node_to_worker_node](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/security_group_rule) | resource |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/data-sources/caller_identity) | data source |
+| [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/data-sources/partition) | data source |
 
 ## Inputs
 

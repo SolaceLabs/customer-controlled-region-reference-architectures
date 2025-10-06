@@ -230,7 +230,7 @@ helm repo add autoscaler https://kubernetes.github.io/autoscaler
 helm repo update autoscaler
 
 terraform output -raw -state=terraform/terraform.tfstate cluster_autoscaler_helm_values | \
-    helm upgrade --install cluster-autoscaler autoscaler/cluster-autoscaler --version 9.43.2 -n kube-system --values - --set image.tag=<version>
+    helm upgrade --install cluster-autoscaler autoscaler/cluster-autoscaler --version 9.46.3 -n kube-system --wait --values - --set image.tag=<version>
 ```
 
 ###  Deploying AWS Load Balancer Controller <a name="eks-deploy-lb"></a>
@@ -242,7 +242,7 @@ helm repo add eks https://aws.github.io/eks-charts
 helm repo update eks
 
 terraform output -raw -state=terraform/terraform.tfstate load_balancer_controller_helm_values | \
-    helm install aws-load-balancer-controller eks/aws-load-balancer-controller --version 1.10.1 -n kube-system --values -
+    helm upgrade --install aws-load-balancer-controller eks/aws-load-balancer-controller --version 1.13.4 -n kube-system --wait --values -
 ```
 
 ## Changelog

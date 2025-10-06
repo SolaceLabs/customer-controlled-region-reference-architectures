@@ -34,6 +34,11 @@ variable "node_group_desired_size" {
   description = "The desired size of the node group."
 }
 
+variable "node_group_max_size" {
+  type        = number
+  description = "The maximum size of the node group."
+}
+
 variable "worker_node_volume_size" {
   type        = number
   description = "The size of the worker node root disk."
