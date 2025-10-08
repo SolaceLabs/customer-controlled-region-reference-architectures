@@ -59,6 +59,12 @@ resource "aws_eks_node_group" "this" {
     id      = aws_launch_template.this.id
     version = aws_launch_template.this.latest_version
   }
+
+  lifecycle {
+    ignore_changes = [
+      scaling_config[0].desired_size
+    ]
+  }
 }
 
 resource "aws_autoscaling_group_tag" "name" {
