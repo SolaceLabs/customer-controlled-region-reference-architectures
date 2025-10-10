@@ -31,6 +31,15 @@ resources:
         cpu: 1250m
         ephemeral-storage: 2.25Gi
         memory: 6912Mi
+    prod5k:
+      requests:
+        cpu: 3200m
+        memory: 14490Mi
+        ephemeral-storage: 2.25Gi
+      limits:
+        cpu: 4200m
+        memory: 14490Mi
+        ephemeral-storage: 2.25Gi
     prod10k:
       requests:
         cpu: 3200m
@@ -40,6 +49,15 @@ resources:
         cpu: 4200m
         memory: 14490Mi
         ephemeral-storage: 2.25Gi
+    prod50k:
+      limits:
+        cpu: 82000m
+        ephemeral-storage: 2.25Gi
+        memory: 31284Mi
+      requests:
+        cpu: 7200m
+        ephemeral-storage: 2.25Gi
+        memory: 31284Mi
     prod100k:
       limits:
         cpu: 82000m
