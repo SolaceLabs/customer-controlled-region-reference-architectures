@@ -31,6 +31,7 @@ No modules.
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name of the cluster and name (or name prefix) for all other infrastructure. | `string` | n/a | yes |
 | <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version) | The kubernetes version to use. | `string` | n/a | yes |
 | <a name="input_node_group_desired_size"></a> [node\_group\_desired\_size](#input\_node\_group\_desired\_size) | The desired size of the node group. | `number` | n/a | yes |
+| <a name="input_node_group_max_size"></a> [node\_group\_max\_size](#input\_node\_group\_max\_size) | The maximum size of the node group. | `number` | `3` | no |
 | <a name="input_node_group_name"></a> [node\_group\_name](#input\_node\_group\_name) | The name the node group. | `string` | n/a | yes |
 | <a name="input_security_group_ids"></a> [security\_group\_ids](#input\_security\_group\_ids) | The security groups that will be attached to the worker nodes. | `list(string)` | n/a | yes |
 | <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | The subnets that the node group will use. | `list(string)` | n/a | yes |
