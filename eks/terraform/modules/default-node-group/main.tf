@@ -44,7 +44,7 @@ resource "aws_eks_node_group" "this" {
   scaling_config {
     desired_size = var.node_group_desired_size
     min_size     = 0
-    max_size     = 3
+    max_size     = var.node_group_max_size
   }
 
   launch_template {
