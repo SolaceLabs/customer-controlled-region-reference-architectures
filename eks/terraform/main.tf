@@ -112,6 +112,7 @@ module "node_group_default" {
   worker_node_ami_version = nonsensitive(data.aws_ssm_parameter.eks_ami_release_version.value)
 
   node_group_desired_size = 2
+  node_group_max_size     = 3
 }
 
 module "node_group_prod1k" {
