@@ -75,3 +75,37 @@ resource "azurerm_route" "cluster_secondary" {
   address_prefix      = var.secondary_vnet_cidr
   next_hop_type       = "VnetLocal"
 }
+
+resource "azurerm_subnet" "cluster_secondary" {
+  #checkov:skip=CKV2_AZURE_31:AKS manages the NSGs appled to worker nodes - having one on the subnet would require either manual management or overly permissive rules that would defeat the purpose
+
+  count = var.create_network && var.secondary_vnet_cidr != null ? 1 : 0
+
+  name                 = "cluster-secondary"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.this[0].name
+  address_prefixes     = [var.secondary_cluster_subnet_cidr]
+
+  private_endpoint_network_policies = "Disabled"
+
+  depends_on = [azurerm_virtual_network.this]
+
+  lifecycle {
+    precondition {
+      condition     = var.secondary_cluster_subnet_cidr != null
+      error_message = "A valid IPv4 CIDR must be provided for 'secondary_cluster_subnet_cidr' variable when secondary_vnet_cidr is set."
+    }
+
+    precondition {
+      condition     = can(cidrhost(var.secondary_cluster_subnet_cidr, 0))
+      error_message = "A valid IPv4 CIDR must be provided for 'secondary_cluster_subnet_cidr' variable."
+    }
+  }
+}
+
+resource "azurerm_subnet_route_table_association" "cluster_secondary" {
+  count = var.create_network && var.secondary_vnet_cidr != null ? 1 : 0
+
+  subnet_id      = azurerm_subnet.cluster_secondary[0].id
+  route_table_id = azurerm_route_table.cluster[0].id
+}

@@ -42,3 +42,9 @@ variable "cluster_subnet_cidr" {
   default     = null
   description = "The CIDR of the cluster's subnet."
 }
+
+variable "secondary_cluster_subnet_cidr" {
+  type        = string
+  default     = null
+  description = "The CIDR of the secondary cluster subnet. Required when secondary_vnet_cidr is set."
+}

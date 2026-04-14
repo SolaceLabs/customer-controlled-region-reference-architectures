@@ -47,5 +47,6 @@ No modules.
 | <a name="output_secondary_cidr_range_name_pods"></a> [secondary\_cidr\_range\_name\_pods](#output\_secondary\_cidr\_range\_name\_pods) | n/a |
 | <a name="output_secondary_range_name_messaging_pods"></a> [secondary\_range\_name\_messaging\_pods](#output\_secondary\_range\_name\_messaging\_pods) | n/a |
 | <a name="output_secondary_range_name_services"></a> [secondary\_range\_name\_services](#output\_secondary\_range\_name\_services) | n/a |
+| <a name="output_secondary_subnetwork_name"></a> [secondary\_subnetwork\_name](#output\_secondary\_subnetwork\_name) | n/a |
 | <a name="output_subnetwork_name"></a> [subnetwork\_name](#output\_subnetwork\_name) | n/a |
 <!-- END_TF_DOCS -->
