@@ -42,6 +42,20 @@ resource "aws_vpc" "this" {
   }
 }
 
+resource "aws_vpc_ipv4_cidr_block_association" "secondary" {
+  count = var.create_network && var.secondary_vpc_cidr != null ? 1 : 0
+
+  vpc_id     = aws_vpc.this[0].id
+  cidr_block = var.secondary_vpc_cidr
+
+  lifecycle {
+    precondition {
+      condition     = can(cidrhost(var.secondary_vpc_cidr, 0))
+      error_message = "A valid IPv4 CIDR must be provided for 'secondary_vpc_cidr' variable if it is not null."
+    }
+  }
+}
+
 resource "aws_internet_gateway" "gateway" {
   count = var.create_network ? 1 : 0
 

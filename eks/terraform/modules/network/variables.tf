@@ -15,6 +15,12 @@ variable "vpc_cidr" {
   description = "The CIDR of the cluster's VPC."
 }
 
+variable "secondary_vpc_cidr" {
+  type        = string
+  default     = null
+  description = "An optional secondary CIDR block to associate with the cluster's VPC. This can be used to expand the cluster's available IP address space without needing to create a new VPC and migrate resources."
+}
+
 variable "public_subnet_cidrs" {
   type        = list(string)
   default     = []

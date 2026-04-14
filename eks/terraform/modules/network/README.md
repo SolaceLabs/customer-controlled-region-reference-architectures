@@ -30,6 +30,7 @@ No modules.
 | [aws_subnet.private](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/subnet) | resource |
 | [aws_subnet.public](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/subnet) | resource |
 | [aws_vpc.this](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/vpc) | resource |
+| [aws_vpc_ipv4_cidr_block_association.secondary](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/vpc_ipv4_cidr_block_association) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/data-sources/availability_zones) | data source |
 | [aws_availability_zones.preferred](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/data-sources/availability_zones) | data source |
 
@@ -42,6 +43,7 @@ No modules.
 | <a name="input_preferred_availability_zone_ids"></a> [preferred\_availability\_zone\_ids](#input\_preferred\_availability\_zone\_ids) | The preferred availability zones to use for the created subnets, specified by ZoneId (eg. 'use1-az1') -- not ZoneName (eg. 'us-east-1a'). If no specific zones are required, leave empty. | `list(string)` | `[]` | no |
 | <a name="input_private_subnet_cidrs"></a> [private\_subnet\_cidrs](#input\_private\_subnet\_cidrs) | The CIDRs of the three private subnets. These will contain the EKS cluster's master ENIs, worker nodes, and internal load-balancer ENIs (if desired). | `list(string)` | `[]` | no |
 | <a name="input_public_subnet_cidrs"></a> [public\_subnet\_cidrs](#input\_public\_subnet\_cidrs) | The CIDRs of the three public subnets. These will contain the bastion host, NAT gateways, and internet-facing load balancer ENIs (if desired). | `list(string)` | `[]` | no |
+| <a name="input_secondary_vpc_cidr"></a> [secondary\_vpc\_cidr](#input\_secondary\_vpc\_cidr) | An optional secondary CIDR block to associate with the cluster's VPC. This can be used to expand the cluster's available IP address space without needing to create a new VPC and migrate resources. | `string` | `null` | no |
 | <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | The CIDR of the cluster's VPC. | `string` | `null` | no |
 
 ## Outputs

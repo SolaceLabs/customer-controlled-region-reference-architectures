@@ -31,6 +31,12 @@ variable "vnet_cidr" {
   description = "The CIDR of the cluster's VNET."
 }
 
+variable "secondary_vnet_cidr" {
+  type        = string
+  default     = null
+  description = "An optional secondary CIDR block to associate with the cluster's VNET. This can be used to expand the cluster's available IP address space without needing to create a new VNET and migrate resources."
+}
+
 variable "cluster_subnet_cidr" {
   type        = string
   default     = null

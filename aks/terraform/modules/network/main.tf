@@ -5,12 +5,17 @@ resource "azurerm_virtual_network" "this" {
   location            = var.region
   resource_group_name = var.resource_group_name
   tags                = var.common_tags
-  address_space       = [var.vnet_cidr]
+  address_space       = var.secondary_vnet_cidr != null ? [var.vnet_cidr, var.secondary_vnet_cidr] : [var.vnet_cidr]
 
   lifecycle {
     precondition {
       condition     = can(cidrhost(var.vnet_cidr, 0))
       error_message = "A valid IPv4 CIDR must be provided for 'vnet_cidr' variable."
+    }
+
+    precondition {
+      condition     = var.secondary_vnet_cidr == null || can(cidrhost(var.secondary_vnet_cidr, 0))
+      error_message = "A valid IPv4 CIDR must be provided for 'secondary_vnet_cidr' variable if it is not null."
     }
   }
 }
@@ -58,5 +63,15 @@ resource "azurerm_route" "cluster" {
   resource_group_name = var.resource_group_name
   route_table_name    = azurerm_route_table.cluster[0].name
   address_prefix      = var.vnet_cidr
+  next_hop_type       = "VnetLocal"
+}
+
+resource "azurerm_route" "cluster_secondary" {
+  count = var.create_network && var.secondary_vnet_cidr != null ? 1 : 0
+
+  name                = "local-secondary"
+  resource_group_name = var.resource_group_name
+  route_table_name    = azurerm_route_table.cluster[0].name
+  address_prefix      = var.secondary_vnet_cidr
   next_hop_type       = "VnetLocal"
 }
