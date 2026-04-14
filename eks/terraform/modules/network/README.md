@@ -21,14 +21,22 @@ No modules.
 | Name | Type |
 |------|------|
 | [aws_eip.nat](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/eip) | resource |
+| [aws_eip.secondary_nat](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/eip) | resource |
 | [aws_internet_gateway.gateway](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/internet_gateway) | resource |
 | [aws_nat_gateway.nat](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/nat_gateway) | resource |
+| [aws_nat_gateway.secondary_nat](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/nat_gateway) | resource |
 | [aws_route_table.private](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/route_table) | resource |
 | [aws_route_table.public](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/route_table) | resource |
+| [aws_route_table.secondary_private](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/route_table) | resource |
+| [aws_route_table.secondary_public](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/route_table) | resource |
 | [aws_route_table_association.private](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/route_table_association) | resource |
 | [aws_route_table_association.public](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/route_table_association) | resource |
+| [aws_route_table_association.secondary_private](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/route_table_association) | resource |
+| [aws_route_table_association.secondary_public](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/route_table_association) | resource |
 | [aws_subnet.private](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/subnet) | resource |
 | [aws_subnet.public](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/subnet) | resource |
+| [aws_subnet.secondary_private](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/subnet) | resource |
+| [aws_subnet.secondary_public](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/subnet) | resource |
 | [aws_vpc.this](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/vpc) | resource |
 | [aws_vpc_ipv4_cidr_block_association.secondary](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/resources/vpc_ipv4_cidr_block_association) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/5.100.0/docs/data-sources/availability_zones) | data source |
@@ -43,6 +51,8 @@ No modules.
 | <a name="input_preferred_availability_zone_ids"></a> [preferred\_availability\_zone\_ids](#input\_preferred\_availability\_zone\_ids) | The preferred availability zones to use for the created subnets, specified by ZoneId (eg. 'use1-az1') -- not ZoneName (eg. 'us-east-1a'). If no specific zones are required, leave empty. | `list(string)` | `[]` | no |
 | <a name="input_private_subnet_cidrs"></a> [private\_subnet\_cidrs](#input\_private\_subnet\_cidrs) | The CIDRs of the three private subnets. These will contain the EKS cluster's master ENIs, worker nodes, and internal load-balancer ENIs (if desired). | `list(string)` | `[]` | no |
 | <a name="input_public_subnet_cidrs"></a> [public\_subnet\_cidrs](#input\_public\_subnet\_cidrs) | The CIDRs of the three public subnets. These will contain the bastion host, NAT gateways, and internet-facing load balancer ENIs (if desired). | `list(string)` | `[]` | no |
+| <a name="input_secondary_private_subnet_cidrs"></a> [secondary\_private\_subnet\_cidrs](#input\_secondary\_private\_subnet\_cidrs) | The CIDRs of the three private subnets from the secondary CIDR block. These will contain worker nodes and internal load-balancer ENIs (if desired). | `list(string)` | `[]` | no |
+| <a name="input_secondary_public_subnet_cidrs"></a> [secondary\_public\_subnet\_cidrs](#input\_secondary\_public\_subnet\_cidrs) | The CIDRs of the three public subnets from the secondary CIDR block. These will contain NAT gateways and internet-facing load balancer ENIs (if desired). | `list(string)` | `[]` | no |
 | <a name="input_secondary_vpc_cidr"></a> [secondary\_vpc\_cidr](#input\_secondary\_vpc\_cidr) | An optional secondary CIDR block to associate with the cluster's VPC. This can be used to expand the cluster's available IP address space without needing to create a new VPC and migrate resources. | `string` | `null` | no |
 | <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | The CIDR of the cluster's VPC. | `string` | `null` | no |
 
@@ -52,5 +62,7 @@ No modules.
 |------|-------------|
 | <a name="output_private_subnets"></a> [private\_subnets](#output\_private\_subnets) | n/a |
 | <a name="output_public_subnets"></a> [public\_subnets](#output\_public\_subnets) | n/a |
+| <a name="output_secondary_private_subnets"></a> [secondary\_private\_subnets](#output\_secondary\_private\_subnets) | n/a |
+| <a name="output_secondary_public_subnets"></a> [secondary\_public\_subnets](#output\_secondary\_public\_subnets) | n/a |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | n/a |
 <!-- END_TF_DOCS -->

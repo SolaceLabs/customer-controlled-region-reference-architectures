@@ -158,3 +158,109 @@ resource "aws_route_table_association" "private" {
   subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private[count.index].id
 }
+
+# Secondary CIDR Public Subnets
+resource "aws_subnet" "secondary_public" {
+  count = var.create_network && var.secondary_vpc_cidr != null ? 3 : 0
+
+  vpc_id            = aws_vpc.this[0].id
+  cidr_block        = var.secondary_public_subnet_cidrs[count.index]
+  availability_zone = local.selected_availability_zones.names[count.index]
+
+  tags = {
+    Name                     = "${var.cluster_name}-secondary-public-${count.index}"
+    "kubernetes.io/role/elb" = "1"
+  }
+
+  depends_on = [aws_vpc_ipv4_cidr_block_association.secondary]
+
+  lifecycle {
+    precondition {
+      condition     = length(var.secondary_public_subnet_cidrs) == 3
+      error_message = "Three valid IPv4 CIDRs must be provided in the 'secondary_public_subnet_cidrs' variable when secondary_vpc_cidr is set."
+    }
+  }
+}
+
+# Secondary CIDR Private Subnets
+resource "aws_subnet" "secondary_private" {
+  count             = var.create_network && var.secondary_vpc_cidr != null ? 3 : 0
+  vpc_id            = aws_vpc.this[0].id
+  cidr_block        = var.secondary_private_subnet_cidrs[count.index]
+  availability_zone = local.selected_availability_zones.names[count.index]
+
+  tags = {
+    Name                              = "${var.cluster_name}-secondary-private-${count.index}"
+    "kubernetes.io/role/internal-elb" = "1"
+  }
+
+  depends_on = [aws_vpc_ipv4_cidr_block_association.secondary]
+
+  lifecycle {
+    precondition {
+      condition     = length(var.secondary_private_subnet_cidrs) == 3
+      error_message = "Three valid IPv4 CIDRs must be provided in the 'secondary_private_subnet_cidrs' variable when secondary_vpc_cidr is set."
+    }
+  }
+}
+
+# EIPs for Secondary NAT Gateways
+resource "aws_eip" "secondary_nat" {
+  #checkov:skip=CKV2_AWS_19:False positive - the EIPs are assoicated with the NAT Gateways below
+  count = var.create_network && var.secondary_vpc_cidr != null ? 3 : 0
+}
+
+# Secondary NAT Gateways (one per secondary public subnet)
+resource "aws_nat_gateway" "secondary_nat" {
+  count = var.create_network && var.secondary_vpc_cidr != null ? 3 : 0
+
+  allocation_id = aws_eip.secondary_nat[count.index].id
+  subnet_id     = aws_subnet.secondary_public[count.index].id
+}
+
+# Route Table for Secondary Public Subnets (route to IGW)
+resource "aws_route_table" "secondary_public" {
+  count = var.create_network && var.secondary_vpc_cidr != null ? 1 : 0
+
+  vpc_id = aws_vpc.this[0].id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.gateway[0].id
+  }
+
+  tags = {
+    Name = "${var.cluster_name}-secondary-public"
+  }
+}
+
+# Route Table Associations for Secondary Public Subnets
+resource "aws_route_table_association" "secondary_public" {
+  count = var.create_network && var.secondary_vpc_cidr != null ? length(aws_subnet.secondary_public) : 0
+
+  subnet_id      = aws_subnet.secondary_public[count.index].id
+  route_table_id = aws_route_table.secondary_public[0].id
+}
+
+# Route Tables for Secondary Private Subnets (route to NAT gateways)
+resource "aws_route_table" "secondary_private" {
+  count  = var.create_network && var.secondary_vpc_cidr != null ? 3 : 0
+  vpc_id = aws_vpc.this[0].id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.secondary_nat[count.index].id
+  }
+
+  tags = {
+    Name = "${var.cluster_name}-secondary-private-${count.index}"
+  }
+}
+
+# Route Table Associations for Secondary Private Subnets
+resource "aws_route_table_association" "secondary_private" {
+  count = var.create_network && var.secondary_vpc_cidr != null ? length(aws_subnet.secondary_private) : 0
+
+  subnet_id      = aws_subnet.secondary_private[count.index].id
+  route_table_id = aws_route_table.secondary_private[count.index].id
+}

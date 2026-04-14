@@ -38,3 +38,15 @@ variable "preferred_availability_zone_ids" {
   default     = []
   description = "The preferred availability zones to use for the created subnets, specified by ZoneId (eg. 'use1-az1') -- not ZoneName (eg. 'us-east-1a'). If no specific zones are required, leave empty."
 }
+
+variable "secondary_public_subnet_cidrs" {
+  type        = list(string)
+  default     = []
+  description = "The CIDRs of the three public subnets from the secondary CIDR block. These will contain NAT gateways and internet-facing load balancer ENIs (if desired)."
+}
+
+variable "secondary_private_subnet_cidrs" {
+  type        = list(string)
+  default     = []
+  description = "The CIDRs of the three private subnets from the secondary CIDR block. These will contain worker nodes and internal load-balancer ENIs (if desired)."
+}

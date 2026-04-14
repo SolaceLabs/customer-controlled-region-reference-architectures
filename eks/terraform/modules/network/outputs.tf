@@ -11,3 +11,13 @@ output "private_subnets" {
 
   depends_on = [aws_nat_gateway.nat]
 }
+
+output "secondary_public_subnets" {
+  value = var.create_network && var.secondary_vpc_cidr != null ? aws_subnet.secondary_public[*].id : null
+}
+
+output "secondary_private_subnets" {
+  value = var.create_network && var.secondary_vpc_cidr != null ? aws_subnet.secondary_private[*].id : null
+
+  depends_on = [aws_nat_gateway.secondary_nat]
+}
