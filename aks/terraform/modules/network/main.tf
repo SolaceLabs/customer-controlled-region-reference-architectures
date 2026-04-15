@@ -88,6 +88,17 @@ resource "azurerm_subnet" "cluster_secondary" {
 
   private_endpoint_network_policies = "Disabled"
 
+  dynamic "delegation" {
+    for_each = var.secondary_cluster_subnet_delegation != null ? [var.secondary_cluster_subnet_delegation] : []
+    content {
+      name = delegation.value.name
+      service_delegation {
+        name    = delegation.value.service_delegation.name
+        actions = delegation.value.service_delegation.actions
+      }
+    }
+  }
+
   depends_on = [azurerm_virtual_network.this]
 
   lifecycle {

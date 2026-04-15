@@ -48,3 +48,15 @@ variable "secondary_cluster_subnet_cidr" {
   default     = null
   description = "The CIDR of the secondary cluster subnet. Required when secondary_vnet_cidr is set."
 }
+
+variable "secondary_cluster_subnet_delegation" {
+  type = object({
+    name = string
+    service_delegation = object({
+      name    = string
+      actions = list(string)
+    })
+  })
+  default     = null
+  description = "Optional delegation configuration for the secondary cluster subnet."
+}

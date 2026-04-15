@@ -40,6 +40,7 @@ No modules.
 | <a name="input_region"></a> [region](#input\_region) | The Azure region where this network will reside. | `string` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The name of the resource group that will contain the network. | `string` | n/a | yes |
 | <a name="input_secondary_cluster_subnet_cidr"></a> [secondary\_cluster\_subnet\_cidr](#input\_secondary\_cluster\_subnet\_cidr) | The CIDR of the secondary cluster subnet. Required when secondary\_vnet\_cidr is set. | `string` | `null` | no |
+| <a name="input_secondary_cluster_subnet_delegation"></a> [secondary\_cluster\_subnet\_delegation](#input\_secondary\_cluster\_subnet\_delegation) | Optional delegation configuration for the secondary cluster subnet. | <pre>object({<br>    name = string<br>    service_delegation = object({<br>      name    = string<br>      actions = list(string)<br>    })<br>  })</pre> | `null` | no |
 | <a name="input_secondary_vnet_cidr"></a> [secondary\_vnet\_cidr](#input\_secondary\_vnet\_cidr) | An optional secondary CIDR block to associate with the cluster's VNET. This can be used to expand the cluster's available IP address space without needing to create a new VNET and migrate resources. | `string` | `null` | no |
 | <a name="input_vnet_cidr"></a> [vnet\_cidr](#input\_vnet\_cidr) | The CIDR of the cluster's VNET. | `string` | `null` | no |
 
@@ -50,4 +51,5 @@ No modules.
 | <a name="output_route_table_id"></a> [route\_table\_id](#output\_route\_table\_id) | n/a |
 | <a name="output_secondary_subnet_id"></a> [secondary\_subnet\_id](#output\_secondary\_subnet\_id) | n/a |
 | <a name="output_subnet_id"></a> [subnet\_id](#output\_subnet\_id) | n/a |
+| <a name="output_virtual_network_name"></a> [virtual\_network\_name](#output\_virtual\_network\_name) | n/a |
 <!-- END_TF_DOCS -->
