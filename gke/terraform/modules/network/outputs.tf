@@ -7,7 +7,7 @@ output "subnetwork_name" {
 }
 
 output "secondary_subnetwork_name" {
-  value = var.create_network && var.secondary_network_cidr_range != null ? google_compute_subnetwork.secondary[0].name : null
+  value = var.create_network && var.secondary_network_cidr_range != null && var.secondary_cluster_subnetwork_cidr != null ? google_compute_subnetwork.secondary[0].name : null
 }
 
 output "secondary_cidr_range_name_pods" {

@@ -37,7 +37,8 @@ No modules.
 | <a name="input_secondary_cidr_range_messaging_pods"></a> [secondary\_cidr\_range\_messaging\_pods](#input\_secondary\_cidr\_range\_messaging\_pods) | The secondary CIDR range for the cluster's messaging node pools, if a separate range is desired. | `string` | `null` | no |
 | <a name="input_secondary_cidr_range_pods"></a> [secondary\_cidr\_range\_pods](#input\_secondary\_cidr\_range\_pods) | The secondary CIDR range for the cluster's pods. If a separate CIDR range is provided for messaging pods, this range will be used for just the system (default) node pool. | `string` | `null` | no |
 | <a name="input_secondary_cidr_range_services"></a> [secondary\_cidr\_range\_services](#input\_secondary\_cidr\_range\_services) | The secondary CIDR range for the cluster's services. | `string` | `null` | no |
-| <a name="input_secondary_network_cidr_range"></a> [secondary\_network\_cidr\_range](#input\_secondary\_network\_cidr\_range) | An optional secondary CIDR block for an additional subnetwork. This can be used to expand the cluster's available IP address space without needing to create a new VPC and migrate resources. | `string` | `null` | no |
+| <a name="input_secondary_cluster_subnetwork_cidr"></a> [secondary\_cluster\_subnetwork\_cidr](#input\_secondary\_cluster\_subnetwork\_cidr) | The CIDR of the secondary cluster subnetwork. This should be a subset of secondary\_network\_cidr\_range to leave space for other use cases. | `string` | `null` | no |
+| <a name="input_secondary_network_cidr_range"></a> [secondary\_network\_cidr\_range](#input\_secondary\_network\_cidr\_range) | An optional secondary CIDR block for the cluster's VPC. This can be used to expand the cluster's available IP address space without needing to create a new VPC and migrate resources. | `string` | `null` | no |
 
 ## Outputs
 

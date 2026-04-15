@@ -18,7 +18,13 @@ variable "network_cidr_range" {
 variable "secondary_network_cidr_range" {
   type        = string
   default     = null
-  description = "An optional secondary CIDR block for an additional subnetwork. This can be used to expand the cluster's available IP address space without needing to create a new VPC and migrate resources."
+  description = "An optional secondary CIDR block for the cluster's VPC. This can be used to expand the cluster's available IP address space without needing to create a new VPC and migrate resources."
+}
+
+variable "secondary_cluster_subnetwork_cidr" {
+  type        = string
+  default     = null
+  description = "The CIDR of the secondary cluster subnetwork. This should be a subset of secondary_network_cidr_range to leave space for other use cases."
 }
 
 variable "secondary_cidr_range_services" {
