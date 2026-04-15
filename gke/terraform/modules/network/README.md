@@ -44,6 +44,7 @@ No modules.
 
 | Name | Description |
 |------|-------------|
+| <a name="output_network_id"></a> [network\_id](#output\_network\_id) | n/a |
 | <a name="output_network_name"></a> [network\_name](#output\_network\_name) | n/a |
 | <a name="output_secondary_cidr_range_name_pods"></a> [secondary\_cidr\_range\_name\_pods](#output\_secondary\_cidr\_range\_name\_pods) | n/a |
 | <a name="output_secondary_range_name_messaging_pods"></a> [secondary\_range\_name\_messaging\_pods](#output\_secondary\_range\_name\_messaging\_pods) | n/a |

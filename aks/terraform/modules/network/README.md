@@ -51,5 +51,5 @@ No modules.
 | <a name="output_route_table_id"></a> [route\_table\_id](#output\_route\_table\_id) | n/a |
 | <a name="output_secondary_subnet_id"></a> [secondary\_subnet\_id](#output\_secondary\_subnet\_id) | n/a |
 | <a name="output_subnet_id"></a> [subnet\_id](#output\_subnet\_id) | n/a |
-| <a name="output_virtual_network_name"></a> [virtual\_network\_name](#output\_virtual\_network\_name) | n/a |
+| <a name="output_virtual_network_id"></a> [virtual\_network\_id](#output\_virtual\_network\_id) | n/a |
 <!-- END_TF_DOCS -->
