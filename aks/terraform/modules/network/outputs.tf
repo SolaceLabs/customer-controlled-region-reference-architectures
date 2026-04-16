@@ -2,8 +2,8 @@ output "subnet_id" {
   value = var.create_network ? azurerm_subnet.cluster[0].id : null
 }
 
-output "secondary_subnet_id" {
-  value = var.create_network && var.secondary_vnet_cidr != null ? azurerm_subnet.cluster_secondary[0].id : null
+output "database_subnet_id" {
+  value = var.create_network && var.database_vnet_cidr != null ? azurerm_subnet.database[0].id : null
 }
 
 output "route_table_id" {

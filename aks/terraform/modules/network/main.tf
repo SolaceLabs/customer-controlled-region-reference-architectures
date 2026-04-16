@@ -5,7 +5,7 @@ resource "azurerm_virtual_network" "this" {
   location            = var.region
   resource_group_name = var.resource_group_name
   tags                = var.common_tags
-  address_space       = var.secondary_vnet_cidr != null ? [var.vnet_cidr, var.secondary_vnet_cidr] : [var.vnet_cidr]
+  address_space       = var.database_vnet_cidr != null ? [var.vnet_cidr, var.database_vnet_cidr] : [var.vnet_cidr]
 
   lifecycle {
     precondition {
@@ -14,8 +14,8 @@ resource "azurerm_virtual_network" "this" {
     }
 
     precondition {
-      condition     = var.secondary_vnet_cidr == null || can(cidrhost(var.secondary_vnet_cidr, 0))
-      error_message = "A valid IPv4 CIDR must be provided for 'secondary_vnet_cidr' variable if it is not null."
+      condition     = var.database_vnet_cidr == null || can(cidrhost(var.database_vnet_cidr, 0))
+      error_message = "A valid IPv4 CIDR must be provided for 'database_vnet_cidr' variable if it is not null."
     }
   }
 }
@@ -66,30 +66,30 @@ resource "azurerm_route" "cluster" {
   next_hop_type       = "VnetLocal"
 }
 
-resource "azurerm_route" "cluster_secondary" {
-  count = var.create_network && var.secondary_vnet_cidr != null ? 1 : 0
+resource "azurerm_route" "database" {
+  count = var.create_network && var.database_vnet_cidr != null ? 1 : 0
 
-  name                = "local-secondary"
+  name                = "database"
   resource_group_name = var.resource_group_name
   route_table_name    = azurerm_route_table.cluster[0].name
-  address_prefix      = var.secondary_vnet_cidr
+  address_prefix      = var.database_vnet_cidr
   next_hop_type       = "VnetLocal"
 }
 
-resource "azurerm_subnet" "cluster_secondary" {
+resource "azurerm_subnet" "database" {
   #checkov:skip=CKV2_AZURE_31:AKS manages the NSGs appled to worker nodes - having one on the subnet would require either manual management or overly permissive rules that would defeat the purpose
 
-  count = var.create_network && var.secondary_vnet_cidr != null ? 1 : 0
+  count = var.create_network && var.database_vnet_cidr != null ? 1 : 0
 
-  name                 = "cluster-secondary"
+  name                 = "database"
   resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.this[0].name
-  address_prefixes     = [var.secondary_cluster_subnet_cidr]
+  address_prefixes     = [var.database_subnet_cidr]
 
   private_endpoint_network_policies = "Disabled"
 
   dynamic "delegation" {
-    for_each = var.secondary_cluster_subnet_delegation != null ? [var.secondary_cluster_subnet_delegation] : []
+    for_each = var.database_subnet_delegation != null ? [var.database_subnet_delegation] : []
     content {
       name = delegation.value.name
       service_delegation {
@@ -103,20 +103,20 @@ resource "azurerm_subnet" "cluster_secondary" {
 
   lifecycle {
     precondition {
-      condition     = var.secondary_cluster_subnet_cidr != null
-      error_message = "A valid IPv4 CIDR must be provided for 'secondary_cluster_subnet_cidr' variable when secondary_vnet_cidr is set."
+      condition     = var.database_subnet_cidr != null
+      error_message = "A valid IPv4 CIDR must be provided for 'database_subnet_cidr' variable when database_vnet_cidr is set."
     }
 
     precondition {
-      condition     = can(cidrhost(var.secondary_cluster_subnet_cidr, 0))
-      error_message = "A valid IPv4 CIDR must be provided for 'secondary_cluster_subnet_cidr' variable."
+      condition     = can(cidrhost(var.database_subnet_cidr, 0))
+      error_message = "A valid IPv4 CIDR must be provided for 'database_subnet_cidr' variable."
     }
   }
 }
 
-resource "azurerm_subnet_route_table_association" "cluster_secondary" {
-  count = var.create_network && var.secondary_vnet_cidr != null ? 1 : 0
+resource "azurerm_subnet_route_table_association" "database" {
+  count = var.create_network && var.database_vnet_cidr != null ? 1 : 0
 
-  subnet_id      = azurerm_subnet.cluster_secondary[0].id
+  subnet_id      = azurerm_subnet.database[0].id
   route_table_id = azurerm_route_table.cluster[0].id
 }

@@ -15,10 +15,10 @@ variable "vpc_cidr" {
   description = "The CIDR of the cluster's VPC."
 }
 
-variable "secondary_vpc_cidr" {
+variable "database_vpc_cidr" {
   type        = string
   default     = null
-  description = "An optional secondary CIDR block to associate with the cluster's VPC. This can be used to expand the cluster's available IP address space without needing to create a new VPC and migrate resources."
+  description = "An optional database CIDR block to associate with the cluster's VPC. This can be used for database subnets that are isolated from the internet."
 }
 
 variable "public_subnet_cidrs" {
@@ -39,8 +39,8 @@ variable "preferred_availability_zone_ids" {
   description = "The preferred availability zones to use for the created subnets, specified by ZoneId (eg. 'use1-az1') -- not ZoneName (eg. 'us-east-1a'). If no specific zones are required, leave empty."
 }
 
-variable "secondary_private_subnet_cidrs" {
+variable "database_private_subnet_cidrs" {
   type        = list(string)
   default     = []
-  description = "The CIDRs of the three private subnets from the secondary CIDR block. These will contain worker nodes and internal load-balancer ENIs (if desired). These subnets will use the same NAT gateways as the primary private subnets."
+  description = "The CIDRs of the three database private subnets from the database CIDR block. These subnets are isolated without internet access for enhanced security."
 }

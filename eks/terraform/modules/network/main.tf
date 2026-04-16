@@ -42,16 +42,16 @@ resource "aws_vpc" "this" {
   }
 }
 
-resource "aws_vpc_ipv4_cidr_block_association" "secondary" {
-  count = var.create_network && var.secondary_vpc_cidr != null ? 1 : 0
+resource "aws_vpc_ipv4_cidr_block_association" "database" {
+  count = var.create_network && var.database_vpc_cidr != null ? 1 : 0
 
   vpc_id     = aws_vpc.this[0].id
-  cidr_block = var.secondary_vpc_cidr
+  cidr_block = var.database_vpc_cidr
 
   lifecycle {
     precondition {
-      condition     = can(cidrhost(var.secondary_vpc_cidr, 0))
-      error_message = "A valid IPv4 CIDR must be provided for 'secondary_vpc_cidr' variable if it is not null."
+      condition     = can(cidrhost(var.database_vpc_cidr, 0))
+      error_message = "A valid IPv4 CIDR must be provided for 'database_vpc_cidr' variable if it is not null."
     }
   }
 }
@@ -159,46 +159,41 @@ resource "aws_route_table_association" "private" {
   route_table_id = aws_route_table.private[count.index].id
 }
 
-# Secondary CIDR Private Subnets
-resource "aws_subnet" "secondary_private" {
-  count             = var.create_network && var.secondary_vpc_cidr != null ? 3 : 0
+# Database Private Subnets
+resource "aws_subnet" "database_private" {
+  count             = var.create_network && var.database_vpc_cidr != null ? 3 : 0
   vpc_id            = aws_vpc.this[0].id
-  cidr_block        = var.secondary_private_subnet_cidrs[count.index]
+  cidr_block        = var.database_private_subnet_cidrs[count.index]
   availability_zone = local.selected_availability_zones.names[count.index]
 
   tags = {
-    Name = "${var.cluster_name}-secondary-private-${count.index}"
+    Name = "${var.cluster_name}-database-private-${count.index}"
   }
 
-  depends_on = [aws_vpc_ipv4_cidr_block_association.secondary]
+  depends_on = [aws_vpc_ipv4_cidr_block_association.database]
 
   lifecycle {
     precondition {
-      condition     = length(var.secondary_private_subnet_cidrs) == 3
-      error_message = "Three valid IPv4 CIDRs must be provided in the 'secondary_private_subnet_cidrs' variable when secondary_vpc_cidr is set."
+      condition     = length(var.database_private_subnet_cidrs) == 3
+      error_message = "Three valid IPv4 CIDRs must be provided in the 'database_private_subnet_cidrs' variable when database_vpc_cidr is set."
     }
   }
 }
 
-# Route Tables for Secondary Private Subnets (route to primary NAT gateways)
-resource "aws_route_table" "secondary_private" {
-  count  = var.create_network && var.secondary_vpc_cidr != null ? 3 : 0
+# Route Tables for Database Private Subnets (no internet access)
+resource "aws_route_table" "database_private" {
+  count  = var.create_network && var.database_vpc_cidr != null ? 3 : 0
   vpc_id = aws_vpc.this[0].id
 
-  route {
-    cidr_block     = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat[count.index].id
-  }
-
   tags = {
-    Name = "${var.cluster_name}-secondary-private-${count.index}"
+    Name = "${var.cluster_name}-database-private-${count.index}"
   }
 }
 
-# Route Table Associations for Secondary Private Subnets
-resource "aws_route_table_association" "secondary_private" {
-  count = var.create_network && var.secondary_vpc_cidr != null ? length(aws_subnet.secondary_private) : 0
+# Route Table Associations for Database Private Subnets
+resource "aws_route_table_association" "database_private" {
+  count = var.create_network && var.database_vpc_cidr != null ? length(aws_subnet.database_private) : 0
 
-  subnet_id      = aws_subnet.secondary_private[count.index].id
-  route_table_id = aws_route_table.secondary_private[count.index].id
+  subnet_id      = aws_subnet.database_private[count.index].id
+  route_table_id = aws_route_table.database_private[count.index].id
 }

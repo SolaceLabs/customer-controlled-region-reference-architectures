@@ -31,10 +31,10 @@ variable "vnet_cidr" {
   description = "The CIDR of the cluster's VNET."
 }
 
-variable "secondary_vnet_cidr" {
+variable "database_vnet_cidr" {
   type        = string
   default     = null
-  description = "An optional secondary CIDR block to associate with the cluster's VNET. This can be used to expand the cluster's available IP address space without needing to create a new VNET and migrate resources."
+  description = "An optional database CIDR block to associate with the cluster's VNET. This can be used to expand the cluster's available IP address space without needing to create a new VNET and migrate resources."
 }
 
 variable "cluster_subnet_cidr" {
@@ -43,13 +43,13 @@ variable "cluster_subnet_cidr" {
   description = "The CIDR of the cluster's subnet."
 }
 
-variable "secondary_cluster_subnet_cidr" {
+variable "database_subnet_cidr" {
   type        = string
   default     = null
-  description = "The CIDR of the secondary cluster subnet. Required when secondary_vnet_cidr is set."
+  description = "The CIDR of the database subnet. Required when database_vnet_cidr is set."
 }
 
-variable "secondary_cluster_subnet_delegation" {
+variable "database_subnet_delegation" {
   type = object({
     name = string
     service_delegation = object({
@@ -58,5 +58,5 @@ variable "secondary_cluster_subnet_delegation" {
     })
   })
   default     = null
-  description = "Optional delegation configuration for the secondary cluster subnet."
+  description = "Optional delegation configuration for the database subnet."
 }
