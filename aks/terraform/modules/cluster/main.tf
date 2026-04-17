@@ -44,6 +44,8 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   local_account_disabled  = var.local_account_disabled
   node_os_upgrade_channel = "None"
 
+  oidc_issuer_enabled = true
+
   api_server_access_profile {
     authorized_ip_ranges = var.kubernetes_api_public_access ? var.kubernetes_api_authorized_networks : null
   }
