@@ -15,6 +15,12 @@ variable "vpc_cidr" {
   description = "The CIDR of the cluster's VPC."
 }
 
+variable "database_vpc_cidr" {
+  type        = string
+  default     = null
+  description = "An optional database CIDR block to associate with the cluster's VPC. This can be used for database subnets that are isolated from the internet."
+}
+
 variable "public_subnet_cidrs" {
   type        = list(string)
   default     = []
@@ -31,4 +37,10 @@ variable "preferred_availability_zone_ids" {
   type        = list(string)
   default     = []
   description = "The preferred availability zones to use for the created subnets, specified by ZoneId (eg. 'use1-az1') -- not ZoneName (eg. 'us-east-1a'). If no specific zones are required, leave empty."
+}
+
+variable "database_private_subnet_cidrs" {
+  type        = list(string)
+  default     = []
+  description = "The CIDRs of the three database private subnets from the database CIDR block. These subnets are isolated without internet access for enhanced security."
 }

@@ -25,6 +25,7 @@ No modules.
 | [google_compute_router.router](https://registry.terraform.io/providers/hashicorp/google/6.42.0/docs/resources/compute_router) | resource |
 | [google_compute_router_nat.nat](https://registry.terraform.io/providers/hashicorp/google/6.42.0/docs/resources/compute_router_nat) | resource |
 | [google_compute_subnetwork.cluster](https://registry.terraform.io/providers/hashicorp/google/6.42.0/docs/resources/compute_subnetwork) | resource |
+| [google_compute_subnetwork.secondary](https://registry.terraform.io/providers/hashicorp/google/6.42.0/docs/resources/compute_subnetwork) | resource |
 
 ## Inputs
 
@@ -36,14 +37,18 @@ No modules.
 | <a name="input_secondary_cidr_range_messaging_pods"></a> [secondary\_cidr\_range\_messaging\_pods](#input\_secondary\_cidr\_range\_messaging\_pods) | The secondary CIDR range for the cluster's messaging node pools, if a separate range is desired. | `string` | `null` | no |
 | <a name="input_secondary_cidr_range_pods"></a> [secondary\_cidr\_range\_pods](#input\_secondary\_cidr\_range\_pods) | The secondary CIDR range for the cluster's pods. If a separate CIDR range is provided for messaging pods, this range will be used for just the system (default) node pool. | `string` | `null` | no |
 | <a name="input_secondary_cidr_range_services"></a> [secondary\_cidr\_range\_services](#input\_secondary\_cidr\_range\_services) | The secondary CIDR range for the cluster's services. | `string` | `null` | no |
+| <a name="input_secondary_cluster_subnetwork_cidr"></a> [secondary\_cluster\_subnetwork\_cidr](#input\_secondary\_cluster\_subnetwork\_cidr) | The CIDR of the secondary cluster subnetwork. This should be a subset of secondary\_network\_cidr\_range to leave space for other use cases. | `string` | `null` | no |
+| <a name="input_secondary_network_cidr_range"></a> [secondary\_network\_cidr\_range](#input\_secondary\_network\_cidr\_range) | An optional secondary CIDR block for the cluster's VPC. This can be used to expand the cluster's available IP address space without needing to create a new VPC and migrate resources. | `string` | `null` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| <a name="output_network_id"></a> [network\_id](#output\_network\_id) | n/a |
 | <a name="output_network_name"></a> [network\_name](#output\_network\_name) | n/a |
 | <a name="output_secondary_cidr_range_name_pods"></a> [secondary\_cidr\_range\_name\_pods](#output\_secondary\_cidr\_range\_name\_pods) | n/a |
 | <a name="output_secondary_range_name_messaging_pods"></a> [secondary\_range\_name\_messaging\_pods](#output\_secondary\_range\_name\_messaging\_pods) | n/a |
 | <a name="output_secondary_range_name_services"></a> [secondary\_range\_name\_services](#output\_secondary\_range\_name\_services) | n/a |
+| <a name="output_secondary_subnetwork_name"></a> [secondary\_subnetwork\_name](#output\_secondary\_subnetwork\_name) | n/a |
 | <a name="output_subnetwork_name"></a> [subnetwork\_name](#output\_subnetwork\_name) | n/a |
 <!-- END_TF_DOCS -->
