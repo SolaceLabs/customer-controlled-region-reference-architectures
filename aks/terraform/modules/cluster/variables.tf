@@ -127,3 +127,9 @@ variable "worker_node_os_disk_type" {
   default     = "Ephemeral"
   description = "The type of the OS disk for the worker nodes in the default (system) node pool."
 }
+
+variable "enable_workload_identity" {
+  type        = bool
+  default     = false
+  description = "Whether to enable workload identity for the cluster. If enabled, this will create a federated identity credential in the cluster's user assigned identity that allows service accounts in the cluster to authenticate with Azure AD and obtain tokens for accessing other Azure resources."
+}

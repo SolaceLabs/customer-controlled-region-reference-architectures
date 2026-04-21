@@ -46,6 +46,8 @@ resource "azurerm_kubernetes_cluster" "cluster" {
 
   oidc_issuer_enabled = true
 
+  workload_identity_enabled = var.enable_workload_identity
+
   api_server_access_profile {
     authorized_ip_ranges = var.kubernetes_api_public_access ? var.kubernetes_api_authorized_networks : null
   }
