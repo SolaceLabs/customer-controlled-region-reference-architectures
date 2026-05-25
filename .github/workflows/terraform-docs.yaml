@@ -30,7 +30,12 @@ jobs:
         with:
           working-dir: ./gke/terraform
           config-file: ./gke/terraform/.terraform-docs.yaml
-      
+      - name: Generate terraform-docs for SKE
+        uses: terraform-docs/gh-actions@v1.0.0
+        with:
+          working-dir: ./ske/terraform
+          config-file: ./ske/terraform/.terraform-docs.yaml
+
       - name: Fix permissions
         run: sudo chmod -R ugo+rwX .
 
@@ -41,4 +46,4 @@ jobs:
           title: Automated updates to Terraform Docs
           branch: automated/terraform-docs
           body: |
-            Automated updates to Terraform Docs for EKS, AKS, and GKE
+            Automated updates to Terraform Docs for EKS, AKS, GKE, and SKE
