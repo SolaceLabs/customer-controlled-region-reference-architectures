@@ -118,12 +118,12 @@ variable "bastion_image_id" {
 
 variable "bastion_ssh_source_cidr" {
   type        = string
-  default     = ""
-  description = "Source CIDR allowed to SSH to the bastion (port 22). Required when create_bastion is true."
+  default     = "0.0.0.0/0"
+  description = "Source CIDR allowed to SSH to the bastion (port 22)."
 }
 
 variable "bastion_icmp_source_cidr" {
   type        = string
-  default     = ""
-  description = "Source CIDR allowed to send ICMP echo (ping) to the bastion. Leave empty to omit the ICMP ingress rule entirely."
+  default     = "0.0.0.0/0"
+  description = "Source CIDR allowed to send ICMP echo (ping) to the bastion."
 }
