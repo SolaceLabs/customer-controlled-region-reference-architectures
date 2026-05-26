@@ -34,11 +34,11 @@ module "network" {
 
 module "bastion" {
   source = "./modules/bastion"
+  count  = var.create_bastion ? 1 : 0
 
-  cluster_name   = var.cluster_name
-  project_id     = stackit_resourcemanager_project.cluster.project_id
-  network_id     = module.network.network_id
-  create_bastion = var.create_bastion
+  cluster_name = var.cluster_name
+  project_id   = stackit_resourcemanager_project.cluster.project_id
+  network_id   = module.network.network_id
 
   bastion_ssh_public_key   = var.bastion_ssh_public_key
   bastion_image_id         = var.bastion_image_id

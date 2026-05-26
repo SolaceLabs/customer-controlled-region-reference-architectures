@@ -13,22 +13,14 @@ variable "network_id" {
   description = "Network ID for the bastion's NIC."
 }
 
-variable "create_bastion" {
-  type        = bool
-  default     = false
-  description = "Whether to create a bastion host. When false, no resources are created and outputs are null."
-}
-
 variable "bastion_ssh_public_key" {
   type        = string
-  default     = ""
-  description = "SSH public key string installed on the bastion. Required when create_bastion is true."
+  description = "SSH public key string installed on the bastion."
 }
 
 variable "bastion_image_id" {
   type        = string
-  default     = ""
-  description = "STACKIT image UUID for the bastion VM. Required when create_bastion is true. Find current Ubuntu UUIDs via `stackit image list --project-id <any-org-project>` filtered to distro=ubuntu."
+  description = "STACKIT image UUID for the bastion VM. Find current Ubuntu UUIDs via `stackit image list --project-id <any-org-project>` filtered to distro=ubuntu."
 }
 
 variable "machine_type" {

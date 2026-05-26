@@ -1,14 +1,12 @@
 resource "stackit_security_group" "bastion_sg" {
-  count      = var.create_bastion ? 1 : 0
   project_id = var.project_id
   name       = "${var.cluster_name}-bastion-sg"
   stateful   = true
 }
 
 resource "stackit_security_group_rule" "ssh" {
-  count             = var.create_bastion ? 1 : 0
   project_id        = var.project_id
-  security_group_id = stackit_security_group.bastion_sg[0].security_group_id
+  security_group_id = stackit_security_group.bastion_sg.security_group_id
   direction         = "ingress"
   ether_type        = "IPv4"
   port_range = {
@@ -19,19 +17,11 @@ resource "stackit_security_group_rule" "ssh" {
     name = "tcp"
   }
   ip_range = var.bastion_ssh_source_cidr
-
-  lifecycle {
-    precondition {
-      condition     = var.bastion_ssh_source_cidr != ""
-      error_message = "bastion_ssh_source_cidr must be provided if bastion host is being created."
-    }
-  }
 }
 
 resource "stackit_security_group_rule" "icmp" {
-  count             = var.create_bastion && var.bastion_icmp_source_cidr != "" ? 1 : 0
   project_id        = var.project_id
-  security_group_id = stackit_security_group.bastion_sg[0].security_group_id
+  security_group_id = stackit_security_group.bastion_sg.security_group_id
   direction         = "ingress"
   icmp_parameters = {
     code = 0
@@ -44,14 +34,12 @@ resource "stackit_security_group_rule" "icmp" {
 }
 
 resource "stackit_network_interface" "bastion_nic" {
-  count              = var.create_bastion ? 1 : 0
   project_id         = var.project_id
   network_id         = var.network_id
-  security_group_ids = [stackit_security_group.bastion_sg[0].security_group_id]
+  security_group_ids = [stackit_security_group.bastion_sg.security_group_id]
 }
 
 resource "stackit_server" "bastion" {
-  count      = var.create_bastion ? 1 : 0
   project_id = var.project_id
   name       = "${var.cluster_name}-bastion"
   boot_volume = {
@@ -61,20 +49,18 @@ resource "stackit_server" "bastion" {
   }
 
   machine_type = var.machine_type
-  keypair_name = stackit_key_pair.bastion_kp[0].name
+  keypair_name = stackit_key_pair.bastion_kp.name
   network_interfaces = [
-    stackit_network_interface.bastion_nic[0].network_interface_id
+    stackit_network_interface.bastion_nic.network_interface_id
   ]
 }
 
 resource "stackit_public_ip" "bastion_public_ip" {
-  count                = var.create_bastion ? 1 : 0
   project_id           = var.project_id
-  network_interface_id = stackit_network_interface.bastion_nic[0].network_interface_id
+  network_interface_id = stackit_network_interface.bastion_nic.network_interface_id
 }
 
 resource "stackit_key_pair" "bastion_kp" {
-  count      = var.create_bastion ? 1 : 0
   name       = "${var.cluster_name}-bastion-kp"
   public_key = var.bastion_ssh_public_key
 }

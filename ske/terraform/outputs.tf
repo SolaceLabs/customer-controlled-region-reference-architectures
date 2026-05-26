@@ -24,11 +24,11 @@ output "kubernetes_api_public_access" {
 }
 
 output "bastion_public_ip" {
-  value       = module.bastion.bastion_public_ip
+  value       = one(module.bastion[*].bastion_public_ip)
   description = "Public IP of the bastion host (null when create_bastion is false)."
 }
 
 output "bastion_username" {
-  value       = module.bastion.bastion_username
+  value       = one(module.bastion[*].bastion_username)
   description = "SSH username for the bastion host (null when create_bastion is false)."
 }
