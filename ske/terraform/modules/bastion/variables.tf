@@ -45,12 +45,12 @@ variable "boot_volume_size" {
 
 variable "bastion_ssh_source_cidr" {
   type        = string
-  default     = "0.0.0.0/0"
-  description = "Source CIDR allowed to SSH to the bastion (port 22). STACKIT security group rules accept a single CIDR per rule; for multiple sources, extend the module."
+  default     = ""
+  description = "Source CIDR allowed to SSH to the bastion (port 22). Required when create_bastion is true. STACKIT security group rules accept a single CIDR per rule; for multiple sources, extend the module."
 }
 
 variable "bastion_icmp_source_cidr" {
   type        = string
-  default     = "0.0.0.0/0"
-  description = "Source CIDR allowed to send ICMP echo (ping) to the bastion."
+  default     = ""
+  description = "Source CIDR allowed to send ICMP echo (ping) to the bastion. Leave empty to omit the ICMP ingress rule entirely."
 }

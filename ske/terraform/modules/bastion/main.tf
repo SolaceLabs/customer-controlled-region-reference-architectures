@@ -19,10 +19,17 @@ resource "stackit_security_group_rule" "ssh" {
     name = "tcp"
   }
   ip_range = var.bastion_ssh_source_cidr
+
+  lifecycle {
+    precondition {
+      condition     = var.bastion_ssh_source_cidr != ""
+      error_message = "bastion_ssh_source_cidr must be provided if bastion host is being created."
+    }
+  }
 }
 
 resource "stackit_security_group_rule" "icmp" {
-  count             = var.create_bastion ? 1 : 0
+  count             = var.create_bastion && var.bastion_icmp_source_cidr != "" ? 1 : 0
   project_id        = var.project_id
   security_group_id = stackit_security_group.bastion_sg[0].security_group_id
   direction         = "ingress"

@@ -35,10 +35,10 @@
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_additional_sna_ranges"></a> [additional\_sna\_ranges](#input\_additional\_sna\_ranges) | Additional IPv4 prefixes added to the STACKIT Network Area, alongside cluster\_cidr. Commonly used for a VPN gateway range. | `list(string)` | <pre>[<br/>  "10.0.1.0/24"<br/>]</pre> | no |
-| <a name="input_bastion_icmp_source_cidr"></a> [bastion\_icmp\_source\_cidr](#input\_bastion\_icmp\_source\_cidr) | Source CIDR allowed to send ICMP echo (ping) to the bastion. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_bastion_icmp_source_cidr"></a> [bastion\_icmp\_source\_cidr](#input\_bastion\_icmp\_source\_cidr) | Source CIDR allowed to send ICMP echo (ping) to the bastion. Leave empty to omit the ICMP ingress rule entirely. | `string` | `""` | no |
 | <a name="input_bastion_image_id"></a> [bastion\_image\_id](#input\_bastion\_image\_id) | STACKIT image UUID for the bastion VM. Required when create\_bastion is true. Find current Ubuntu UUIDs via `stackit image list --project-id <any-org-project>` filtered to distro=ubuntu. | `string` | `""` | no |
 | <a name="input_bastion_ssh_public_key"></a> [bastion\_ssh\_public\_key](#input\_bastion\_ssh\_public\_key) | SSH public key string installed on the bastion. Required when create\_bastion is true. | `string` | `""` | no |
-| <a name="input_bastion_ssh_source_cidr"></a> [bastion\_ssh\_source\_cidr](#input\_bastion\_ssh\_source\_cidr) | Source CIDR allowed to SSH to the bastion (port 22). | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_bastion_ssh_source_cidr"></a> [bastion\_ssh\_source\_cidr](#input\_bastion\_ssh\_source\_cidr) | Source CIDR allowed to SSH to the bastion (port 22). Required when create\_bastion is true. | `string` | `""` | no |
 | <a name="input_cluster_cidr"></a> [cluster\_cidr](#input\_cluster\_cidr) | IPv4 CIDR for the cluster network. | `string` | `"10.0.0.0/24"` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name used for the SKE cluster, project, and as a prefix for network resources. Max 11 characters (STACKIT SKE limit). | `string` | n/a | yes |
 | <a name="input_create_bastion"></a> [create\_bastion](#input\_create\_bastion) | Whether to create a bastion host with a public IP. | `bool` | `false` | no |
