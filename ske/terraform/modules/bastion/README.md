@@ -32,10 +32,10 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
-| <a name="input_bastion_icmp_source_cidr"></a> [bastion\_icmp\_source\_cidr](#input\_bastion\_icmp\_source\_cidr) | Source CIDR allowed to send ICMP echo (ping) to the bastion. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_bastion_icmp_source_cidr"></a> [bastion\_icmp\_source\_cidr](#input\_bastion\_icmp\_source\_cidr) | Source CIDR allowed to send ICMP echo (ping) to the bastion. Leave empty to omit the ICMP ingress rule entirely. | `string` | `""` | no |
 | <a name="input_bastion_image_id"></a> [bastion\_image\_id](#input\_bastion\_image\_id) | STACKIT image UUID for the bastion VM. Find current Ubuntu UUIDs via `stackit image list --project-id <any-org-project>` filtered to distro=ubuntu. | `string` | n/a | yes |
 | <a name="input_bastion_ssh_public_key"></a> [bastion\_ssh\_public\_key](#input\_bastion\_ssh\_public\_key) | SSH public key string installed on the bastion. | `string` | n/a | yes |
-| <a name="input_bastion_ssh_source_cidr"></a> [bastion\_ssh\_source\_cidr](#input\_bastion\_ssh\_source\_cidr) | Source CIDR allowed to SSH to the bastion (port 22). STACKIT security group rules accept a single CIDR per rule; for multiple sources, extend the module. | `string` | `"0.0.0.0/0"` | no |
+| <a name="input_bastion_ssh_source_cidr"></a> [bastion\_ssh\_source\_cidr](#input\_bastion\_ssh\_source\_cidr) | Source CIDR allowed to SSH to the bastion (port 22). Must be non-empty when the bastion is created. STACKIT security group rules accept a single CIDR per rule; for multiple sources, extend the module. | `string` | `""` | no |
 | <a name="input_boot_volume_size"></a> [boot\_volume\_size](#input\_boot\_volume\_size) | Boot volume size in GiB for the bastion host. | `number` | `16` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Cluster name. Used as a prefix for bastion resource names (e.g. cluster\_name + '-bastion', cluster\_name + '-bastion-sg', cluster\_name + '-bastion-kp'). | `string` | n/a | yes |
 | <a name="input_machine_type"></a> [machine\_type](#input\_machine\_type) | STACKIT VM flavor for the bastion host. | `string` | `"g2i.1"` | no |
