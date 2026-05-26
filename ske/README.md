@@ -70,7 +70,7 @@ Each pool's nodes use a 50 GiB boot volume on the `storage_premium_perf2` perfor
 There are two options for cluster access:
 
  * A **bastion host** (opt-in via `create_bastion = true`) with a public IP, accessible via SSH from provided source CIDRs. The bastion image is referenced by UUID — the Terraform doesn't dynamically look it up because the lookup requires a project that hasn't been created yet at plan time. Set `bastion_image_id` to a current Ubuntu image UUID (find one via `stackit image list`).
- * The cluster's Kubernetes API can be set to **PUBLIC** (the default, accessible from the internet) or **PRIVATE** via `kubernetes_api_access_scope`. When PRIVATE, access requires going through the bastion's network.
+ * The cluster's Kubernetes API can be set to **PUBLIC** (the default, accessible from the internet) or **SNA** via `kubernetes_api_access_scope`. When SNA, access is restricted to the STACKIT Network Area the cluster is bound to, which typically requires going through the bastion's network.
 
 ## Usage of Terraform for STACKIT Kubernetes Engine <a name="ske-usage"></a>
 

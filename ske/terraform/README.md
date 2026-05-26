@@ -42,7 +42,7 @@
 | <a name="input_cluster_cidr"></a> [cluster\_cidr](#input\_cluster\_cidr) | IPv4 CIDR for the cluster network. | `string` | `"10.0.0.0/24"` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name used for the SKE cluster, project, and as a prefix for network resources. Max 11 characters (STACKIT SKE limit). | `string` | n/a | yes |
 | <a name="input_create_bastion"></a> [create\_bastion](#input\_create\_bastion) | Whether to create a bastion host with a public IP. | `bool` | `false` | no |
-| <a name="input_kubernetes_api_access_scope"></a> [kubernetes\_api\_access\_scope](#input\_kubernetes\_api\_access\_scope) | Control plane access scope. PUBLIC exposes the Kubernetes API to the internet; PRIVATE restricts to the cluster network. | `string` | `"PUBLIC"` | no |
+| <a name="input_kubernetes_api_access_scope"></a> [kubernetes\_api\_access\_scope](#input\_kubernetes\_api\_access\_scope) | Control plane access scope. PUBLIC exposes the Kubernetes API to the internet; SNA restricts access to the STACKIT Network Area the cluster is bound to. | `string` | `"PUBLIC"` | no |
 | <a name="input_network_dns_servers"></a> [network\_dns\_servers](#input\_network\_dns\_servers) | IPv4 nameservers configured on the cluster network. | `list(string)` | <pre>[<br/>  "8.8.8.8",<br/>  "8.8.4.4"<br/>]</pre> | no |
 | <a name="input_node_pool_max_size"></a> [node\_pool\_max\_size](#input\_node\_pool\_max\_size) | Maximum number of nodes for messaging and monitoring node pools. | `number` | `10` | no |
 | <a name="input_node_pool_volume_size"></a> [node\_pool\_volume\_size](#input\_node\_pool\_volume\_size) | Root volume size in GiB for each node pool. Default is sized for Solace Cloud broker workloads. | `number` | `50` | no |

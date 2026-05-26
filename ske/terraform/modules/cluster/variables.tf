@@ -26,10 +26,10 @@ variable "node_pools" {
 variable "kubernetes_api_access_scope" {
   type        = string
   default     = "PUBLIC"
-  description = "Control plane access scope. PUBLIC exposes the Kubernetes API to the internet; PRIVATE restricts access to the cluster network."
+  description = "Control plane access scope. PUBLIC exposes the Kubernetes API to the internet; SNA restricts access to the STACKIT Network Area the cluster is bound to."
 
   validation {
-    condition     = contains(["PUBLIC", "PRIVATE"], var.kubernetes_api_access_scope)
-    error_message = "kubernetes_api_access_scope must be PUBLIC or PRIVATE."
+    condition     = contains(["PUBLIC", "SNA"], var.kubernetes_api_access_scope)
+    error_message = "kubernetes_api_access_scope must be PUBLIC or SNA."
   }
 }

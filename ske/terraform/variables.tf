@@ -63,7 +63,7 @@ variable "network_dns_servers" {
 variable "kubernetes_api_access_scope" {
   type        = string
   default     = "PUBLIC"
-  description = "Control plane access scope. PUBLIC exposes the Kubernetes API to the internet; PRIVATE restricts to the cluster network."
+  description = "Control plane access scope. PUBLIC exposes the Kubernetes API to the internet; SNA restricts access to the STACKIT Network Area the cluster is bound to."
 }
 
 ################################################################################
