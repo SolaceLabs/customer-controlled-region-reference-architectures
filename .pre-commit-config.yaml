@@ -23,3 +23,6 @@ repos:
     - name: Run terraform-docs for GKE
       id: terraform-docs-go
       args: ["./gke/terraform", "--lockfile=false"]
+    - name: Run terraform-docs for SKE
+      id: terraform-docs-go
+      args: ["./ske/terraform", "--lockfile=false"]
