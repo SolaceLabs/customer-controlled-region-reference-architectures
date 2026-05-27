@@ -20,7 +20,7 @@ module "network" {
 
   organization_id       = var.organization_id
   project_id            = stackit_resourcemanager_project.cluster.project_id
-  cluster_name          = var.cluster_name
+  name                  = var.cluster_name
   region                = var.region
   cluster_cidr          = var.cluster_cidr
   additional_sna_ranges = var.additional_sna_ranges
