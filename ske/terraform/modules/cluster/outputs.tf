@@ -22,7 +22,3 @@ output "egress_address_ranges" {
   value       = stackit_ske_cluster.this.egress_address_ranges
   description = "Outgoing network ranges (CIDR) of traffic originating from cluster workloads."
 }
-
-# TODO(DATAGO-137471): oidc_issuer_url and api_server_endpoint are not exposed
-# by stackit_ske_cluster. Surface via kubeconfig parsing or upstream provider
-# feature request. Needed by WIF work in DATAGO-135999.
