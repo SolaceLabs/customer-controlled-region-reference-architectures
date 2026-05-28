@@ -69,7 +69,7 @@ The VM sizes, labels, and taints for each event broker service node pool are as 
 
 #### Bastion host
 
-A bastion host (opt-in via `create_bastion = true`) with a public IP, accessible via SSH from provided source CIDRs. The bastion image is referenced by UUID — the Terraform doesn't dynamically look it up because the lookup requires a project that hasn't been created yet at plan time. Set `bastion_image_id` to a current Ubuntu image UUID (find one via `stackit image list`).
+A bastion host (opt-in via `create_bastion = true`) with a public IP, accessible via SSH from provided source CIDRs. The latest Ubuntu image in the project is auto-detected via the `stackit_image_v2` data source; set `bastion_image_id` to pin a specific image UUID instead.
 
 #### Kubernetes API access
 
@@ -95,7 +95,7 @@ The following section is an overview of the steps to use this Terraform. Before 
 To use this Terraform module, the following is required:
 
 * Terraform 1.3 or above (we recommend [tfenv](https://github.com/tfutils/tfenv) for Terraform version management)
-* [STACKIT CLI](https://github.com/stackitcloud/stackit-cli) for discovering image UUIDs and pulling kubeconfigs
+* [STACKIT CLI](https://github.com/stackitcloud/stackit-cli) for pulling kubeconfigs
 * [yq](https://github.com/mikefarah/yq#install)
 * [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
 * [helm](https://helm.sh/docs/intro/install/)
@@ -109,13 +109,7 @@ To use this Terraform module, the following is required:
     export STACKIT_SERVICE_ACCOUNT_KEY_PATH=/path/to/credentials.json
     ```
 
-2. Find a current Ubuntu image UUID for the bastion (only needed if `create_bastion = true`):
-
-    ```bash
-    stackit image list --project-id <any-existing-org-project> | grep -i ubuntu
-    ```
-
-3. Navigate to the `terraform/` directory and create a `terraform.tfvars` file with the required variables. See the Terraform [README.md](terraform/README.md) for a full list of variables.
+2. Navigate to the `terraform/` directory and create a `terraform.tfvars` file with the required variables. See the Terraform [README.md](terraform/README.md) for a full list of variables.
 
     For example:
 
@@ -131,19 +125,18 @@ To use this Terraform module, the following is required:
     kubernetes_version = "1.32"
 
     create_bastion          = true
-    bastion_image_id        = "<uuid from step 2>"
     bastion_ssh_public_key  = "ssh-rsa abc123..."
     bastion_ssh_source_cidr = "192.168.1.1/32"
     ```
 
-4. Apply the Terraform:
+3. Apply the Terraform:
 
     ```bash
     terraform init
     terraform apply
     ```
 
-5. After you create the cluster, set up access:
+4. After you create the cluster, set up access:
 
     * On the default private API setting (`kubernetes_api_public_access = false`), reach the cluster through the bastion. Use the `connect.sh` script to open a tunnel and set up your environment:
 

@@ -2,7 +2,7 @@
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
 
 ## Providers
@@ -20,7 +20,7 @@ No resources.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_allow_system_components"></a> [allow\_system\_components](#input\_allow\_system\_components) | StackIT-specific flag. Set to true only for the system pool that hosts cluster system workloads (CoreDNS, etc.). | `bool` | `false` | no |
 | <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | Zone suffixes. One node pool config object is produced per zone. Examples: ['1', '2'] for messaging, ['3'] for monitoring, ['m'] for metro / system. | `list(string)` | n/a | yes |
 | <a name="input_machine_type"></a> [machine\_type](#input\_machine\_type) | StackIT VM flavor (e.g. m2i.2). | `string` | n/a | yes |
@@ -38,6 +38,6 @@ No resources.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_node_pools"></a> [node\_pools](#output\_node\_pools) | List of node pool config objects, one per zone in var.availability\_zones. Shape matches the schema expected by stackit\_ske\_cluster.node\_pools. Calling code uses concat() to assemble multiple module outputs into the cluster's full node\_pools argument. |
 <!-- END_TF_DOCS -->

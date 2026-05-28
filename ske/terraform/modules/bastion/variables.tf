@@ -20,7 +20,7 @@ variable "bastion_ssh_public_key" {
 
 variable "bastion_image_id" {
   type        = string
-  description = "STACKIT image UUID for the bastion VM. Find current Ubuntu UUIDs via `stackit image list --project-id <any-org-project>` filtered to distro=ubuntu."
+  description = "STACKIT image UUID for the bastion VM."
 }
 
 variable "machine_type" {

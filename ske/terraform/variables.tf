@@ -158,7 +158,7 @@ variable "bastion_ssh_public_key" {
 variable "bastion_image_id" {
   type        = string
   default     = ""
-  description = "STACKIT image UUID for the bastion VM. Required when create_bastion is true. Find current Ubuntu UUIDs via `stackit image list --project-id <any-org-project>` filtered to distro=ubuntu."
+  description = "STACKIT image UUID for the bastion VM. Optional: when empty, the latest Ubuntu image in the project is auto-detected via the stackit_image_v2 data source. Set this to pin a specific image UUID."
 }
 
 variable "bastion_ssh_source_cidr" {

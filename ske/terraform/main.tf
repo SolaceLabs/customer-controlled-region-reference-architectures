@@ -36,6 +36,17 @@ module "network" {
 # Bastion
 ################################################################################
 
+data "stackit_image_v2" "bastion" {
+  count      = var.create_bastion ? 1 : 0
+  project_id = stackit_resourcemanager_project.cluster.project_id
+
+  filter = {
+    distro = "ubuntu"
+  }
+
+  depends_on = [stackit_resourcemanager_project.cluster]
+}
+
 module "bastion" {
   source = "./modules/bastion"
   count  = var.create_bastion ? 1 : 0
@@ -45,7 +56,7 @@ module "bastion" {
   network_id   = module.network.network_id
 
   bastion_ssh_public_key   = var.bastion_ssh_public_key
-  bastion_image_id         = var.bastion_image_id
+  bastion_image_id         = var.bastion_image_id != "" ? var.bastion_image_id : split(",", data.stackit_image_v2.bastion[0].id)[2]
   bastion_ssh_source_cidr  = var.bastion_ssh_source_cidr
   bastion_icmp_source_cidr = var.bastion_icmp_source_cidr
   common_labels            = var.common_labels
