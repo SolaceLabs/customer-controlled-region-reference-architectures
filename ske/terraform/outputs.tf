@@ -18,9 +18,24 @@ output "cluster_name" {
   description = "Name of the SKE cluster."
 }
 
+output "current_kubernetes_version" {
+  value       = module.cluster.kubernetes_version_used
+  description = "Kubernetes version currently in use by the cluster."
+}
+
+output "pod_address_ranges" {
+  value       = module.cluster.pod_address_ranges
+  description = "Network ranges (CIDR) used by pods in the cluster."
+}
+
+output "egress_address_ranges" {
+  value       = module.cluster.egress_address_ranges
+  description = "Outgoing network ranges (CIDR) of traffic originating from cluster workloads."
+}
+
 output "kubernetes_api_public_access" {
-  value       = var.kubernetes_api_access_scope == "PUBLIC"
-  description = "Whether the cluster's Kubernetes API is publicly accessible. Derived from kubernetes_api_access_scope; matches the AKS/EKS/GKE output name so connect.sh can use the same logic."
+  value       = var.kubernetes_api_public_access
+  description = "Whether the cluster's Kubernetes API is publicly accessible."
 }
 
 output "bastion_public_ip" {

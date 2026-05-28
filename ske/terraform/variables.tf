@@ -22,6 +22,12 @@ variable "owner_email" {
   description = "Owner email assigned to the STACKIT project."
 }
 
+variable "common_labels" {
+  type        = map(string)
+  default     = {}
+  description = "Map of resource labels to apply to all resources that support labelling."
+}
+
 ################################################################################
 # Region / network
 ################################################################################
@@ -60,10 +66,49 @@ variable "network_dns_servers" {
 # Cluster
 ################################################################################
 
-variable "kubernetes_api_access_scope" {
+variable "kubernetes_version" {
   type        = string
-  default     = "PUBLIC"
-  description = "Control plane access scope. PUBLIC exposes the Kubernetes API to the internet; SNA restricts access to the STACKIT Network Area the cluster is bound to."
+  description = "The kubernetes version for the cluster. Maps to kubernetes_version_min on stackit_ske_cluster."
+}
+
+variable "kubernetes_api_public_access" {
+  type        = bool
+  default     = false
+  description = "When set to true, the Kubernetes API is accessible publicly from the provided authorized networks."
+}
+
+variable "kubernetes_api_authorized_networks" {
+  type        = list(string)
+  default     = []
+  description = "The list of CIDRs that can access the Kubernetes API, in addition to the bastion host (which is added by default). When empty, no ACL is applied."
+}
+
+################################################################################
+# Cluster extensions
+################################################################################
+
+variable "dns_enabled" {
+  type        = bool
+  default     = false
+  description = "When set to true, enables the externalDNS extension on the cluster."
+}
+
+variable "dns_zones" {
+  type        = list(string)
+  default     = []
+  description = "DNS zones that externalDNS is allowed to manage records in. When empty, all zones are allowed."
+}
+
+variable "observability_enabled" {
+  type        = bool
+  default     = false
+  description = "When set to true, enables the STACKIT Observability integration on the cluster."
+}
+
+variable "observability_instance_id" {
+  type        = string
+  default     = null
+  description = "ID of the STACKIT Observability instance to send cluster telemetry to. Required when observability_enabled is true."
 }
 
 ################################################################################

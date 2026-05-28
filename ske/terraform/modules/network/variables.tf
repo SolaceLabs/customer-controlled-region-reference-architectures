@@ -45,8 +45,8 @@ variable "network_dns_servers" {
   }
 }
 
-variable "resource_labels" {
+variable "common_labels" {
   type        = map(string)
-  description = "Map of resource labels to apply to all resources that support labelling."
   default     = {}
+  description = "Map of resource labels to apply to all resources that support labelling."
 }

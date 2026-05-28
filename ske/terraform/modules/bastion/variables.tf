@@ -46,3 +46,9 @@ variable "bastion_icmp_source_cidr" {
   default     = ""
   description = "Source CIDR allowed to send ICMP echo (ping) to the bastion. Leave empty to omit the ICMP ingress rule entirely."
 }
+
+variable "common_labels" {
+  type        = map(string)
+  default     = {}
+  description = "Map of resource labels to apply to all resources that support labelling."
+}

@@ -2,6 +2,7 @@ resource "stackit_security_group" "bastion_sg" {
   project_id = var.project_id
   name       = "${var.cluster_name}-bastion-sg"
   stateful   = true
+  labels     = var.common_labels
 }
 
 resource "stackit_security_group_rule" "ssh" {
@@ -45,6 +46,7 @@ resource "stackit_network_interface" "bastion_nic" {
   project_id         = var.project_id
   network_id         = var.network_id
   security_group_ids = [stackit_security_group.bastion_sg.security_group_id]
+  labels             = var.common_labels
 }
 
 resource "stackit_server" "bastion" {
@@ -61,14 +63,17 @@ resource "stackit_server" "bastion" {
   network_interfaces = [
     stackit_network_interface.bastion_nic.network_interface_id
   ]
+  labels = var.common_labels
 }
 
 resource "stackit_public_ip" "bastion_public_ip" {
   project_id           = var.project_id
   network_interface_id = stackit_network_interface.bastion_nic.network_interface_id
+  labels               = var.common_labels
 }
 
 resource "stackit_key_pair" "bastion_kp" {
   name       = "${var.cluster_name}-bastion-kp"
   public_key = var.bastion_ssh_public_key
+  labels     = var.common_labels
 }
