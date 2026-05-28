@@ -88,7 +88,7 @@ The cluster's Kubernetes API can be either:
 The following section is an overview of the steps to use this Terraform. Before you begin, review the necessary [prerequisites](#ske-prerequisites). Here's an overview of the steps:
 
 1. [Create the Kubernetes cluster](#ske-create-cluster).
-2. [Deploy the recommended storage classes](#ske-deploy-storage).
+2. [Reference the recommended storage classes in your broker configuration](#ske-storage-classes).
 
 ### Prerequisites <a name="ske-prerequisites"></a>
 
@@ -128,7 +128,7 @@ To use this Terraform module, the following is required:
     cluster_cidr          = "10.0.0.0/24"
     transfer_network_cidr = "10.1.0.0/16"
 
-    kubernetes_version = "1.32"
+    kubernetes_version = "1.35" # check current supported versions with `stackit ske options describe`
 
     create_bastion          = true
     bastion_image_id        = "<uuid from step 2>"
@@ -158,8 +158,15 @@ To use this Terraform module, the following is required:
         kubectl config use-context <cluster-name>
         ```
 
-### Deploying Storage Classes <a name="ske-deploy-storage"></a>
+### Storage Classes <a name="ske-storage-classes"></a>
 
-For Solace Cloud broker workloads, two STACKIT block-storage performance classes are recommended: `perf2` for the broker `data` volume and `perf6` for the broker `spool` volume.
+SKE ships with a complete set of `premium-perfN-stackit` StorageClasses pre-installed and managed by Gardener — there are no manifests to apply. Each class wraps a STACKIT block-storage performance plan (`storage_premium_perfN`) through the `cinder.csi.openstack.org` CSI provisioner, with `reclaimPolicy: Delete`, `volumeBindingMode: WaitForFirstConsumer`, and volume expansion enabled. The cluster default is `premium-perf1-stackit`.
 
-> StorageClass manifests for SKE are not yet included in [`kubernetes/`](kubernetes/). The exact provisioner + parameter shape needs validation against a live SKE cluster before publishing. Tracked as a follow-up.
+For Solace Cloud broker workloads:
+
+* **`premium-perf6-stackit`** for the broker `spool` volume (5,000 IOPS SSD)
+* **`premium-perf2-stackit`** for the broker `data` volume (1,000 IOPS SSD)
+
+The full set of available classes (`perf0`, `perf1`, `perf2`, `perf4`, `perf6`, `perf8`, `perf10`, `perf12`–`perf21`, `perf29`) and their per-region IOPS specs are documented on the [STACKIT Block Storage service plans](https://docs.stackit.cloud/products/storage/block-storage/basics/service-plans/) page.
+
+> The StorageClasses are Gardener-managed (`shoot.gardener.cloud/no-cleanup: "true"`) — any in-cluster edits are reverted automatically, so the classes must be used as-shipped. Their default filesystem is `ext4`.
