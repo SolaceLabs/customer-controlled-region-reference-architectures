@@ -2,20 +2,20 @@
 ## Requirements
 
 | Name | Version |
-| ---- | ------- |
+|------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
 | <a name="requirement_stackit"></a> [stackit](#requirement\_stackit) | ~> 0.95.0 |
 
 ## Providers
 
 | Name | Version |
-| ---- | ------- |
+|------|---------|
 | <a name="provider_stackit"></a> [stackit](#provider\_stackit) | 0.95.0 |
 
 ## Modules
 
 | Name | Source | Version |
-| ---- | ------ | ------- |
+|------|--------|---------|
 | <a name="module_bastion"></a> [bastion](#module\_bastion) | ./modules/bastion | n/a |
 | <a name="module_cluster"></a> [cluster](#module\_cluster) | ./modules/cluster | n/a |
 | <a name="module_network"></a> [network](#module\_network) | ./modules/network | n/a |
@@ -27,14 +27,14 @@
 ## Resources
 
 | Name | Type |
-| ---- | ---- |
+|------|------|
 | [stackit_resourcemanager_project.cluster](https://registry.terraform.io/providers/stackitcloud/stackit/latest/docs/resources/resourcemanager_project) | resource |
 | [stackit_image_v2.bastion](https://registry.terraform.io/providers/stackitcloud/stackit/latest/docs/data-sources/image_v2) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-| ---- | ----------- | ---- | ------- | :------: |
+|------|-------------|------|---------|:--------:|
 | <a name="input_additional_sna_ranges"></a> [additional\_sna\_ranges](#input\_additional\_sna\_ranges) | Additional IPv4 prefixes added to the STACKIT Network Area, alongside cluster\_cidr. Commonly used for a VPN gateway range. | `list(string)` | <pre>[<br/>  "10.0.1.0/24"<br/>]</pre> | no |
 | <a name="input_bastion_icmp_source_cidr"></a> [bastion\_icmp\_source\_cidr](#input\_bastion\_icmp\_source\_cidr) | Source CIDR allowed to send ICMP echo (ping) to the bastion. Leave empty to omit the ICMP ingress rule entirely. | `string` | `""` | no |
 | <a name="input_bastion_image_id"></a> [bastion\_image\_id](#input\_bastion\_image\_id) | STACKIT image UUID for the bastion VM. Optional: when empty, the latest Ubuntu image in the project is auto-detected via the stackit\_image\_v2 data source. Set this to pin a specific image UUID. | `string` | `""` | no |
@@ -64,7 +64,7 @@
 ## Outputs
 
 | Name | Description |
-| ---- | ----------- |
+|------|-------------|
 | <a name="output_bastion_public_ip"></a> [bastion\_public\_ip](#output\_bastion\_public\_ip) | Public IP of the bastion host (null when create\_bastion is false). |
 | <a name="output_bastion_username"></a> [bastion\_username](#output\_bastion\_username) | SSH username for the bastion host (null when create\_bastion is false). |
 | <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | Name of the SKE cluster. |

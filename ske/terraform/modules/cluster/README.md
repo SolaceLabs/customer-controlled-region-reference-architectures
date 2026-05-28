@@ -2,14 +2,14 @@
 ## Requirements
 
 | Name | Version |
-| ---- | ------- |
+|------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
 | <a name="requirement_stackit"></a> [stackit](#requirement\_stackit) | ~> 0.95.0 |
 
 ## Providers
 
 | Name | Version |
-| ---- | ------- |
+|------|---------|
 | <a name="provider_stackit"></a> [stackit](#provider\_stackit) | ~> 0.95.0 |
 
 ## Modules
@@ -19,13 +19,13 @@ No modules.
 ## Resources
 
 | Name | Type |
-| ---- | ---- |
+|------|------|
 | [stackit_ske_cluster.this](https://registry.terraform.io/providers/stackitcloud/stackit/latest/docs/resources/ske_cluster) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-| ---- | ----------- | ---- | ------- | :------: |
+|------|-------------|------|---------|:--------:|
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the SKE cluster. STACKIT limits cluster names to 11 characters. | `string` | n/a | yes |
 | <a name="input_dns_enabled"></a> [dns\_enabled](#input\_dns\_enabled) | When set to true, enables the externalDNS extension on the cluster. | `bool` | `false` | no |
 | <a name="input_dns_zones"></a> [dns\_zones](#input\_dns\_zones) | DNS zones that externalDNS is allowed to manage records in. When empty, all zones are allowed. | `list(string)` | `[]` | no |
@@ -41,7 +41,7 @@ No modules.
 ## Outputs
 
 | Name | Description |
-| ---- | ----------- |
+|------|-------------|
 | <a name="output_cluster_id"></a> [cluster\_id](#output\_cluster\_id) | Terraform internal resource ID of the cluster, structured as project\_id,region,name. |
 | <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | Name of the SKE cluster. |
 | <a name="output_egress_address_ranges"></a> [egress\_address\_ranges](#output\_egress\_address\_ranges) | Outgoing network ranges (CIDR) of traffic originating from cluster workloads. |
