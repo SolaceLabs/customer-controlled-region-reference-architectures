@@ -13,9 +13,9 @@ The sections below describe the architecture of the reference Terraform project 
 * are recommended but not required to successfully deploy Solace Cloud
 * are available to produce a working cluster but we are not opinionated on what to use (an option or configuration had to be selected as part of the Terraform, but does not impact the installation of Solace Cloud)
 
-The areas to review are the [networking](#ske-network), [cluster configuration](#ske-cluster-config), and [access to and from the cluster](#ske-access).
+The areas to review are the [networking](#ske-network), [cluster configuration](#ske-cluster-config), and [access to and from the cluster](#ske-access). Below is an architectural diagram of the components of the SKE cluster that are created with this Terraform project:
 
-> An architecture diagram for SKE has not yet been produced. See [`docs/`](docs/) in the AKS / EKS / GKE reference architectures for the analogous layout in those providers.
+![SKE Architecture Diagram](docs/architecture.png)
 
 ### Network <a name="ske-network"></a>
 
@@ -44,6 +44,8 @@ STACKIT's `eu01` region has three discrete availability zones (`eu01-1`, `eu01-2
 
 The cluster has the following node pools. Note: STACKIT does not expose a standalone node-pool resource — pools are defined inline on `stackit_ske_cluster.node_pools`. The reference architecture's `broker-node-pool` module is a config-factory: it produces node-pool config objects, which the top-level Terraform concatenates into the cluster's `node_pools` argument.
 
+All pools' nodes use a 50 GiB boot volume on the `storage_premium_perf2` performance class.
+
 ##### Default (System)
 
 The default node pool runs on the metro availability zone (`eu01-m`) so STACKIT can automatically migrate system workloads across physical zones on failure. It uses the `c2i.2` flavor, scales from 1 to 3 nodes, and is the only pool with `allow_system_components = true` (which lets cluster-system workloads such as CoreDNS schedule onto it).
@@ -62,8 +64,6 @@ The VM sizes, labels, and taints for each event broker service node pool are as 
 | prod10k1 / prod10k2  | `m2i.4` | -1 / -2 | nodeType:messaging<br>serviceClass:prod10k      | nodeType:messaging:NoExecute<br>serviceClass:prod10k:NoExecute    |
 | prod100k1 / prod100k2| `m2i.8` | -1 / -2 | nodeType:messaging<br>serviceClass:prod100k     | nodeType:messaging:NoExecute<br>serviceClass:prod100k:NoExecute   |
 | monitoring           | `g3i.2` | -3      | nodeType:monitoring                             | nodeType:monitoring:NoExecute                                     |
-
-Each pool's nodes use a 50 GiB boot volume on the `storage_premium_perf2` performance class.
 
 ### Access <a name="ske-access"></a>
 
