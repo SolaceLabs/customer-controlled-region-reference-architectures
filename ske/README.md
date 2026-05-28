@@ -37,14 +37,12 @@ Each SKE cluster lives in its own STACKIT project. The Terraform creates the pro
 
 STACKIT's `eu01` region has three discrete availability zones (`eu01-1`, `eu01-2`, `eu01-3`) plus a **metro** zone (`eu01-m`) that spans multiple physical zones. The reference architecture uses:
 * the metro zone for the system / default pool (STACKIT-managed system components benefit from cross-zone failover)
-* discrete zones for messaging pools (one pool per zone, enabling pod anti-affinity across zones for HA brokers)
-* one discrete zone (`eu01-3`) for the monitoring pool
+* the three discrete zones for messaging pools (one pool per zone per tier, enabling pod anti-affinity across zones for HA brokers)
+* the three discrete zones for monitoring pools (one pool per zone)
 
 #### Node Pools
 
-The cluster has the following node pools. Note: STACKIT does not expose a standalone node-pool resource — pools are defined inline on `stackit_ske_cluster.node_pools`. The reference architecture's `broker-node-pool` module is a config-factory: it produces node-pool config objects, which the top-level Terraform concatenates into the cluster's `node_pools` argument.
-
-All pools' nodes use a 50 GiB boot volume on the `storage_premium_perf2` performance class.
+The cluster has the following node pools. All pools' nodes use a 50 GiB boot volume on the `storage_premium_perf2` performance class.
 
 ##### Default (System)
 
@@ -52,18 +50,18 @@ The default node pool runs on the metro availability zone (`eu01-m`) so STACKIT 
 
 ##### Event Broker Services
 
-The cluster has 6 node pools for event broker services — two per tier, one in each of `eu01-1` and `eu01-2`. Locking each pool to a single AZ allows the cluster autoscaler to operate predictably and enables pod anti-affinity across zones for HA broker services.
+The cluster has a total of 12 node pools for event broker services. Instead of spanning multiple availability zones, there are 4 sets of 3 node pools with each locked to a single availability zone. These node pools are locked to one availability zone to allow the cluster autoscaler to work properly. We use pod anti-affinity against the node's zone label to ensure that each pod in a high-availability event broker service is in a separate availability zone.
 
 These node pools are engineered to support a 1:1 ratio of event broker service pod to worker node. We use labels and taints on each of these node pools to ensure that only event broker service pods are scheduled on the worker nodes for each scaling tier.
 
-The VM sizes, labels, and taints for each event broker service node pool are as follows (sized to meet Solace Cloud broker resource requirements on STACKIT):
+The VM sizes, labels, and taints for each event broker service node pool are as follows:
 
-| Name                 | VM size | AZ      | Labels                                          | Taints                                                            |
-|----------------------|---------|---------|-------------------------------------------------|-------------------------------------------------------------------|
-| prod1k1 / prod1k2    | `m2i.2` | -1 / -2 | nodeType:messaging<br>serviceClass:prod1k       | nodeType:messaging:NoExecute<br>serviceClass:prod1k:NoExecute     |
-| prod10k1 / prod10k2  | `m2i.4` | -1 / -2 | nodeType:messaging<br>serviceClass:prod10k      | nodeType:messaging:NoExecute<br>serviceClass:prod10k:NoExecute    |
-| prod100k1 / prod100k2| `m2i.8` | -1 / -2 | nodeType:messaging<br>serviceClass:prod100k     | nodeType:messaging:NoExecute<br>serviceClass:prod100k:NoExecute   |
-| monitoring           | `g3i.2` | -3      | nodeType:monitoring                             | nodeType:monitoring:NoExecute                                     |
+| Name       | VM size | Labels                                      | Taints                                                          |
+|------------|---------|---------------------------------------------|-----------------------------------------------------------------|
+| prod1k     | `m2i.2` | nodeType:messaging<br>serviceClass:prod1k   | nodeType:messaging:NoExecute<br>serviceClass:prod1k:NoExecute   |
+| prod10k    | `m2i.4` | nodeType:messaging<br>serviceClass:prod10k  | nodeType:messaging:NoExecute<br>serviceClass:prod10k:NoExecute  |
+| prod100k   | `m2i.8` | nodeType:messaging<br>serviceClass:prod100k | nodeType:messaging:NoExecute<br>serviceClass:prod100k:NoExecute |
+| monitoring | `g3i.2` | nodeType:monitoring                         | nodeType:monitoring:NoExecute                                   |
 
 ### Access <a name="ske-access"></a>
 
@@ -155,4 +153,4 @@ To use this Terraform module, the following is required:
 
 For Solace Cloud broker workloads, two STACKIT block-storage performance classes are recommended: `perf2` for the broker `data` volume and `perf6` for the broker `spool` volume.
 
-> StorageClass manifests for SKE are not yet included in [`kubernetes/`](kubernetes/). The exact provisioner + parameter shape needs validation against a live SKE cluster before publishing. Tracked as a follow-up.
+StorageClass manifests for SKE are not provided with this Terraform. Create them manually against the cluster using STACKIT's CSI driver and the recommended performance classes above.

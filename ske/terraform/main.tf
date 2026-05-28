@@ -136,7 +136,7 @@ module "node_pool_monitoring" {
 
   pool_name_prefix   = "monitoring"
   region             = var.region
-  availability_zones = ["3"]
+  availability_zones = ["1", "2", "3"]
   machine_type       = local.monitoring_machine_type
   volume_size        = var.node_pool_volume_size
   volume_type        = var.node_pool_volume_type
@@ -151,7 +151,7 @@ module "node_pool_prod1k" {
 
   pool_name_prefix   = "prod1k"
   region             = var.region
-  availability_zones = ["1", "2"]
+  availability_zones = ["1", "2", "3"]
   machine_type       = local.prod1k_machine_type
   volume_size        = var.node_pool_volume_size
   volume_type        = var.node_pool_volume_type
@@ -166,7 +166,7 @@ module "node_pool_prod10k" {
 
   pool_name_prefix   = "prod10k"
   region             = var.region
-  availability_zones = ["1", "2"]
+  availability_zones = ["1", "2", "3"]
   machine_type       = local.prod10k_machine_type
   volume_size        = var.node_pool_volume_size
   volume_type        = var.node_pool_volume_type
@@ -181,7 +181,7 @@ module "node_pool_prod100k" {
 
   pool_name_prefix   = "prod100k"
   region             = var.region
-  availability_zones = ["1", "2"]
+  availability_zones = ["1", "2", "3"]
   machine_type       = local.prod100k_machine_type
   volume_size        = var.node_pool_volume_size
   volume_type        = var.node_pool_volume_type

@@ -52,11 +52,17 @@
         <mxCell id="ske-prod1k2" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;prod1k2 Node Pool&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="1" vertex="1">
           <mxGeometry x="335" y="310" width="170" height="40" as="geometry" />
         </mxCell>
+        <mxCell id="ske-prod1k3" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;prod1k3 Node Pool&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="1" vertex="1">
+          <mxGeometry x="600" y="310" width="170" height="40" as="geometry" />
+        </mxCell>
         <mxCell id="ske-prod10k1" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;prod10k1 Node Pool&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="1" vertex="1">
           <mxGeometry x="70" y="370" width="170" height="40" as="geometry" />
         </mxCell>
         <mxCell id="ske-prod10k2" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;prod10k2 Node Pool&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="1" vertex="1">
           <mxGeometry x="335" y="370" width="170" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ske-prod10k3" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;prod10k3 Node Pool&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="1" vertex="1">
+          <mxGeometry x="600" y="370" width="170" height="40" as="geometry" />
         </mxCell>
         <mxCell id="ske-prod100k1" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;prod100k1 Node Pool&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="1" vertex="1">
           <mxGeometry x="70" y="430" width="170" height="40" as="geometry" />
@@ -64,7 +70,16 @@
         <mxCell id="ske-prod100k2" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;prod100k2 Node Pool&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="1" vertex="1">
           <mxGeometry x="335" y="430" width="170" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="ske-monitoring" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;monitoring Node Pool&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="1" vertex="1">
+        <mxCell id="ske-prod100k3" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;prod100k3 Node Pool&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="1" vertex="1">
+          <mxGeometry x="600" y="430" width="170" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ske-monitoring1" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;monitoring1 Node Pool&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="1" vertex="1">
+          <mxGeometry x="70" y="490" width="170" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ske-monitoring2" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;monitoring2 Node Pool&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="1" vertex="1">
+          <mxGeometry x="335" y="490" width="170" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ske-monitoring3" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;monitoring3 Node Pool&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;" parent="1" vertex="1">
           <mxGeometry x="600" y="490" width="170" height="40" as="geometry" />
         </mxCell>
       </root>
