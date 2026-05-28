@@ -6,9 +6,12 @@ resource "stackit_resourcemanager_project" "cluster" {
   parent_container_id = var.organization_id
   name                = var.cluster_name
   owner_email         = var.owner_email
-  labels = {
-    "networkArea" = module.network.network_area_id
-  }
+  labels = merge(
+    var.common_labels,
+    {
+      "networkArea" = module.network.network_area_id
+    },
+  )
 }
 
 ################################################################################
@@ -26,6 +29,7 @@ module "network" {
   additional_sna_ranges = var.additional_sna_ranges
   transfer_network_cidr = var.transfer_network_cidr
   network_dns_servers   = var.network_dns_servers
+  common_labels         = var.common_labels
 }
 
 ################################################################################
@@ -44,6 +48,7 @@ module "bastion" {
   bastion_image_id         = var.bastion_image_id
   bastion_ssh_source_cidr  = var.bastion_ssh_source_cidr
   bastion_icmp_source_cidr = var.bastion_icmp_source_cidr
+  common_labels            = var.common_labels
 }
 
 ################################################################################
@@ -182,9 +187,10 @@ module "node_pool_prod100k" {
 module "cluster" {
   source = "./modules/cluster"
 
-  cluster_name = var.cluster_name
-  project_id   = stackit_resourcemanager_project.cluster.project_id
-  network_id   = module.network.network_id
+  cluster_name       = var.cluster_name
+  project_id         = stackit_resourcemanager_project.cluster.project_id
+  network_id         = module.network.network_id
+  kubernetes_version = var.kubernetes_version
 
   node_pools = concat(
     [local.default_pool],
@@ -194,5 +200,14 @@ module "cluster" {
     module.node_pool_prod100k.node_pools,
   )
 
-  kubernetes_api_access_scope = var.kubernetes_api_access_scope
+  kubernetes_api_public_access = var.kubernetes_api_public_access
+  kubernetes_api_authorized_networks = concat(
+    var.kubernetes_api_authorized_networks,
+    var.create_bastion ? ["${module.bastion[0].bastion_public_ip}/32"] : [],
+  )
+
+  dns_enabled               = var.dns_enabled
+  dns_zones                 = var.dns_zones
+  observability_enabled     = var.observability_enabled
+  observability_instance_id = var.observability_instance_id
 }

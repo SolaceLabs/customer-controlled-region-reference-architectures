@@ -67,10 +67,21 @@ Each pool's nodes use a 50 GiB boot volume on the `storage_premium_perf2` perfor
 
 ### Access <a name="ske-access"></a>
 
-There are two options for cluster access:
+#### Bastion host
 
- * A **bastion host** (opt-in via `create_bastion = true`) with a public IP, accessible via SSH from provided source CIDRs. The bastion image is referenced by UUID — the Terraform doesn't dynamically look it up because the lookup requires a project that hasn't been created yet at plan time. Set `bastion_image_id` to a current Ubuntu image UUID (find one via `stackit image list`).
- * The cluster's Kubernetes API can be set to **PUBLIC** (the default, accessible from the internet) or **SNA** via `kubernetes_api_access_scope`. When SNA, access is restricted to the STACKIT Network Area the cluster is bound to, which typically requires going through the bastion's network.
+A bastion host (opt-in via `create_bastion = true`) with a public IP, accessible via SSH from provided source CIDRs. The bastion image is referenced by UUID — the Terraform doesn't dynamically look it up because the lookup requires a project that hasn't been created yet at plan time. Set `bastion_image_id` to a current Ubuntu image UUID (find one via `stackit image list`).
+
+#### Kubernetes API access
+
+The cluster's Kubernetes API can be either:
+
+ * **Private** (the default, `kubernetes_api_public_access = false`): the API server is only reachable from inside the cluster's STACKIT Network Area. A bastion or other in-SNA routing path is required.
+ * **Public** (`kubernetes_api_public_access = true`): the API server is reachable from the internet, restricted by an allow-list set via `kubernetes_api_authorized_networks`. When `create_bastion = true`, the bastion's public IP is automatically appended to that allow-list.
+
+#### Optional cluster extensions
+
+ * **externalDNS** (opt-in via `dns_enabled = true`): enables in-cluster externalDNS to manage records on STACKIT DNS. Set `dns_zones` to restrict externalDNS to specific domains, or leave empty to allow all zones.
+ * **STACKIT Observability** (opt-in via `observability_enabled = true`): forwards cluster metrics and logs to a STACKIT Observability instance. Requires `observability_instance_id` to point at an existing instance.
 
 ## Usage of Terraform for STACKIT Kubernetes Engine <a name="ske-usage"></a>
 
@@ -117,6 +128,8 @@ To use this Terraform module, the following is required:
     cluster_cidr          = "10.0.0.0/24"
     transfer_network_cidr = "10.1.0.0/16"
 
+    kubernetes_version = "1.32"
+
     create_bastion          = true
     bastion_image_id        = "<uuid from step 2>"
     bastion_ssh_public_key  = "ssh-rsa abc123..."
@@ -132,13 +145,13 @@ To use this Terraform module, the following is required:
 
 5. After you create the cluster, set up access:
 
-    * If the bastion host was created, use the `connect.sh` script to open a tunnel and set up your environment to access the cluster:
+    * On the default private API setting (`kubernetes_api_public_access = false`), reach the cluster through the bastion. Use the `connect.sh` script to open a tunnel and set up your environment:
 
         ```bash
         source ./connect.sh --private-key <ssh private key path>
         ```
 
-    * If the Kubernetes API was left at the default `PUBLIC` access scope, a kubeconfig is sufficient:
+    * If `kubernetes_api_public_access = true` and the caller's IP is in `kubernetes_api_authorized_networks`, a kubeconfig is sufficient:
 
         ```bash
         stackit ske kubeconfig create <cluster-name> --project-id <project-id>

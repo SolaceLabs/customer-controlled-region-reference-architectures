@@ -1,7 +1,7 @@
 resource "stackit_network_area" "this" {
   organization_id = var.organization_id
   name            = "${var.name}-sna"
-  labels          = var.resource_labels
+  labels          = var.common_labels
 }
 
 resource "stackit_network_area_region" "this" {
@@ -19,5 +19,5 @@ resource "stackit_network" "this" {
   ipv4_prefix      = var.cluster_cidr
   project_id       = var.project_id
   ipv4_nameservers = var.network_dns_servers
-  labels           = var.resource_labels
+  labels           = var.common_labels
 }
