@@ -128,7 +128,7 @@ To use this Terraform module, the following is required:
     cluster_cidr          = "10.0.0.0/24"
     transfer_network_cidr = "10.1.0.0/16"
 
-    kubernetes_version = "1.32"
+    kubernetes_version = "1.35" # check current supported versions with `stackit ske options describe`
 
     create_bastion          = true
     bastion_image_id        = "<uuid from step 2>"
@@ -160,6 +160,11 @@ To use this Terraform module, the following is required:
 
 ### Deploying Storage Classes <a name="ske-deploy-storage"></a>
 
-For Solace Cloud broker workloads, two STACKIT block-storage performance classes are recommended: `perf2` for the broker `data` volume and `perf6` for the broker `spool` volume.
+Create the storage classes — one for the broker's `spool` volume (`solace-broker-spool`, wraps `storage_premium_perf6`) and one for the `data` volume (`solace-default`, wraps `storage_premium_perf2`):
 
-> StorageClass manifests for SKE are not yet included in [`kubernetes/`](kubernetes/). The exact provisioner + parameter shape needs validation against a live SKE cluster before publishing. Tracked as a follow-up.
+```bash
+kubectl apply -f kubernetes/storage-class-spool.yaml
+kubectl apply -f kubernetes/storage-class-data.yaml
+```
+
+The full set of available STACKIT block-storage performance plans is documented on the [STACKIT Block Storage service plans](https://docs.stackit.cloud/products/storage/block-storage/basics/service-plans/) page.
