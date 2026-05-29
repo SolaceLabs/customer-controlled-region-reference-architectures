@@ -36,6 +36,17 @@ module "network" {
 # Bastion
 ################################################################################
 
+data "stackit_image_v2" "bastion" {
+  count      = var.create_bastion && var.bastion_image_id == "" ? 1 : 0
+  project_id = stackit_resourcemanager_project.cluster.project_id
+
+  filter = {
+    distro = "ubuntu"
+  }
+
+  depends_on = [stackit_resourcemanager_project.cluster]
+}
+
 module "bastion" {
   source = "./modules/bastion"
   count  = var.create_bastion ? 1 : 0
@@ -45,7 +56,7 @@ module "bastion" {
   network_id   = module.network.network_id
 
   bastion_ssh_public_key   = var.bastion_ssh_public_key
-  bastion_image_id         = var.bastion_image_id
+  bastion_image_id         = var.bastion_image_id != "" ? var.bastion_image_id : split(",", data.stackit_image_v2.bastion[0].id)[2]
   bastion_ssh_source_cidr  = var.bastion_ssh_source_cidr
   bastion_icmp_source_cidr = var.bastion_icmp_source_cidr
   common_labels            = var.common_labels
@@ -125,7 +136,7 @@ module "node_pool_monitoring" {
 
   pool_name_prefix   = "monitoring"
   region             = var.region
-  availability_zones = ["3"]
+  availability_zones = ["1", "2", "3"]
   machine_type       = local.monitoring_machine_type
   volume_size        = var.node_pool_volume_size
   volume_type        = var.node_pool_volume_type
@@ -140,7 +151,7 @@ module "node_pool_prod1k" {
 
   pool_name_prefix   = "prod1k"
   region             = var.region
-  availability_zones = ["1", "2"]
+  availability_zones = ["1", "2", "3"]
   machine_type       = local.prod1k_machine_type
   volume_size        = var.node_pool_volume_size
   volume_type        = var.node_pool_volume_type
@@ -155,7 +166,7 @@ module "node_pool_prod10k" {
 
   pool_name_prefix   = "prod10k"
   region             = var.region
-  availability_zones = ["1", "2"]
+  availability_zones = ["1", "2", "3"]
   machine_type       = local.prod10k_machine_type
   volume_size        = var.node_pool_volume_size
   volume_type        = var.node_pool_volume_type
@@ -170,7 +181,7 @@ module "node_pool_prod100k" {
 
   pool_name_prefix   = "prod100k"
   region             = var.region
-  availability_zones = ["1", "2"]
+  availability_zones = ["1", "2", "3"]
   machine_type       = local.prod100k_machine_type
   volume_size        = var.node_pool_volume_size
   volume_type        = var.node_pool_volume_type
