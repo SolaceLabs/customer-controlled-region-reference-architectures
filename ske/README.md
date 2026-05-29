@@ -88,7 +88,7 @@ The cluster's Kubernetes API can be either:
 The following section is an overview of the steps to use this Terraform. Before you begin, review the necessary [prerequisites](#ske-prerequisites). Here's an overview of the steps:
 
 1. [Create the Kubernetes cluster](#ske-create-cluster).
-2. [Reference the recommended storage classes in your broker configuration](#ske-storage-classes).
+2. [Deploy the recommended storage classes](#ske-deploy-storage).
 
 ### Prerequisites <a name="ske-prerequisites"></a>
 
@@ -158,15 +158,13 @@ To use this Terraform module, the following is required:
         kubectl config use-context <cluster-name>
         ```
 
-### Storage Classes <a name="ske-storage-classes"></a>
+### Deploying Storage Classes <a name="ske-deploy-storage"></a>
 
-SKE ships with a complete set of `premium-perfN-stackit` StorageClasses pre-installed and managed by Gardener — there are no manifests to apply. Each class wraps a STACKIT block-storage performance plan (`storage_premium_perfN`) through the `cinder.csi.openstack.org` CSI provisioner, with `reclaimPolicy: Delete`, `volumeBindingMode: WaitForFirstConsumer`, and volume expansion enabled. The cluster default is `premium-perf1-stackit`.
+Create the storage classes — one for the broker's `spool` volume (`solace-broker-spool`, wraps `storage_premium_perf6`) and one for the `data` volume (`solace-default`, wraps `storage_premium_perf2`):
 
-For Solace Cloud broker workloads:
+```bash
+kubectl apply -f kubernetes/storage-class-spool.yaml
+kubectl apply -f kubernetes/storage-class-data.yaml
+```
 
-* **`premium-perf6-stackit`** for the broker `spool` volume (5,000 IOPS SSD)
-* **`premium-perf2-stackit`** for the broker `data` volume (1,000 IOPS SSD)
-
-The full set of available classes (`perf0`, `perf1`, `perf2`, `perf4`, `perf6`, `perf8`, `perf10`, `perf12`–`perf21`, `perf29`) and their per-region IOPS specs are documented on the [STACKIT Block Storage service plans](https://docs.stackit.cloud/products/storage/block-storage/basics/service-plans/) page.
-
-> The StorageClasses are Gardener-managed (`shoot.gardener.cloud/no-cleanup: "true"`) — any in-cluster edits are reverted automatically, so the classes must be used as-shipped. Their default filesystem is `ext4`.
+The full set of available STACKIT block-storage performance plans is documented on the [STACKIT Block Storage service plans](https://docs.stackit.cloud/products/storage/block-storage/basics/service-plans/) page.
