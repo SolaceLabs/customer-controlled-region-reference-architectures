@@ -9,8 +9,8 @@ serviceClass:
 highlyAvailable: true
 
 images:
-  busybox: registry.k8s.io/busybox:latest
-  nginx: registry.k8s.io/nginx-slim:0.8
+  busybox: busybox:latest
+  nginx: nginx:latest
 
 service:
   externalTrafficPolicy: Local

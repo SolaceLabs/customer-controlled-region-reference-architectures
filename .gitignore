@@ -7,5 +7,6 @@ terraform.tfstate*
 .infracost
 .external_modules
 testing/*/terraform/*
+testing/*/.cluster-suffix
 *.bak
 .idea
