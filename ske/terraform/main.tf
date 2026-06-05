@@ -74,7 +74,6 @@ locals {
   prod10k_machine_type    = "m2i.4"
   prod100k_machine_type   = "m2i.8"
 
-  # System pool stays inline — special shape (allow_system_components, fixed scaling, metro AZ).
   default_pool = {
     name                    = "default"
     availability_zones      = ["${var.region}-m"]
