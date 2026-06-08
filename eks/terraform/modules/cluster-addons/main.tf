@@ -89,6 +89,10 @@ module "aws_vpc_cni_pod_identity" {
   aws_vpc_cni_enable_ipv4   = true
   use_name_prefix           = false
 
+  additional_policy_arns = {
+    vpc_cni = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+  }
+
   association_defaults = {
     namespace       = local.controllers_namespace
     service_account = local.vpc_cni_service_account
