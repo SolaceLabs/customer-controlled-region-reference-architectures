@@ -15,6 +15,18 @@ variable "network_cidr_range" {
   description = "The CIDR for the cluster's network."
 }
 
+variable "database_network_cidr_range" {
+  type        = string
+  default     = null
+  description = "An optional database CIDR block for the cluster's VPC. This can be used to expand the cluster's available IP address space without needing to create a new VPC and migrate resources."
+}
+
+variable "database_subnetwork_cidr" {
+  type        = string
+  default     = null
+  description = "The CIDR of the database subnetwork. This should be a subset of database_network_cidr_range to leave space for other use cases."
+}
+
 variable "secondary_cidr_range_services" {
   type        = string
   default     = null

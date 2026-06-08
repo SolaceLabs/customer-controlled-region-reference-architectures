@@ -1,5 +1,5 @@
 resource "azurerm_kubernetes_cluster_node_pool" "this" {
-  count = length(var.availability_zones)
+  count = var.split_node_group ? length(var.availability_zones) : 1
 
   name = "${var.node_pool_name}${count.index}"
   tags = var.common_tags
@@ -18,7 +18,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "this" {
 
   max_pods = var.max_pods_per_node
 
-  zones          = [var.availability_zones[count.index]]
+  zones          = var.split_node_group ? [var.availability_zones[count.index]] : var.availability_zones
   vnet_subnet_id = var.subnet_id
 
   vm_size         = var.worker_node_vm_size

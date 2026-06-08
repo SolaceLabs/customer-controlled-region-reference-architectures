@@ -4,13 +4,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.3 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | 6.10.0 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | 6.42.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 6.10.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 6.42.0 |
 
 ## Modules
 
@@ -20,7 +20,7 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [google_container_node_pool.this](https://registry.terraform.io/providers/hashicorp/google/6.10.0/docs/resources/container_node_pool) | resource |
+| [google_container_node_pool.this](https://registry.terraform.io/providers/hashicorp/google/6.42.0/docs/resources/container_node_pool) | resource |
 
 ## Inputs
 

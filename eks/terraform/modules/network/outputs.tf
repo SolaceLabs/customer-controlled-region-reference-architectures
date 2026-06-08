@@ -11,3 +11,7 @@ output "private_subnets" {
 
   depends_on = [aws_nat_gateway.nat]
 }
+
+output "database_private_subnets" {
+  value = var.create_network && var.database_vpc_cidr != null ? aws_subnet.database_private[*].id : null
+}

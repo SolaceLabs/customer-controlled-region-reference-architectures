@@ -20,6 +20,12 @@ variable "availability_zones" {
   description = "The availability zones for the node pools - one pool is created in each zone."
 }
 
+variable "split_node_group" {
+  type        = bool
+  description = "Whether to split the nodegroup into a nodegroup per availability zone."
+  default     = true
+}
+
 variable "subnet_id" {
   type        = string
   description = "The subnet that will contain the worker nodes in each node pool."

@@ -35,9 +35,10 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | The availability zones for the default (system) node pool. | `list(string)` | <pre>[<br/>  "1",<br/>  "2",<br/>  "3"<br/>]</pre> | no |
+| <a name="input_availability_zones"></a> [availability\_zones](#input\_availability\_zones) | The availability zones for the default (system) node pool. | `list(string)` | <pre>[<br>  "1",<br>  "2",<br>  "3"<br>]</pre> | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The name of the cluster and name (or name prefix) for all other infrastructure. | `string` | n/a | yes |
 | <a name="input_common_tags"></a> [common\_tags](#input\_common\_tags) | Tags that are added to all resources created by this module. | `map(string)` | `{}` | no |
+| <a name="input_enable_workload_identity"></a> [enable\_workload\_identity](#input\_enable\_workload\_identity) | Whether to enable workload identity for the cluster. If enabled, this will create a federated identity credential in the cluster's user assigned identity that allows service accounts in the cluster to authenticate with Azure AD and obtain tokens for accessing other Azure resources. | `bool` | `false` | no |
 | <a name="input_kubernetes_api_authorized_networks"></a> [kubernetes\_api\_authorized\_networks](#input\_kubernetes\_api\_authorized\_networks) | A list of CIDRs that can access the Kubernetes API, in addition to the VPC's CIDR (which is added by default). | `list(string)` | `[]` | no |
 | <a name="input_kubernetes_api_public_access"></a> [kubernetes\_api\_public\_access](#input\_kubernetes\_api\_public\_access) | When set to true, the Kubernetes API is accessible publically from the provided authorized networks. | `bool` | `false` | no |
 | <a name="input_kubernetes_cluster_admin_groups"></a> [kubernetes\_cluster\_admin\_groups](#input\_kubernetes\_cluster\_admin\_groups) | A list of Azure AD group object IDs that will have the Admin Role for the cluster. | `list(string)` | `[]` | no |
@@ -66,4 +67,5 @@ No modules.
 | <a name="output_cluster_id"></a> [cluster\_id](#output\_cluster\_id) | n/a |
 | <a name="output_cluster_name"></a> [cluster\_name](#output\_cluster\_name) | n/a |
 | <a name="output_current_kubernetes_version"></a> [current\_kubernetes\_version](#output\_current\_kubernetes\_version) | n/a |
+| <a name="output_oidc_issuer_url"></a> [oidc\_issuer\_url](#output\_oidc\_issuer\_url) | n/a |
 <!-- END_TF_DOCS -->

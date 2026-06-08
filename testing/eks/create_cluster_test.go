@@ -16,8 +16,8 @@ import (
 )
 
 // cluster autoscaler version must match kubernetes version
-const KubernetesVersion = "1.31"
-const ClusterAutoscalerVersion = "v1.31.1"
+const KubernetesVersion = "1.33"
+const ClusterAutoscalerVersion = "v1.33.1"
 
 func testCluster(t *testing.T, configOptions *terraform.Options) {
 	kubeconfig := terraform.Output(t, configOptions, "kubeconfig")
@@ -33,9 +33,15 @@ func testCluster(t *testing.T, configOptions *terraform.Options) {
 	common.TestServiceClassWithValues(t, kubeconfigPath, "prod1k", "gp3", []string{"./service-annotations.yaml"}, 1, true)
 	common.TestServiceClassWithValues(t, kubeconfigPath, "prod1k", "gp3", []string{"./service-annotations.yaml"}, 2, false)
 
+	common.TestServiceClassWithValues(t, kubeconfigPath, "prod5k", "gp3", []string{"./service-annotations.yaml"}, 1, true)
+	common.TestServiceClassWithValues(t, kubeconfigPath, "prod5k", "gp3", []string{"./service-annotations.yaml"}, 1, false)
+
 	common.TestServiceClassWithValues(t, kubeconfigPath, "prod10k", "gp2-test", []string{"./service-annotations.yaml"}, 1, true)
 	common.TestServiceClassWithValues(t, kubeconfigPath, "prod10k", "gp3", []string{"./service-annotations.yaml"}, 1, true)
 	common.TestServiceClassWithValues(t, kubeconfigPath, "prod10k", "gp3", []string{"./service-annotations.yaml"}, 2, false)
+
+	common.TestServiceClassWithValues(t, kubeconfigPath, "prod50k", "gp3", []string{"./service-annotations.yaml"}, 1, true)
+	common.TestServiceClassWithValues(t, kubeconfigPath, "prod50k", "gp3", []string{"./service-annotations.yaml"}, 1, false)
 
 	common.TestServiceClassWithValues(t, kubeconfigPath, "prod100k", "gp2-test", []string{"./service-annotations.yaml"}, 1, false)
 

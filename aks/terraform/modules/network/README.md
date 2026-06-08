@@ -21,9 +21,12 @@ No modules.
 | Name | Type |
 |------|------|
 | [azurerm_route.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/route) | resource |
+| [azurerm_route.cluster_secondary](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/route) | resource |
 | [azurerm_route_table.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/route_table) | resource |
 | [azurerm_subnet.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/subnet) | resource |
+| [azurerm_subnet.cluster_secondary](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/subnet) | resource |
 | [azurerm_subnet_route_table_association.cluster](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/subnet_route_table_association) | resource |
+| [azurerm_subnet_route_table_association.cluster_secondary](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/subnet_route_table_association) | resource |
 | [azurerm_virtual_network.this](https://registry.terraform.io/providers/hashicorp/azurerm/4.11.0/docs/resources/virtual_network) | resource |
 
 ## Inputs
@@ -36,6 +39,9 @@ No modules.
 | <a name="input_create_network"></a> [create\_network](#input\_create\_network) | When set to false, networking (VNET, Subnets, etc) must be created externally. | `bool` | `true` | no |
 | <a name="input_region"></a> [region](#input\_region) | The Azure region where this network will reside. | `string` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | The name of the resource group that will contain the network. | `string` | n/a | yes |
+| <a name="input_secondary_cluster_subnet_cidr"></a> [secondary\_cluster\_subnet\_cidr](#input\_secondary\_cluster\_subnet\_cidr) | The CIDR of the secondary cluster subnet. Required when secondary\_vnet\_cidr is set. | `string` | `null` | no |
+| <a name="input_secondary_cluster_subnet_delegation"></a> [secondary\_cluster\_subnet\_delegation](#input\_secondary\_cluster\_subnet\_delegation) | Optional delegation configuration for the secondary cluster subnet. | <pre>object({<br>    name = string<br>    service_delegation = object({<br>      name    = string<br>      actions = list(string)<br>    })<br>  })</pre> | `null` | no |
+| <a name="input_secondary_vnet_cidr"></a> [secondary\_vnet\_cidr](#input\_secondary\_vnet\_cidr) | An optional secondary CIDR block to associate with the cluster's VNET. This can be used to expand the cluster's available IP address space without needing to create a new VNET and migrate resources. | `string` | `null` | no |
 | <a name="input_vnet_cidr"></a> [vnet\_cidr](#input\_vnet\_cidr) | The CIDR of the cluster's VNET. | `string` | `null` | no |
 
 ## Outputs
@@ -43,5 +49,7 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_route_table_id"></a> [route\_table\_id](#output\_route\_table\_id) | n/a |
+| <a name="output_secondary_subnet_id"></a> [secondary\_subnet\_id](#output\_secondary\_subnet\_id) | n/a |
 | <a name="output_subnet_id"></a> [subnet\_id](#output\_subnet\_id) | n/a |
+| <a name="output_virtual_network_id"></a> [virtual\_network\_id](#output\_virtual\_network\_id) | n/a |
 <!-- END_TF_DOCS -->

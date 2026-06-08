@@ -30,6 +30,14 @@ resource "aws_launch_template" "this" {
       tags          = var.worker_node_tags
     }
   }
+
+  dynamic "tag_specifications" {
+    for_each = length(var.worker_node_tags) > 0 ? [0] : []
+    content {
+      resource_type = "volume"
+      tags          = var.worker_node_tags
+    }
+  }
 }
 
 resource "aws_eks_node_group" "this" {
@@ -43,13 +51,19 @@ resource "aws_eks_node_group" "this" {
 
   scaling_config {
     desired_size = var.node_group_desired_size
-    min_size     = 0
-    max_size     = 3
+    min_size     = var.node_group_desired_size
+    max_size     = var.node_group_max_size
   }
 
   launch_template {
     id      = aws_launch_template.this.id
     version = aws_launch_template.this.latest_version
+  }
+
+  lifecycle {
+    ignore_changes = [
+      scaling_config[0].desired_size
+    ]
   }
 }
 

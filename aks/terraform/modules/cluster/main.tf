@@ -42,6 +42,11 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   kubernetes_version      = var.kubernetes_version
   sku_tier                = "Standard"
   local_account_disabled  = var.local_account_disabled
+  node_os_upgrade_channel = "None"
+
+  oidc_issuer_enabled = true
+
+  workload_identity_enabled = var.enable_workload_identity
 
   api_server_access_profile {
     authorized_ip_ranges = var.kubernetes_api_public_access ? var.kubernetes_api_authorized_networks : null
@@ -65,6 +70,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     vnet_subnet_id  = var.subnet_id
     zones           = var.availability_zones
     max_pods        = var.max_pods_per_node
+    tags            = var.common_tags
 
     upgrade_settings {
       max_surge = "10%"

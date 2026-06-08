@@ -13,3 +13,7 @@ output "cluster_id" {
 output "current_kubernetes_version" {
   value = azurerm_kubernetes_cluster.cluster.current_kubernetes_version
 }
+
+output "oidc_issuer_url" {
+  value = azurerm_kubernetes_cluster.cluster.oidc_issuer_url
+}

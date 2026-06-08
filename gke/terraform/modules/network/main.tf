@@ -66,6 +66,26 @@ resource "google_compute_subnetwork" "cluster" {
   }
 }
 
+resource "google_compute_subnetwork" "database" {
+  #checkov:skip=CKV_GCP_76:This is not required, subnetwork is not configured to use ipv6
+  #checkov:skip=CKV_GCP_26:Solace is not opinionated on the use of VPC flow logs
+
+  count = var.create_network && var.database_network_cidr_range != null && var.database_subnetwork_cidr != null ? 1 : 0
+
+  name          = "${var.cluster_name}-database-subnetwork"
+  ip_cidr_range = var.database_subnetwork_cidr
+  network       = google_compute_network.this[0].name
+
+  private_ip_google_access = true
+
+  lifecycle {
+    precondition {
+      condition     = can(cidrhost(var.database_subnetwork_cidr, 0))
+      error_message = "A valid IPv4 CIDR must be provided for 'database_subnetwork_cidr' variable."
+    }
+  }
+}
+
 resource "google_compute_router" "router" {
   count = var.create_network ? 1 : 0
 

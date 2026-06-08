@@ -1,6 +1,6 @@
 # Reference Terraform for Google Kubernetes Engine
 
-We provide a sample Terraform that you can use as a reference to set up your Kubernetes cluster using Google Kubernetes Engine (GKE). This Terraform gives you a recommended practices for the cluster to help ensure your deployment of PubSub+ Cloud is successful.
+We provide a sample Terraform that you can use as a reference to set up your Kubernetes cluster using Google Kubernetes Engine (GKE). This Terraform gives you a recommended practices for the cluster to help ensure your deployment of Solace Cloud is successful.
 
 You can review the architecture and understand how to deploy using the Terraform.
 For information about the architecture, see:
@@ -14,9 +14,9 @@ for the GKE cluster, see the [documentation website](https://docs.solace.com/Clo
 
 This section describes the architecture reference Terraform project for deploying a GKE cluster. This information includes Kubernetes components and configuration that:
 
- * are required (or highly recommended) to operate successfully with Solace PubSub+ Cloud
- * are recommended but not required to successfully deploy PubSub+ Cloud
- * are available to produce a working cluster but where Solace is not opinionated on what to use (an option or the configuration had to be selected as part of the Terraform and doesn't impact the installation of PubSub+ Cloud)
+ * are required (or highly recommended) to operate successfully with Solace Cloud
+ * are recommended but not required to successfully deploy Solace Cloud
+ * are available to produce a working cluster but where Solace is not opinionated on what to use (an option or the configuration had to be selected as part of the Terraform and doesn't impact the installation of Solace Cloud)
 
 Review these sections below: [networking](#gke-network), [cluster configuration](#gke-cluster-configure), and [access to and from the cluster](#gke-access).
 
@@ -60,7 +60,7 @@ The cluster has the following node pools:
 
 ##### Default (System)
 
-By default the pool has three worker nodes (one in each availability zone), and it uses the `n2-standard-2` machine type. All of the standard Kubernetes services and the Solace Mission Control Agent run on these worker nodes.
+By default the pool has three worker nodes (one in each availability zone), and it uses the `n2-standard-2` machine type. All of the standard Kubernetes services, as well as the Mission Control Agent, run on these worker nodes.
 
 ##### Event Broker Services
 
@@ -106,7 +106,7 @@ To use this Terraform module, you require:
 
 1. Navigate to the `terraform/` directory and create a `terraform.tfvars` file with the required variables. The VPC and subnet CIDRs must be sized appropriately for the number of event broker services that you require to be created. Make the following changes in the file:
 
-* The `kubernetes_version` variable should be set to the latest Kubernetes version that is [supported by PubSub+ Cloud](https://docs.solace.com/Cloud/Deployment-Considerations/cloud-broker-k8s-versions-support.htm).
+* The `kubernetes_version` variable should be set to the latest Kubernetes version that is [supported by Solace Cloud](https://docs.solace.com/Cloud/Deployment-Considerations/cloud-broker-k8s-versions-support.htm).
 * The `network_cidr_range`, `secondary_cidr_range_pods`, and `secondary_cidr_range_services` variables set the CIDR ranges that will be used for the network, pods, and services. The `secondary_cidr_range_pods` and `secondary_cidr_range_services` variables end up as secondary CIDR ranges in the cluster's subnet and cannot overlap.
 * The `bastion_ssh_authorized_networks` variable must be set with the CIDRs of the networks where the bastion host will be accessed from.
 * The `bastion_ssh_public_key` variable must be set with the public key of the key pair that will be used to access the bastion host.
