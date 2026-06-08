@@ -127,9 +127,3 @@ variable "worker_node_os_disk_type" {
   default     = "Ephemeral"
   description = "The type of the OS disk for the worker nodes in the default (system) node pool."
 }
-
-variable "node_os_upgrade_channel" {
-  type        = string
-  default     = "None"
-  description = "The upgrade channel for this Kubernetes Cluster Nodes' OS Image"
-}
