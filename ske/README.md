@@ -1,0 +1,161 @@
+# Reference Terraform for STACKIT Kubernetes Engine
+
+We provide a sample Terraform that you can use as a reference to set up your Kubernetes cluster using STACKIT Kubernetes Engine (SKE). This Terraform gives you recommended practices for the cluster to help ensure your deployment of Solace Cloud is successful.
+
+You can review the architecture and understand how to deploy using the Terraform. For information about the architecture, see:
+* [Architecture of SKE Reference Terraform](#ske-architecture)
+* [Usage of Terraform for SKE](#ske-usage)
+
+## Architecture of the Reference Terraform for STACKIT Kubernetes Engine <a name="ske-architecture"></a>
+
+The sections below describe the architecture of the reference Terraform project for deploying a STACKIT Kubernetes Engine (SKE) cluster. It includes Kubernetes components and configuration that:
+* are required (or highly recommended) to operate successfully with Solace Cloud
+* are recommended but not required to successfully deploy Solace Cloud
+* are available to produce a working cluster but we are not opinionated on what to use (an option or configuration had to be selected as part of the Terraform, but does not impact the installation of Solace Cloud)
+
+The areas to review are the [networking](#ske-network), [cluster configuration](#ske-cluster-config), and [access to and from the cluster](#ske-access). Below is an architectural diagram of the components of the SKE cluster that are created with this Terraform project:
+
+![SKE Architecture Diagram](docs/architecture.png)
+
+### Network <a name="ske-network"></a>
+
+The Terraform creates the following network resources:
+
+* A **STACKIT Network Area (SNA)** at the organization level, with the cluster's CIDR registered as its primary network range, plus an optional secondary range for a VPN gateway.
+* A **network area region binding** that associates the SNA with the chosen STACKIT region (e.g. `eu01`) and configures the transfer network CIDR.
+* A **project-scoped network** that the SKE cluster's worker nodes attach to.
+
+The network area can be reused across multiple projects in the same organization. Cluster networks (one per cluster) live inside a project and consume CIDR space from the SNA.
+
+### Cluster Configuration <a name="ske-cluster-config"></a>
+
+#### Project
+
+Each SKE cluster lives in its own STACKIT project. The Terraform creates the project under the configured organization and tags it with the SNA's network area ID via a label.
+
+#### Availability Zones
+
+STACKIT's `eu01` region has three discrete availability zones (`eu01-1`, `eu01-2`, `eu01-3`) plus a **metro** zone (`eu01-m`) that spans multiple physical zones. The reference architecture uses:
+* the metro zone for the system / default pool (STACKIT-managed system components benefit from cross-zone failover)
+* the three discrete zones for messaging pools (one pool per zone per tier, enabling pod anti-affinity across zones for HA brokers)
+* the three discrete zones for monitoring pools (one pool per zone)
+
+#### Node Pools
+
+The cluster has the following node pools. All pools' nodes use a 50 GiB boot volume on the `storage_premium_perf2` performance class.
+
+##### Default (System)
+
+The default node pool runs on the metro availability zone (`eu01-m`) so STACKIT can automatically migrate system workloads across physical zones on failure. It uses the `c2i.2` flavor, scales from 1 to 3 nodes, and is the only pool with `allow_system_components = true` (which lets cluster-system workloads such as CoreDNS schedule onto it).
+
+##### Event Broker Services
+
+The cluster has a total of 12 node pools for event broker services. Instead of spanning multiple availability zones, there are 4 sets of 3 node pools with each locked to a single availability zone. These node pools are locked to one availability zone to allow the cluster autoscaler to work properly. We use pod anti-affinity against the node's zone label to ensure that each pod in a high-availability event broker service is in a separate availability zone.
+
+These node pools are engineered to support a 1:1 ratio of event broker service pod to worker node. We use labels and taints on each of these node pools to ensure that only event broker service pods are scheduled on the worker nodes for each scaling tier.
+
+The VM sizes, labels, and taints for each event broker service node pool are as follows:
+
+| Name       | VM size | Labels                                      | Taints                                                          |
+|------------|---------|---------------------------------------------|-----------------------------------------------------------------|
+| prod1k     | `m2i.2` | nodeType:messaging<br>serviceClass:prod1k   | nodeType:messaging:NoExecute<br>serviceClass:prod1k:NoExecute   |
+| prod10k    | `m2i.4` | nodeType:messaging<br>serviceClass:prod10k  | nodeType:messaging:NoExecute<br>serviceClass:prod10k:NoExecute  |
+| prod100k   | `m2i.8` | nodeType:messaging<br>serviceClass:prod100k | nodeType:messaging:NoExecute<br>serviceClass:prod100k:NoExecute |
+| monitoring | `g3i.2` | nodeType:monitoring                         | nodeType:monitoring:NoExecute                                   |
+
+### Access <a name="ske-access"></a>
+
+#### Bastion host
+
+A bastion host (opt-in via `create_bastion = true`) with a public IP, accessible via SSH from provided source CIDRs. The latest Ubuntu image in the project is auto-detected via the `stackit_image_v2` data source; set `bastion_image_id` to pin a specific image UUID instead.
+
+#### Kubernetes API access
+
+The cluster's Kubernetes API can be either:
+
+ * **Private** (the default, `kubernetes_api_public_access = false`): the API server is only reachable from inside the cluster's STACKIT Network Area. A bastion or other in-SNA routing path is required.
+ * **Public** (`kubernetes_api_public_access = true`): the API server is reachable from the internet, restricted by an allow-list set via `kubernetes_api_authorized_networks`. When `create_bastion = true`, the bastion's public IP is automatically appended to that allow-list.
+
+#### Optional cluster extensions
+
+ * **externalDNS** (opt-in via `dns_enabled = true`): enables in-cluster externalDNS to manage records on STACKIT DNS. Set `dns_zones` to restrict externalDNS to specific domains, or leave empty to allow all zones.
+ * **STACKIT Observability** (opt-in via `observability_enabled = true`): forwards cluster metrics and logs to a STACKIT Observability instance. Requires `observability_instance_id` to point at an existing instance.
+
+## Usage of Terraform for STACKIT Kubernetes Engine <a name="ske-usage"></a>
+
+The following section is an overview of the steps to use this Terraform. Before you begin, review the necessary [prerequisites](#ske-prerequisites). Here's an overview of the steps:
+
+1. [Create the Kubernetes cluster](#ske-create-cluster).
+2. [Deploy the recommended storage classes](#ske-deploy-storage).
+
+### Prerequisites <a name="ske-prerequisites"></a>
+
+To use this Terraform module, the following is required:
+
+* Terraform 1.3 or above (we recommend [tfenv](https://github.com/tfutils/tfenv) for Terraform version management)
+* [STACKIT CLI](https://github.com/stackitcloud/stackit-cli) for pulling kubeconfigs
+* [yq](https://github.com/mikefarah/yq#install)
+* [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/)
+* [helm](https://helm.sh/docs/intro/install/)
+* A STACKIT service-account key with sufficient permissions to create projects, networks, and SKE clusters in the target organization.
+
+### Creating the Kubernetes Cluster <a name="ske-create-cluster"></a>
+
+1. Configure the STACKIT provider with a service-account key:
+
+    ```bash
+    export STACKIT_SERVICE_ACCOUNT_KEY_PATH=/path/to/credentials.json
+    ```
+
+2. Navigate to the `terraform/` directory and create a `terraform.tfvars` file with the required variables. See the Terraform [README.md](terraform/README.md) for a full list of variables.
+
+    For example:
+
+    ```hcl
+    organization_id = "00000000-0000-0000-0000-000000000000"
+    cluster_name    = "solace-eu01"
+    owner_email     = "you@example.com"
+
+    region                = "eu01"
+    cluster_cidr          = "10.0.0.0/24"
+    transfer_network_cidr = "10.1.0.0/16"
+
+    kubernetes_version = "1.35" # check current supported versions with `stackit ske options describe`
+
+    create_bastion          = true
+    bastion_ssh_public_key  = "ssh-rsa abc123..."
+    bastion_ssh_source_cidr = "192.168.1.1/32"
+    ```
+
+3. Apply the Terraform:
+
+    ```bash
+    terraform init
+    terraform apply
+    ```
+
+4. After you create the cluster, set up access:
+
+    * On the default private API setting (`kubernetes_api_public_access = false`), reach the cluster through the bastion. Use the `connect.sh` script to open a tunnel and set up your environment:
+
+        ```bash
+        source ./connect.sh --private-key <ssh private key path>
+        ```
+
+    * If `kubernetes_api_public_access = true` and the caller's IP is in `kubernetes_api_authorized_networks`, a kubeconfig is sufficient:
+
+        ```bash
+        stackit ske kubeconfig create <cluster-name> --project-id <project-id>
+        kubectl config use-context <cluster-name>
+        ```
+
+### Deploying Storage Classes <a name="ske-deploy-storage"></a>
+
+Create the storage classes — one for the broker's `spool` volume (`solace-broker-spool`, wraps `storage_premium_perf6`) and one for the `data` volume (`solace-default`, wraps `storage_premium_perf2`):
+
+```bash
+kubectl apply -f kubernetes/storage-class-spool.yaml
+kubectl apply -f kubernetes/storage-class-data.yaml
+```
+
+The full set of available STACKIT block-storage performance plans is documented on the [STACKIT Block Storage service plans](https://docs.stackit.cloud/products/storage/block-storage/basics/service-plans/) page.
