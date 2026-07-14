@@ -13,3 +13,8 @@ variable "cluster_name" {
 variable "storage_class_path" {
   type = string
 }
+
+variable "proxy_url" {
+  type    = string
+  default = ""
+}

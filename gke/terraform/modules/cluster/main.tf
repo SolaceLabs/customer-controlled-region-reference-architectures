@@ -43,7 +43,8 @@ resource "google_container_cluster" "cluster" {
 
   deletion_protection = false
 
-  networking_mode = "VPC_NATIVE"
+  networking_mode   = "VPC_NATIVE"
+  datapath_provider = "ADVANCED_DATAPATH"
 
   monitoring_config {
     managed_prometheus {

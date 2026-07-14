@@ -9,6 +9,7 @@ clusters:
 - cluster:
     server: https://${data.google_container_cluster.main.endpoint}
     certificate-authority-data: ${data.google_container_cluster.main.master_auth[0].cluster_ca_certificate}
+${var.proxy_url != "" ? "    proxy-url: ${var.proxy_url}" : ""}
   name: ${data.google_container_cluster.main.id}
 contexts:
 - context:

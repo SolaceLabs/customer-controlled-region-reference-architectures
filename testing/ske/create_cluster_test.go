@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/SolaceDev/sc-private-regions-terraform/testing/common"
 	"github.com/gruntwork-io/terratest/modules/k8s"
@@ -143,6 +144,10 @@ func TestTerraformSkeClusterComplete(t *testing.T) {
 		Vars: vars,
 		Upgrade: true,
 	})
+
+	underTestOptions.RetryableTerraformErrors["has still active"] = "STACKIT network area still has the deleting project attached; retrying"
+	underTestOptions.MaxRetries = 8
+	underTestOptions.TimeBetweenRetries = 30 * time.Second
 
 	if keepCluster != "yes" {
 		defer terraform.Destroy(t, underTestOptions)

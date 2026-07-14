@@ -8,7 +8,7 @@ terraform {
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "~> 2.0"
+      version = ">= 2.24"
     }
   }
 }
@@ -31,4 +31,8 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(
     data.google_container_cluster.main.master_auth[0].cluster_ca_certificate,
   )
+
+  # When set, reach the (private) Kubernetes API through an SSH SOCKS5 proxy
+  # to the bastion instead of directly from the test runner.
+  proxy_url = var.proxy_url != "" ? var.proxy_url : null
 }
