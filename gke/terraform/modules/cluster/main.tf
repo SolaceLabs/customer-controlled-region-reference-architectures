@@ -74,6 +74,13 @@ resource "google_container_cluster" "cluster" {
   }
 
   master_authorized_networks_config {
+    # Public GCE CIDR access to the control plane is only valid when the public
+    # endpoint is enabled. For private clusters (enable_private_endpoint = true)
+    # the GKE API rejects gcp_public_cidrs_access_enabled = true, so tie it to
+    # the same toggle that drives the private endpoint. Left unset, the provider
+    # force-sends the API's computed value (true), which breaks private clusters.
+    gcp_public_cidrs_access_enabled = var.kubernetes_api_public_access
+
     dynamic "cidr_blocks" {
       for_each = var.kubernetes_api_authorized_networks
       content {
