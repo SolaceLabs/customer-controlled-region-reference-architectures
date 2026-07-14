@@ -100,18 +100,18 @@ locals {
   prod10k_machine_type    = "m2i.4"
   prod100k_machine_type   = "m2i.8"
 
-  # System pool stays inline — special shape (allow_system_components, fixed scaling, metro AZ).
+  # System pool stays inline — special shape (allow_system_components, fixed scaling).
   default_pool = {
     name                    = "default"
-    availability_zones      = ["${var.region}-m"]
+    availability_zones      = ["${var.region}-1", "${var.region}-2", "${var.region}-3"]
     machine_type            = local.default_machine_type
     volume_size             = var.node_pool_volume_size
     volume_type             = var.node_pool_volume_type
     allow_system_components = true
     maximum                 = 3
-    minimum                 = 1
-    max_surge               = 1
-    max_unavailable         = 1
+    minimum                 = 2
+    max_surge               = 3
+    max_unavailable         = 3
   }
 
   monitoring_labels_and_taints = {

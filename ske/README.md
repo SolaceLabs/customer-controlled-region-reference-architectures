@@ -35,10 +35,12 @@ Each SKE cluster lives in its own STACKIT project. The Terraform creates the pro
 
 #### Availability Zones
 
-STACKIT's `eu01` region has three discrete availability zones (`eu01-1`, `eu01-2`, `eu01-3`) plus a **metro** zone (`eu01-m`) that spans multiple physical zones. The reference architecture uses:
-* the metro zone for the system / default pool (STACKIT-managed system components benefit from cross-zone failover)
-* the three discrete zones for messaging pools (one pool per zone per tier, enabling pod anti-affinity across zones for HA brokers)
-* the three discrete zones for monitoring pools (one pool per zone)
+STACKIT's `eu01` region has three discrete availability zones (`eu01-1`, `eu01-2`, `eu01-3`) plus a **metro** zone (`eu01-m`) that spans multiple physical zones. The reference architecture uses the three discrete zones for all node pools:
+* the system / default pool is a single pool that spans all three zones
+* the messaging pools are locked to one zone each (one pool per zone per tier, enabling pod anti-affinity across zones for HA brokers)
+* the monitoring pools are locked to one zone each (one pool per zone)
+
+The metro zone is not used.
 
 #### Node Pools
 
@@ -46,7 +48,7 @@ The cluster has the following node pools. All pools' nodes use a 50 GiB boot vol
 
 ##### Default (System)
 
-The default node pool runs on the metro availability zone (`eu01-m`) so STACKIT can automatically migrate system workloads across physical zones on failure. It uses the `c2i.2` flavor, scales from 1 to 3 nodes, and is the only pool with `allow_system_components = true` (which lets cluster-system workloads such as CoreDNS schedule onto it).
+The default node pool spans the three discrete availability zones (`eu01-1`, `eu01-2`, `eu01-3`). It uses the `c2i.2` flavor and scales from 2 to 3 nodes — the minimum of 2 keeps nodes in at least two zones, so a single zone failure cannot take out the whole pool. It is the only pool with `allow_system_components = true` (which lets cluster-system workloads such as CoreDNS schedule onto it).
 
 ##### Event Broker Services
 

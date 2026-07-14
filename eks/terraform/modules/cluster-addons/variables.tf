@@ -53,3 +53,9 @@ variable "addon_version_pod_identity" {
   default     = null
   description = "The version of the pod identity add-on to install."
 }
+
+variable "enable_network_policy" {
+  type        = bool
+  default     = false
+  description = "Whether to enable VPC CNI native NetworkPolicy support (enableNetworkPolicy=true) on the vpc-cni add-on."
+}
