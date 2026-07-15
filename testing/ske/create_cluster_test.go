@@ -48,13 +48,13 @@ func getOrCreateSuffix(t *testing.T) string {
 }
 
 func testCluster(t *testing.T, kubeconfigPath string) {
-	common.TestHighAvailableServiceClass(t, kubeconfigPath, "prod1k", "solace-default", 1)
-	common.TestStandaloneServiceClass(t, kubeconfigPath, "prod1k", "solace-default", 2)
+	common.TestHighAvailableServiceClass(t, kubeconfigPath, "prod1k", "solace-broker-spool-perf4", 1)
+	common.TestStandaloneServiceClass(t, kubeconfigPath, "prod1k", "solace-broker-spool-perf4", 2)
 
-	common.TestHighAvailableServiceClass(t, kubeconfigPath, "prod10k", "solace-default", 1)
-	common.TestStandaloneServiceClass(t, kubeconfigPath, "prod10k", "solace-default", 2)
+	common.TestHighAvailableServiceClass(t, kubeconfigPath, "prod10k", "solace-broker-spool-perf6", 1)
+	common.TestStandaloneServiceClass(t, kubeconfigPath, "prod10k", "solace-broker-spool-perf6", 2)
 
-	common.TestStandaloneServiceClass(t, kubeconfigPath, "prod100k", "solace-default", 1)
+	common.TestStandaloneServiceClass(t, kubeconfigPath, "prod100k", "solace-broker-spool-perf8", 1)
 
 	common.PrintTestComplete(t)
 }
@@ -62,11 +62,16 @@ func testCluster(t *testing.T, kubeconfigPath string) {
 func applyStorageClasses(t *testing.T, kubeconfigPath string) {
 	options := k8s.NewKubectlOptions("", kubeconfigPath, "")
 
-	storageClassDataPath, _ := filepath.Abs("../../ske/kubernetes/storage-class-data.yaml")
-	storageClassSpoolPath, _ := filepath.Abs("../../ske/kubernetes/storage-class-spool.yaml")
+	storageClassDataPath, _ := filepath.Abs("../../ske/kubernetes/solace-broker-data-perf2.yaml")
+	storageClassSpoolPathPerf4, _ := filepath.Abs("../../ske/kubernetes/storage-class-spool-perf4.yaml")
+	storageClassSpoolPathPerf6, _ := filepath.Abs("../../ske/kubernetes/storage-class-spool-perf6.yaml")
+	storageClassSpoolPathPerf8, _ := filepath.Abs("../../ske/kubernetes/storage-class-spool-perf8.yaml")
 
 	k8s.KubectlApply(t, options, storageClassDataPath)
-	k8s.KubectlApply(t, options, storageClassSpoolPath)
+	k8s.KubectlApply(t, options, storageClassSpoolPathPerf4)
+	k8s.KubectlApply(t, options, storageClassSpoolPathPerf6)
+	k8s.KubectlApply(t, options, storageClassSpoolPathPerf8)
+
 }
 
 func formatVars(vars map[string]any) string {
@@ -91,9 +96,9 @@ func formatVars(vars map[string]any) string {
 }
 
 func writeVarFile(t *testing.T, name string, targetDir string, vars map[string]any) {
-	file, err := os.Create(fmt.Sprintf("%v/%v.tfvars",targetDir,name))
+	file, err := os.Create(fmt.Sprintf("%v/%v.tfvars", targetDir, name))
 	if err != nil {
-	  logger.Log(t,err)
+		logger.Log(t, err)
 	}
 	defer file.Close()
 
@@ -125,24 +130,24 @@ func TestTerraformSkeClusterComplete(t *testing.T) {
 
 	underTestPath, _ := common.CopyTerraform(t, "../../ske/terraform", clusterSuffix)
 	vars := map[string]any{
-			"cluster_name":                       clusterName,
-			"region":                             region,
-			"kubernetes_version":                 KubernetesVersion,
-			"cluster_cidr":                       "10.10.0.0/24",
-			"worker_node_pool_min_size":          1,
-			"create_bastion":                     true,
-			"bastion_image_id":                   "3ad2867e-695b-4ee6-9502-b563013413d4",
-			"bastion_ssh_public_key":             bastionPublicKey,
-			"bastion_ssh_source_cidrs":           localCidr,
-			"kubernetes_api_public_access":       true,
-			"kubernetes_api_authorized_networks": localCidr,
+		"cluster_name":                       clusterName,
+		"region":                             region,
+		"kubernetes_version":                 KubernetesVersion,
+		"cluster_cidr":                       "10.10.0.0/24",
+		"worker_node_pool_min_size":          1,
+		"create_bastion":                     true,
+		"bastion_image_id":                   "3ad2867e-695b-4ee6-9502-b563013413d4",
+		"bastion_ssh_public_key":             bastionPublicKey,
+		"bastion_ssh_source_cidrs":           localCidr,
+		"kubernetes_api_public_access":       true,
+		"kubernetes_api_authorized_networks": localCidr,
 	}
 	writeVarFile(t, clusterSuffix, underTestPath, vars)
 	underTestOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: underTestPath,
-		NoColor: true,
-		Vars: vars,
-		Upgrade: true,
+		NoColor:      true,
+		Vars:         vars,
+		Upgrade:      true,
 	})
 
 	underTestOptions.RetryableTerraformErrors["has still active"] = "STACKIT network area still has the deleting project attached; retrying"

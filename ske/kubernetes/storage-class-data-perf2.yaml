@@ -1,10 +1,12 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: solace-broker-spool
+  name: solace-broker-data-perf2
+  labels:
+    diskType: data
 provisioner: cinder.csi.openstack.org
 parameters:
-  type: storage_premium_perf6
+  type: storage_premium_perf2
   csi.storage.k8s.io/fstype: xfs
 reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer
