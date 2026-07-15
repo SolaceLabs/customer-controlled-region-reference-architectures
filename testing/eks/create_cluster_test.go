@@ -16,8 +16,8 @@ import (
 )
 
 // cluster autoscaler version must match kubernetes version
-const KubernetesVersion = "1.33"
-const ClusterAutoscalerVersion = "v1.33.1"
+const KubernetesVersion = "1.36"
+const ClusterAutoscalerVersion = "v1.36.0"
 
 func testCluster(t *testing.T, configOptions *terraform.Options) {
 	kubeconfig := terraform.Output(t, configOptions, "kubeconfig")
