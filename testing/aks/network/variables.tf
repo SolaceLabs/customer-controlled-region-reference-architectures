@@ -5,3 +5,7 @@ variable "region" {
 variable "cluster_name" {
   type = string
 }
+
+variable "subscription" {
+  type = string
+}

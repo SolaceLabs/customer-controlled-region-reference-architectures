@@ -10,26 +10,57 @@ import (
 	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
-// Prerequisite, set the Azure subscription with: export TF_VAR_subscription=<project>
+// Prerequisite, set the Azure subscription with: export TF_VAR_subscription=<subscription>
 
-const KubernetesVersion = "1.29"
+const KubernetesVersion = "1.33"
+
+func destroyAks(t *testing.T, options *terraform.Options) {
+	if _, err := terraform.DestroyE(t, options); err == nil {
+		return
+	}
+	terraform.Destroy(t, options)
+}
 
 func testCluster(t *testing.T, configOptions *terraform.Options) {
 	kubeconfig := terraform.Output(t, configOptions, "kubeconfig")
 	kubeconfigPath := common.WriteKubeconfigToTempFile(kubeconfig)
 	defer os.Remove(kubeconfigPath)
 
-	common.TestHighAvailableServiceClass(t, kubeconfigPath, "prod1k", "managed-premium-zoned", 1)
-	common.TestStandaloneServiceClass(t, kubeconfigPath, "prod1k", "managed-premium-zoned", 2)
+	storageClass := "managed-premium-zoned"
 
-	common.TestStandaloneServiceClass(t, kubeconfigPath, "prod5k", "managed-premium-zoned", 2)
+	serviceClassTests := []struct {
+		name            string
+		serviceClass    string
+		highlyAvailable bool
+		serviceCount    int
+	}{
+		{"prod1k-ha", "prod1k", true, 1},
+		{"prod1k-standalone", "prod1k", false, 2},
+		{"prod5k-standalone", "prod5k", false, 2},
+		{"prod10k-ha", "prod10k", true, 1},
+		{"prod10k-standalone", "prod10k", false, 2},
+		{"prod50k-standalone", "prod50k", false, 1},
+		{"prod100k-standalone", "prod100k", false, 1},
+	}
 
-	common.TestHighAvailableServiceClass(t, kubeconfigPath, "prod10k", "managed-premium-zoned", 1)
-	common.TestStandaloneServiceClass(t, kubeconfigPath, "prod10k", "managed-premium-zoned", 2)
+	t.Run("validate", func(t *testing.T) {
+		for _, tc := range serviceClassTests {
+			tc := tc
+			t.Run(tc.name, func(t *testing.T) {
+				t.Parallel()
+				if tc.highlyAvailable {
+					common.TestHighAvailableServiceClass(t, kubeconfigPath, tc.serviceClass, storageClass, tc.serviceCount)
+				} else {
+					common.TestStandaloneServiceClass(t, kubeconfigPath, tc.serviceClass, storageClass, tc.serviceCount)
+				}
+			})
+		}
 
-	common.TestStandaloneServiceClass(t, kubeconfigPath, "prod50k", "managed-premium-zoned", 1)
-
-	common.TestStandaloneServiceClass(t, kubeconfigPath, "prod100k", "managed-premium-zoned", 1)
+		t.Run("network-policy", func(t *testing.T) {
+			t.Parallel()
+			common.TestNetworkPolicyEnforcement(t, kubeconfigPath)
+		})
+	})
 
 	common.PrintTestComplete(t)
 }
@@ -59,7 +90,6 @@ func TestTerraformAksClusterComplete(t *testing.T) {
 	}
 	terraform.InitAndApply(t, prereqOptions)
 
-	localCidr := []string{terraform.Output(t, prereqOptions, "local_cidr")}
 	bastionPublicKey := terraform.Output(t, prereqOptions, "bastion_ssh_public_key")
 
 	underTestPath, _ := common.CopyTerraform(t, "../../aks/terraform", clusterSuffix)
@@ -71,11 +101,11 @@ func TestTerraformAksClusterComplete(t *testing.T) {
 			"region":                             azureRegion,
 			"kubernetes_version":                 KubernetesVersion,
 			"vnet_cidr":                          "10.10.0.0/24",
-			"bastion_ssh_authorized_networks":    localCidr,
+			"bastion_ssh_authorized_networks":    []string{"0.0.0.0/0"},
 			"bastion_ssh_public_key":             bastionPublicKey,
 			"worker_node_ssh_public_key":         bastionPublicKey,
-			"kubernetes_api_public_access":       true,
-			"kubernetes_api_authorized_networks": localCidr,
+			"kubernetes_api_public_access":       false,
+			"kubernetes_api_authorized_networks": []string{},
 			"local_account_disabled":             false,
 			"common_tags":                        common.GenerateTags(clusterName),
 		},
@@ -83,10 +113,17 @@ func TestTerraformAksClusterComplete(t *testing.T) {
 	})
 
 	if keepCluster != "yes" {
-		defer terraform.Destroy(t, underTestOptions)
+		defer destroyAks(t, underTestOptions)
 	}
-
 	terraform.InitAndApply(t, underTestOptions)
+
+	bastionPublicIp := terraform.Output(t, underTestOptions, "bastion_public_ip")
+	bastionPrivateKey := terraform.Output(t, prereqOptions, "bastion_ssh_private_key")
+
+	common.TestSshToBastionHost(t, bastionPublicIp, "ubuntu", bastionPrivateKey)
+
+	proxyUrl, stopProxy := common.StartSocksProxyThroughBastion(t, bastionPublicIp, "ubuntu", bastionPrivateKey)
+	defer stopProxy()
 
 	storageClassPath, _ := filepath.Abs("../../aks/kubernetes/storage-class.yaml")
 
@@ -98,6 +135,7 @@ func TestTerraformAksClusterComplete(t *testing.T) {
 			"resource_group_name": fmt.Sprintf("%s-cluster", clusterName),
 			"cluster_name":        clusterName,
 			"storage_class_path":  storageClassPath,
+			"proxy_url":           proxyUrl,
 		},
 		Upgrade: true,
 	})
@@ -106,15 +144,6 @@ func TestTerraformAksClusterComplete(t *testing.T) {
 		defer terraform.Destroy(t, configOptions)
 	}
 	terraform.InitAndApply(t, configOptions)
-
-	kubeconfig := terraform.Output(t, configOptions, "kubeconfig")
-	kubeconfigPath := common.WriteKubeconfigToTempFile(kubeconfig)
-	defer os.Remove(kubeconfigPath)
-
-	bastionPublicIp := terraform.Output(t, underTestOptions, "bastion_public_ip")
-	bastionPrivateKey := terraform.Output(t, prereqOptions, "bastion_ssh_private_key")
-
-	common.TestSshToBastionHost(t, bastionPublicIp, "ubuntu", bastionPrivateKey)
 
 	testCluster(t, configOptions)
 }
@@ -187,9 +216,8 @@ func TestTerraformAksClusterExternalNetwork(t *testing.T) {
 	})
 
 	if keepCluster != "yes" {
-		defer terraform.Destroy(t, underTestOptions)
+		defer destroyAks(t, underTestOptions)
 	}
-
 	terraform.InitAndApply(t, underTestOptions)
 
 	storageClassPath, _ := filepath.Abs("../../aks/kubernetes/storage-class.yaml")
@@ -210,10 +238,6 @@ func TestTerraformAksClusterExternalNetwork(t *testing.T) {
 		defer terraform.Destroy(t, configOptions)
 	}
 	terraform.InitAndApply(t, configOptions)
-
-	kubeconfig := terraform.Output(t, configOptions, "kubeconfig")
-	kubeconfigPath := common.WriteKubeconfigToTempFile(kubeconfig)
-	defer os.Remove(kubeconfigPath)
 
 	testCluster(t, configOptions)
 }

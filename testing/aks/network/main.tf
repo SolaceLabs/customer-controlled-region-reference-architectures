@@ -15,11 +15,11 @@ resource "azurerm_virtual_network" "cluster" {
 }
 
 resource "azurerm_subnet" "cluster" {
-  name                                      = "cluster"
-  resource_group_name                       = azurerm_resource_group.network.name
-  virtual_network_name                      = azurerm_virtual_network.cluster.name
-  address_prefixes                          = [local.cidr]
-  private_endpoint_network_policies_enabled = false
+  name                              = "cluster"
+  resource_group_name               = azurerm_resource_group.network.name
+  virtual_network_name              = azurerm_virtual_network.cluster.name
+  address_prefixes                  = [local.cidr]
+  private_endpoint_network_policies = "Disabled"
 }
 
 resource "azurerm_subnet_route_table_association" "cluster" {

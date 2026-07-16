@@ -39,7 +39,7 @@ variable "kubernetes_dns_service_ip" {
 variable "kubernetes_pod_cidr" {
   type        = string
   default     = "10.101.0.0/16"
-  description = "The CIDR used to assign IPs to kubernetes services, internal to the cluster."
+  description = "Pod CIDR for the cluster. Azure CNI Overlay reserves one fixed /24 per node, so it must satisfy 2^(24 - prefix) >= the sum of all node pool autoscaler max-counts (e.g. /16 = 256, /14 = 1024)."
 }
 
 variable "outbound_ip_count" {
