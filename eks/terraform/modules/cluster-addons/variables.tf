@@ -56,6 +56,6 @@ variable "addon_version_pod_identity" {
 
 variable "enable_network_policy" {
   type        = bool
-  default     = false
+  default     = true
   description = "Whether to enable VPC CNI native NetworkPolicy support (enableNetworkPolicy=true) on the vpc-cni add-on."
 }
