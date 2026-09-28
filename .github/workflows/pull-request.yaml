@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3
       - name: Setup terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1 # v2
       - name: Terraform format check for EKS
         run: terraform fmt -check
         working-directory: ./eks/terraform
-      - uses: terraform-linters/setup-tflint@v3
+      - uses: terraform-linters/setup-tflint@a5a1af8c6551fb10c53f1cd4ba62359f1973746f # v3
         name: Setup tflint
         with:
           tflint_version: v0.45.0
@@ -29,7 +29,7 @@ jobs:
         run: tflint -f compact
         working-directory: ./eks/terraform
       - name: Run checkov for EKS
-        uses: bridgecrewio/checkov-action@v12.2361.0 # 2.3.261
+        uses: bridgecrewio/checkov-action@a4529b613d94ba07ccbe7c146e8c3dcc8eb386ef # v12.2361.0
         with:
           directory: eks/terraform
           output_format: cli
@@ -40,13 +40,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3
       - name: Setup terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1 # v2
       - name: Terraform format check for AKS
         run: terraform fmt -check
         working-directory: ./aks/terraform
-      - uses: terraform-linters/setup-tflint@v3
+      - uses: terraform-linters/setup-tflint@a5a1af8c6551fb10c53f1cd4ba62359f1973746f # v3
         name: Setup tflint
         with:
           tflint_version: v0.45.0
@@ -58,7 +58,7 @@ jobs:
         run: tflint -f compact
         working-directory: ./aks/terraform
       - name: Run checkov for AKS
-        uses: bridgecrewio/checkov-action@v12.2361.0 # 2.3.261
+        uses: bridgecrewio/checkov-action@a4529b613d94ba07ccbe7c146e8c3dcc8eb386ef # v12.2361.0
         with:
           directory: aks/terraform
           output_format: cli
@@ -69,13 +69,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3
       - name: Setup terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1 # v2
       - name: Terraform format check for GKE
         run: terraform fmt -check
         working-directory: ./gke/terraform
-      - uses: terraform-linters/setup-tflint@v3
+      - uses: terraform-linters/setup-tflint@a5a1af8c6551fb10c53f1cd4ba62359f1973746f # v3
         name: Setup tflint
         with:
           tflint_version: v0.45.0
@@ -87,7 +87,7 @@ jobs:
         run: tflint -f compact
         working-directory: ./gke/terraform
       - name: Run checkov for GKE
-        uses: bridgecrewio/checkov-action@v12.2361.0 # 2.3.261
+        uses: bridgecrewio/checkov-action@a4529b613d94ba07ccbe7c146e8c3dcc8eb386ef # v12.2361.0
         with:
           directory: gke/terraform
           output_format: cli
@@ -98,13 +98,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3
       - name: Setup terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@633666f66e0061ca3b725c73b2ec20cd13a8fdd1 # v2
       - name: Terraform format check for SKE
         run: terraform fmt -check
         working-directory: ./ske/terraform
-      - uses: terraform-linters/setup-tflint@v3
+      - uses: terraform-linters/setup-tflint@a5a1af8c6551fb10c53f1cd4ba62359f1973746f # v3
         name: Setup tflint
         with:
           tflint_version: v0.45.0
@@ -116,7 +116,7 @@ jobs:
         run: tflint -f compact
         working-directory: ./ske/terraform
       - name: Run checkov for SKE
-        uses: bridgecrewio/checkov-action@v12.2361.0 # 2.3.261
+        uses: bridgecrewio/checkov-action@a4529b613d94ba07ccbe7c146e8c3dcc8eb386ef # v12.2361.0
         with:
           directory: ske/terraform
           output_format: cli

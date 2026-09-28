@@ -14,24 +14,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3
       - name: Generate terraform-docs for EKS
-        uses: terraform-docs/gh-actions@v1.0.0
+        uses: terraform-docs/gh-actions@f6d59f89a280fa0a3febf55ef68f146784b20ba0 # v1.0.0
         with:
           working-dir: ./eks/terraform
           config-file: ./eks/terraform/.terraform-docs.yaml
       - name: Generate terraform-docs for AKS
-        uses: terraform-docs/gh-actions@v1.0.0
+        uses: terraform-docs/gh-actions@f6d59f89a280fa0a3febf55ef68f146784b20ba0 # v1.0.0
         with:
           working-dir: ./aks/terraform
           config-file: ./aks/terraform/.terraform-docs.yaml
       - name: Generate terraform-docs for GKE
-        uses: terraform-docs/gh-actions@v1.0.0
+        uses: terraform-docs/gh-actions@f6d59f89a280fa0a3febf55ef68f146784b20ba0 # v1.0.0
         with:
           working-dir: ./gke/terraform
           config-file: ./gke/terraform/.terraform-docs.yaml
       - name: Generate terraform-docs for SKE
-        uses: terraform-docs/gh-actions@v1.0.0
+        uses: terraform-docs/gh-actions@f6d59f89a280fa0a3febf55ef68f146784b20ba0 # v1.0.0
         with:
           working-dir: ./ske/terraform
           config-file: ./ske/terraform/.terraform-docs.yaml
@@ -40,7 +40,7 @@ jobs:
         run: sudo chmod -R ugo+rwX .
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@4e1beaa7521e8b457b572c090b25bd3db56bf1c5 # v5
         with:
           commit-message: Updates to Terraform Docs [automated change]
           title: Automated updates to Terraform Docs
