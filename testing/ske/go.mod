@@ -1,8 +1,6 @@
 module github.com/SolaceDev/sc-private-regions-terraform/testing/ske
 
-go 1.21
-
-toolchain go1.21.1
+go 1.24
 
 require github.com/gruntwork-io/terratest v0.46.7
 
@@ -53,7 +51,7 @@ require (
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.15.11 // indirect
+	github.com/klauspost/compress v1.18.7 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-zglob v0.0.4 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
